@@ -1,0 +1,6 @@
+.env
+.env.*
+node_modules/
+server/serviceAccount.json
+npm-debug.log
+yarn-error.log

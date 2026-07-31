@@ -1,0 +1,1091 @@
+Uri: https://bluecrestult.com/assets/images/brand/logo_1776155007.png
+File Name: C:\Downloaded Web Sites\bluecrestult.com\assets\images\brand\logo_1776155007-1.png
+Content Type: image/png
+
+Uri: https://bluecrestult.com/customer/assets/css/app.min.css
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\css\app.min-1.css
+Content Type: text/css
+
+Uri: https://bluecrestult.com/customer/assets/css/bootstrap.min.css
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\css\bootstrap.min-1.css
+Content Type: text/css
+
+Uri: https://bluecrestult.com/customer/assets/css/icons.min.css
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\css\icons.min-1.css
+Content Type: text/css
+
+Uri: https://bluecrestult.com/customer/assets/fonts/boxicons.eot
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\boxicons-1.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/boxicons.svg?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\boxicons-1.svg
+Content Type: image/svg+xml
+
+Uri: https://bluecrestult.com/customer/assets/fonts/boxicons.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\boxicons-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/boxicons.woff
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\boxicons-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/fonts/boxicons.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\boxicons-1.woff2
+Content Type: font/woff2
+
+Uri: https://bluecrestult.com/customer/assets/fonts/dripicons-v2.eot
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\dripicons-v2-2.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/dripicons-v2.eot?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\dripicons-v2-3.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/dripicons-v2.svg
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\dripicons-v2-1.svg
+Content Type: image/svg+xml
+
+Uri: https://bluecrestult.com/customer/assets/fonts/dripicons-v2.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\dripicons-v2-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/dripicons-v2.woff
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\dripicons-v2-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.eot
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-2.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.eot?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-3.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.svg
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-1.svg
+Content Type: image/svg+xml
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.woff
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-brands-400.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-brands-400-1.woff2
+Content Type: font/woff2
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.eot
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-2.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.eot?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-3.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.svg
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-1.svg
+Content Type: image/svg+xml
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.woff
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-regular-400.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-regular-400-1.woff2
+Content Type: font/woff2
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.eot
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-2.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.eot?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-3.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.svg
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-1.svg
+Content Type: image/svg+xml
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.woff
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/fonts/fa-solid-900.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\fa-solid-900-1.woff2
+Content Type: font/woff2
+
+Uri: https://bluecrestult.com/customer/assets/fonts/materialdesignicons-webfont.eot?
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\materialdesignicons-webfont-3.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/materialdesignicons-webfont.eot?v=5.8.55
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\materialdesignicons-webfont-2.eot
+Content Type: application/vnd.ms-fontobject
+
+Uri: https://bluecrestult.com/customer/assets/fonts/materialdesignicons-webfont.ttf?v=5.8.55
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\materialdesignicons-webfont-1.ttf
+Content Type: font/ttf
+
+Uri: https://bluecrestult.com/customer/assets/fonts/materialdesignicons-webfont.woff2?v=5.8.55
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\materialdesignicons-webfont-1.woff2
+Content Type: font/woff2
+
+Uri: https://bluecrestult.com/customer/assets/fonts/materialdesignicons-webfont.woff?v=5.8.55
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\fonts\materialdesignicons-webfont-1.woff
+Content Type: font/woff
+
+Uri: https://bluecrestult.com/customer/assets/images/bg-auth-overlay.png
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\images\bg-auth-overlay-1.png
+Content Type: image/png
+
+Uri: https://bluecrestult.com/customer/assets/images/favicon.ico
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\images\favicon-1.ico
+Content Type: image/x-icon
+
+Uri: https://bluecrestult.com/customer/assets/libs/bootstrap/js/bootstrap.bundle.min.js
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\libs\bootstrap\js\bootstrap.bundle.min-1.js
+Content Type: text/javascript
+
+Uri: https://bluecrestult.com/customer/assets/libs/jquery/jquery.min.js
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\libs\jquery\jquery.min-1.js
+Content Type: text/javascript
+
+Uri: https://bluecrestult.com/customer/assets/libs/node-waves/waves.min.js
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\libs\node-waves\waves.min-1.js
+Content Type: text/javascript
+
+Uri: https://bluecrestult.com/customer/assets/libs/simplebar/simplebar.min.js
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\assets\libs\simplebar\simplebar.min-1.js
+Content Type: text/javascript
+
+Uri: https://bluecrestult.com/customer/login.php
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\login.php-2.html
+Content Type: text/html
+
+Uri: https://bluecrestult.com/customer/login.php?error=plslogin
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\login.php-1.html
+Content Type: text/html
+
+Uri: https://bluecrestult.com/customer/register.php
+File Name: C:\Downloaded Web Sites\bluecrestult.com\customer\register.php-1.html
+Content Type: text/html
+
+Uri: https://cdn.jsdelivr.net/npm/sweetalert2@11
+File Name: C:\Downloaded Web Sites\bluecrestult.com\npm\sweetalert2@11-1
+Content Type: application/javascript
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\css\all.min-1.css
+Content Type: text/css
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-brands-400-1.ttf
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-brands-400-1.woff2
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-regular-400.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-regular-400-1.ttf
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-regular-400.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-regular-400-1.woff2
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-solid-900-1.ttf
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-solid-900-1.woff2
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-v4compatibility.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-v4compatibility-1.ttf
+Content Type: application/octet-stream
+
+Uri: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-v4compatibility.woff2
+File Name: C:\Downloaded Web Sites\bluecrestult.com\ajax\libs\font-awesome\6.4.0\webfonts\fa-v4compatibility-1.woff2
+Content Type: application/octet-stream
+
+Uri: https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Epilogue:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap
+File Name: C:\Downloaded Web Sites\bluecrestult.com\css2-4
+Content Type: text/css
+
+Uri: https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap
+File Name: C:\Downloaded Web Sites\bluecrestult.com\css2-3
+Content Type: text/css
+
+Uri: https://fonts.gstatic.com/s/dawningofanewday/v22/t5t_IQMbOp2SEwuncwLRjMfIg1yYit_nAz8b.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\dawningofanewday\v22\t5t_IQMbOp2SEwuncwLRjMfIg1yYit_nAz8b-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HA4T5_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HA4T5_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HAKT5_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HAKT5_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HAKTp_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HAKTp_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HBUT5_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HBUT5_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCjSJ_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCjSJ_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCKSJ_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCKSJ_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCKT5_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HCKT5_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HDtSJ_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HDtSJ_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HDUSJ_R.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZCFGj5hxF0EhjimlIhqAYaY7EBcUSC-HDUSJ_R-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OX1zTiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OX1zTiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OX7jTiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OX7jTiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXAjPiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXAjPiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXbjPiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXbjPiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDPiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDPiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXmTTiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXmTTiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXsDPiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXsDPiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/epilogue/v20/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXsDTiDA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\epilogue\v20\O4ZMFGj5hxF0EhjimngomvnCCtqb30OXsDTiDA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc2dphjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc2dphjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc2dthjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc2dthjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc69thjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTc69thjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcB9xhjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcB9xhjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTccNxhjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTccNxhjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTch9thjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTch9thjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcPtxhjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcPtxhjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcWdthjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcWdthjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcWdxhjQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCM3FwrK3iLTcvneQg7Ca725JhhKnNqk4j1ebLhAm8SrXTcWdxhjQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuBWYMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuBWYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyfMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyfMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyYMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuDyYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyeMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyeMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuOKfMZg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\inter\v20\UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuOKfMZg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-5flOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-5flOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-Lf1OQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-Lf1OQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-LflOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-LflOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO8LeVOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO8LeVOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO8LflOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO8LflOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO9seVOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO9seVOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO9VeVOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO9VeVOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO_VflOQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDba2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO_VflOQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8-qxjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8-qxjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8FqtjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8FqtjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8L6tjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8L6tjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8lqxjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8lqxjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKtjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKxjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8SKxjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yK1jPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yK1jPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\jetbrainsmono\v24\tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsS9-SvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsS9-SvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSd-OvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSd-OvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSG-OvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSG-OvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSgOSvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSgOSvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSKeOvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSKeOvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSqeOvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSqeOvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSqeSvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSqeSvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSzuSvHg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptwg83HX_SGhgqk2hAjQlW_mEuZ0FsSzuSvHg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexaFRwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexaFRwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexc1RwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexc1RwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexRNRwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexRNRwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexRNWwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexRNWwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexTpWwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexTpWwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexU1WwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexU1WwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexXRWwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexXRWwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/mulish/v18/1Ptyg83HX_SGhgqO0yLcmjzUAuWexZNRwaA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\mulish\v18\1Ptyg83HX_SGhgqO0yLcmjzUAuWexZNRwaA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk0ZjaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk0ZjaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk5hkaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk5hkaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkxhjaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkxhjaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk_RkaVc.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk_RkaVc-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1y4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1y4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1y4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1y4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ1y4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ1y4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjr0C4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjr0C4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4n.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\opensans\v44\memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4n-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\plusjakartasans\v12\LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_KUnNSg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\plusjakartasans\v12\LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_KUnNSg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\plusjakartasans\v12\LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\plusjakartasans\v12\LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\plusjakartasans\v12\LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiAyp8kv8JHgFVrJJLmE3tF.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiAyp8kv8JHgFVrJJLmE3tF-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLBT5V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLBT5V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLCz7V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLDD4V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDz8V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLDz8V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLEj6V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLFj_V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLFj_V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9V1s.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiByp8kv8JHgFVrLGT9V1s-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLm111lEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLm111lEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLm21llEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLm21llEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLm81xlEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLm81xlEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLmg1hlEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLmg1hlEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLmr19lEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLmr19lEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLmv1plEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLmv1plEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiDyp8kv8JHgFVrJJLmy15lEA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiDyp8kv8JHgFVrJJLmy15lEA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrFJA.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiEyp8kv8JHgFVrFJA-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiGyp8kv8JHgFVrJJLedw.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiGyp8kv8JHgFVrJJLedw-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/poppins/v24/pxiGyp8kv8JHgFVrLPTedw.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\poppins\v24\pxiGyp8kv8JHgFVrLPTedw-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpYCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpYCP-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtaooCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtaooCP.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtapYCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtapYCP-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVuEooCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVuEooCP.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvao4CP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvao4CP.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoooCP.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoooCP-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4bbLPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4bbLPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4cHLPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4cHLPrQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4ejLPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4ejLPrQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4ejMPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4ejMPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4TbMPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4TbMPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4VrMPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4VrMPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4WjMPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4WjMPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4WjNPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4WjNPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/raleway/v37/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4Y_LPrQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4Y_LPrQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML-ZwVrY.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML-ZwVrY-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML193VrY.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML193VrY-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML2Z3VrY.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML2Z3VrY-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML4pwVrY.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML4pwVrY-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML7hwVrY.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML7hwVrY-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAz4PXQdQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAz4PXQdQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzjPXQdQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzjPXQdQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzvvXQdQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzvvXQdQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzWfLQdQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzWfLQdQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzYPLQdQ.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzYPLQdQ-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHQiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHQiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHXiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHXiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLl_XiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLl_XiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QiA8.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QiA8-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabWmT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabWmT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bWmT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bWmT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbGmT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbGmT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbWmT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbWmT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYaammT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYaammT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjammT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjammT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEammT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEammT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEbWmT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEbWmT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtammT.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtammT-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3moJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3moJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3msJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3msJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU7GsJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU7GsJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUAGwJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUAGwJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUd2wJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUd2wJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUgGsJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUgGsJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUOWwJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUOWwJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmsJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmsJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmwJow.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmwJow-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K-DQNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K-DQNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nWNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nWNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K3vXNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K3vXNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K5fQNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K5fQNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K67QNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K67QNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nQNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nQNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nXNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nXNig-1.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32KxfXNig.ttf
+File Name: C:\Downloaded Web Sites\bluecrestult.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32KxfXNig-1.ttf
+Content Type: font/ttf
+
+: C:\Downloaded Web Sites\vanguardtrust.com\s\raleway\v37\1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4Y_LPrQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML-ZwVrY.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML-ZwVrY.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML193VrY.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML193VrY.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML2Z3VrY.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML2Z3VrY.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML4pwVrY.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML4pwVrY.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML7hwVrY.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQCbohi_ic6B3yVSzGBrMx6ZI_cy1A6Ok2ML7hwVrY.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAz4PXQdQ.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAz4PXQdQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzjPXQdQ.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzjPXQdQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzvvXQdQ.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzvvXQdQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzWfLQdQ.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzWfLQdQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/redhattext/v19/RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzYPLQdQ.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\redhattext\v19\RrQEbohi_ic6B3yVSzGBrMxQbb0jEzlRoOOLOnAzYPLQdQ.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHQiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHQiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHXiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLgHXiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLl_XiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLl_XiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QiA8.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QiA8.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabWmT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabWmT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bWmT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bWmT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbGmT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbGmT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbWmT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbWmT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYaammT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYaammT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjammT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjammT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEammT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEammT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEbWmT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZEbWmT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtammT.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\roboto\v51\KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtammT.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3moJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3moJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3msJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU3msJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU7GsJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGU7GsJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUAGwJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUAGwJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUd2wJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUd2wJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUgGsJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUgGsJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUOWwJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUOWwJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmsJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmsJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmwJow.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY9z_wNahGAdqQ43Rh_ebrnlwyYfEPxPoGUXmwJow.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K-DQNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K-DQNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nWNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nWNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K3vXNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K3vXNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K5fQNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K5fQNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K67QNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K67QNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nQNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nQNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nXNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K8nXNig.ttf
+Content Type: font/ttf
+
+Uri: https://fonts.gstatic.com/s/worksans/v24/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32KxfXNig.ttf
+File Name: C:\Downloaded Web Sites\vanguardtrust.com\s\worksans\v24\QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32KxfXNig.ttf
+Content Type: font/ttf
+

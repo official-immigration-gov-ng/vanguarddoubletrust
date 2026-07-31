@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/scrollCue.css">
+    <link rel="stylesheet" href="assets/css/tabler-icons.min.css">
+    <link rel="stylesheet" href="assets/css/britti-sans-trial.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+           <link rel="icon" href="assets/images/brand/favicon_vanguardtrust.svg" type="image/svg+xml">
+        <title>VanguardTrust - Mortgages, Bank Accounts, Savings, Loans & Investments</title>
+
+    <style>
+        :root {
+            --primary-color: #004d9b !important;
+            --secondary-color: #0d3990 !important;
+            --dark-bg-color: #001a3a !important;
+            --accent-color: #ffffff !important;
+            --form-bg-color: #002f6c !important;
+            --light-bg: #f5f7fa !important;
+        }
+
+        /* ===== GLOBAL OVERRIDES WITH !important ===== */
+
+        /* Dark Backgrounds */
+        .bg-dark-div, .navbar, .footer-area, .pay-support-area, .countries-area {
+            background-color: var(--dark-bg-color) !important;
+        }
+
+        /* Primary Buttons */
+        .default-btn {
+            background-color: #004d9b !important;
+            border-color: #004d9b !important;
+            color: #ffffff !important;
+            border-radius: 50px !important;
+            padding: 14px 32px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .default-btn:hover {
+            background-color: #0d3990 !important;
+            border-color: #0d3990 !important;
+            color: #ffffff !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(0, 77, 155, 0.4) !important;
+        }
+
+        .default-btn.active {
+            background-color: #ffffff !important;
+            border-color: #ffffff !important;
+            color: #004d9b !important;
+            font-weight: 700 !important;
+        }
+
+        .default-btn.active:hover {
+            background-color: #e8f0fe !important;
+            border-color: #e8f0fe !important;
+            color: #0d3990 !important;
+        }
+
+        .default-btn.border-btn {
+            background-color: transparent !important;
+            border: 2px solid #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        .default-btn.border-btn:hover {
+            background-color: #ffffff !important;
+            color: #004d9b !important;
+        }
+
+        /* Form Backgrounds */
+        .transfer-money-form.bg-dark-div2 {
+            background-color: #ffffff !important;
+            border: none !important;
+            border-radius: 16px !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .transfer-money-form .form-control {
+            background-color: #f0f4f8 !important;
+            border: 1px solid #d0dbe8 !important;
+            color: #1a1a2e !important;
+            border-radius: 10px !important;
+        }
+
+        .transfer-money-form .form-control::placeholder {
+            color: #6b7c93 !important;
+        }
+
+        .transfer-money-form .title,
+        .transfer-money-form span.title {
+            color: #1a1a2e !important;
+            font-weight: 600 !important;
+        }
+
+        .transfer-money-form .info-list li span,
+        .transfer-money-form .info-list li .text-white {
+            color: #333333 !important;
+        }
+
+        .transfer-money-form .notification {
+            color: #004d9b !important;
+        }
+
+        .transfer-money-form .info-list li i {
+            color: #004d9b !important;
+        }
+
+        /* Accents & Icons */
+        .text-warning2, .ti-star-filled {
+            color: #ffc107 !important;
+        }
+
+        .icon {
+            background-color: rgba(0, 77, 155, 0.08) !important;
+        }
+
+        .features-single-item2 .icon span {
+            color: #004d9b !important;
+        }
+
+        /* Links */
+        .nav-link.active, .nav-link:hover {
+            color: #ffffff !important;
+        }
+
+        /* Mobile Menu */
+        .mobile-navbar .offcanvas-body {
+            background-color: #ffffff !important;
+        }
+        .mobile-menu-list.active a {
+            color: #004d9b !important;
+        }
+
+        /* Dropdowns */
+        .dropdown-menu {
+            background-color: #ffffff !important;
+            border: 1px solid #d0dbe8 !important;
+            border-radius: 10px !important;
+        }
+        .dropdown-item:hover {
+            background-color: #e8f0fe !important;
+        }
+        .dropdown-item span {
+            color: #1a1a2e !important;
+        }
+
+        /* Titles Underlines */
+        .main-title .under-line {
+            background-image: linear-gradient(to top, #004d9b 25%, rgba(255, 255, 255, 0) 40%) !important;
+        }
+
+        /* Top titles */
+        .top-title {
+            color: #004d9b !important;
+        }
+
+        /* Fun fact numbers */
+        .fun-fact-single-item h2 {
+            color: #004d9b !important;
+        }
+
+        /* Why choose us checks */
+        .why-choose-us-item-two .flex-shrink-0 i {
+            background-color: #004d9b !important;
+        }
+
+        /* Back to top */
+        #backtotop {
+            background-color: #004d9b !important;
+        }
+
+        /* ===== HERO SECTION - HALIFAX STYLE ===== */
+        .hero-banking {
+            position: relative !important;
+            min-height: 600px !important;
+            overflow: hidden !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .hero-banking .hero-bg-image {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center right !important;
+            z-index: 1 !important;
+        }
+
+        .hero-banking .hero-overlay {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(to right, rgba(0, 26, 58, 0.92) 0%, rgba(0, 26, 58, 0.85) 35%, rgba(0, 26, 58, 0.5) 60%, rgba(0, 26, 58, 0.1) 80%, transparent 100%) !important;
+            z-index: 2 !important;
+        }
+
+        .hero-banking .hero-content-wrapper {
+            position: relative !important;
+            z-index: 3 !important;
+            width: 100% !important;
+            padding: 80px 0 !important;
+        }
+
+        .hero-banking .hero-text {
+            max-width: 600px !important;
+        }
+
+        .hero-banking .hero-text h1 {
+            font-size: 3.2rem !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            line-height: 1.15 !important;
+            margin-bottom: 20px !important;
+        }
+
+        .hero-banking .hero-text p {
+            font-size: 1.15rem !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            line-height: 1.7 !important;
+            margin-bottom: 30px !important;
+            max-width: 500px !important;
+        }
+
+        .hero-banking .hero-cta-btn {
+            display: inline-block !important;
+            background-color: #ffffff !important;
+            color: #004d9b !important;
+            padding: 16px 36px !important;
+            border-radius: 50px !important;
+            font-size: 1.05rem !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .hero-banking .hero-cta-btn:hover {
+            background-color: #e8f0fe !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .hero-banking .hero-disclaimer {
+            margin-top: 24px !important;
+            font-size: 0.85rem !important;
+            color: rgba(255, 255, 255, 0.7) !important;
+            max-width: 500px !important;
+        }
+
+        /* ===== SERVICES CARDS ===== */
+        .banking-services-area {
+            background-color: #f5f7fa !important;
+            padding: 100px 0 !important;
+        }
+
+        .service-card {
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            padding: 35px 30px !important;
+            height: 100% !important;
+            transition: all 0.3s ease !important;
+            border: 1px solid #e8edf3 !important;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 15px 40px rgba(0, 77, 155, 0.12) !important;
+            border-color: #004d9b !important;
+        }
+
+        .service-card .service-icon {
+            width: 64px !important;
+            height: 64px !important;
+            border-radius: 14px !important;
+            background: linear-gradient(135deg, #004d9b, #0d3990) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-bottom: 20px !important;
+        }
+
+        .service-card .service-icon i {
+            font-size: 28px !important;
+            color: #ffffff !important;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            color: #1a1a2e !important;
+            margin-bottom: 12px !important;
+        }
+
+        .service-card p {
+            color: #5a6a7e !important;
+            font-size: 0.95rem !important;
+            line-height: 1.65 !important;
+        }
+
+        /* ===== QUICK ACCESS BANKING BAR ===== */
+        .quick-banking-bar {
+            background: linear-gradient(135deg, #004d9b, #0d3990) !important;
+            padding: 0 !important;
+            margin-top: -1px !important;
+        }
+
+        .quick-banking-item {
+            padding: 28px 20px !important;
+            text-align: center !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+            transition: background 0.3s ease !important;
+        }
+
+        .quick-banking-item:last-child {
+            border-right: none !important;
+        }
+
+        .quick-banking-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .quick-banking-item i {
+            font-size: 28px !important;
+            color: #ffffff !important;
+            margin-bottom: 8px !important;
+            display: block !important;
+        }
+
+        .quick-banking-item span {
+            color: #ffffff !important;
+            font-size: 0.9rem !important;
+            font-weight: 600 !important;
+        }
+
+        .quick-banking-item a {
+            text-decoration: none !important;
+            color: #ffffff !important;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-area .about-content2 .about-single-info .icon {
+            background-color: rgba(0, 77, 155, 0.08) !important;
+        }
+
+        /* ===== CALCULATOR SECTION ===== */
+        .calculator-section {
+            background-color: #ffffff !important;
+            padding: 100px 0 !important;
+        }
+
+        .calc-card {
+            background: linear-gradient(135deg, #004d9b, #0d3990) !important;
+            border-radius: 16px !important;
+            padding: 40px !important;
+            color: #ffffff !important;
+        }
+
+        .calc-card h3 {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            margin-bottom: 8px !important;
+        }
+
+        .calc-card p {
+            color: rgba(255, 255, 255, 0.8) !important;
+            margin-bottom: 24px !important;
+        }
+
+        .calc-card .calc-btn {
+            display: inline-block !important;
+            background: #ffffff !important;
+            color: #004d9b !important;
+            padding: 12px 28px !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .calc-card .calc-btn:hover {
+            background: #e8f0fe !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background-color: #001a3a !important;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #ffffff !important;
+        }
+
+        /* ===== FEATURES AREA ===== */
+        .features-area-two {
+            background-color: #f5f7fa !important;
+            background-image: none !important;
+        }
+
+        .features-single-item2 {
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            border: 1px solid #e8edf3 !important;
+        }
+
+        .features-single-item2:hover {
+            box-shadow: 0 10px 30px rgba(0, 77, 155, 0.1) !important;
+        }
+
+        .features-single-item2 .step {
+            color: #004d9b !important;
+            font-weight: 700 !important;
+        }
+
+        /* ===== WHY CHOOSE US ===== */
+        .why-choose-us-area {
+            background-image: none !important;
+            background-color: #ffffff !important;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials-area-two {
+            background-image: none !important;
+            background-color: #f5f7fa !important;
+        }
+
+        .testimonials-single-item-two .ti-star-filled {
+            color: #ffc107 !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-area {
+            background-color: #001a3a !important;
+        }
+
+        .footer-single-widget h3 {
+            color: #ffffff !important;
+        }
+
+        .footer-single-widget p,
+        .footer-single-widget a {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .footer-single-widget a:hover {
+            color: #ffffff !important;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .contact-us-area .bg-img {
+            background-image: none !important;
+            background: linear-gradient(135deg, #004d9b, #0d3990) !important;
+        }
+
+        .contact-us-area .top-title {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .contact-us-area .main-title {
+            color: #ffffff !important;
+        }
+
+        .contact-us-area .main-title .under-line {
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 0.4) 25%, rgba(255, 255, 255, 0) 40%) !important;
+        }
+
+        /* ===== PARTNER AREA ===== */
+        .partner-area {
+            background-color: #001a3a !important;
+        }
+
+        .partner-title {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        /* ===== COUNTRIES / PRODUCTS AREA ===== */
+        .countries-area {
+            background-color: #001a3a !important;
+        }
+
+        .countries-item {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* ===== PAY SUPPORT ===== */
+        .pay-support-area {
+            background-color: #001a3a !important;
+        }
+
+        .subscribe-wrap {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1199px) {
+            .hero-banking .hero-text h1 {
+                font-size: 2.6rem !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .hero-banking {
+                min-height: 500px !important;
+            }
+
+            .hero-banking .hero-text h1 {
+                font-size: 2.2rem !important;
+            }
+
+            .hero-banking .hero-text p {
+                font-size: 1rem !important;
+            }
+
+            .hero-banking .hero-overlay {
+                background: linear-gradient(to right, rgba(0, 26, 58, 0.95) 0%, rgba(0, 26, 58, 0.88) 50%, rgba(0, 26, 58, 0.6) 75%, rgba(0, 26, 58, 0.3) 100%) !important;
+            }
+
+            .quick-banking-item {
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+                padding: 20px 15px !important;
+            }
+
+            .banking-services-area {
+                padding: 70px 0 !important;
+            }
+
+            .calculator-section {
+                padding: 70px 0 !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .hero-banking {
+                min-height: 450px !important;
+            }
+
+            .hero-banking .hero-text h1 {
+                font-size: 1.85rem !important;
+            }
+
+            .hero-banking .hero-text p {
+                font-size: 0.95rem !important;
+                margin-bottom: 24px !important;
+            }
+
+            .hero-banking .hero-cta-btn {
+                padding: 14px 28px !important;
+                font-size: 0.95rem !important;
+            }
+
+            .hero-banking .hero-content-wrapper {
+                padding: 60px 0 !important;
+            }
+
+            .hero-banking .hero-overlay {
+                background: rgba(0, 26, 58, 0.82) !important;
+            }
+
+            .calc-card {
+                padding: 28px 22px !important;
+            }
+
+            .service-card {
+                padding: 28px 22px !important;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .hero-banking .hero-text h1 {
+                font-size: 1.6rem !important;
+            }
+
+            .hero-banking .hero-content-wrapper {
+                padding: 50px 0 !important;
+            }
+
+            .quick-banking-item {
+                padding: 16px 10px !important;
+            }
+
+            .quick-banking-item i {
+                font-size: 22px !important;
+            }
+
+            .quick-banking-item span {
+                font-size: 0.8rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="preloader">
+            <img src="assets/images/preloader_vanguardtrust.svg" alt="preloader">
+        </div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg bg-dark-div style-two position-sticky top-0" id="navbar">
+        <div class="container mw-1690">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand me-100" href="index.php.html">
+                    <img src="assets/images/brand/logo_vanguardtrust.svg" width="100" height="100" class="main-logo d-none" alt="logo">
+                    <img src="assets/images/brand/logo_vanguardtrust_white.svg" width="100" height="100" class="white-logo" alt="white-logo">
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-us.php.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.php.html">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact-us.php.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="others-options style-two d-flex align-items-center">
+                <div class="gap-40 d-flex">
+                    <a href="customer/login.php.html" class="text-decoration-none text-white">Login</a>
+                </div>
+                <a href="customer/register.php.html" class="default-btn active d-none d-sm-inline-block shadow-none border-0">
+                    <div class="d-flex align-items-center gap-10">Register</div>
+                </a>
+
+                <a class="navbar-toggler" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    <span class="burger-menu">
+                        <span class="top-bar"></span>
+                        <span class="middle-bar"></span>
+                        <span class="bottom-bar"></span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== MOBILE MENU ===== -->
+    <div class="mobile-navbar offcanvas offcanvas-end border-0" tabindex="-1" id="offcanvasExample">
+        <div class="offcanvas-header">
+            <div>
+                                        <a href="index.php.html" class="logo d-inline-block">
+                    <img src="assets/images/brand/logo_vanguardtrust.svg" alt="logo">
+                </a>
+                <a href="index.php.html" class="logo d-none">
+                    <img src="assets/images/brand/logo_vanguardtrust.svg" width="100" height="100" alt="logo">
+                </a>
+            </div>
+            <button type="button" class="btn-close opacity-1" data-bs-dismiss="offcanvas" aria-label="Close">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="mobile-menu">
+                <li class="mobile-menu-list active"><a href="index.php.html">Home</a></li>
+                <li class="mobile-menu-list without-icon border-bottom"><a href="about-us.php.html" class="nav-link">About Us</a></li>
+                <li class="mobile-menu-list active"><a href="services.php.html">Services</a></li>
+                <li class="mobile-menu-list without-icon border-bottom"><a href="contact-us.php.html" class="nav-link">Contact Us</a></li>
+                <li class="mobile-menu-list without-icon border-bottom"><a href="customer/login.php.html" class="nav-link">Login</a></li>
+                <li class="mobile-menu-list without-icon border-bottom"><a href="customer/register.php.html" class="nav-link">Register</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ===== HERO SECTION - HALIFAX STYLE ===== -->
+    <section class="hero-banking">
+        <img src="assets/images/hero.jpg" alt="Banking hero" class="hero-bg-image">
+        <div class="hero-overlay"></div>
+        <div class="hero-content-wrapper">
+            <div class="container mw-1690">
+                <div class="row">
+                    <div class="col-lg-7 col-xl-6">
+                        <div class="hero-text" data-cues="slideInUp" data-group="images" data-duration="900">
+                            <h1>Start your banking journey with VanguardTrust</h1>
+                            <p>Open your account online today and manage your finances from start to finish with your very own personal banking dashboard.</p>
+                            <a href="customer/register.php.html" class="hero-cta-btn">Open an account today</a>
+                            <p class="hero-disclaimer">Your funds are protected. Terms and conditions apply.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== QUICK BANKING BAR ===== -->
+    <div class="quick-banking-bar">
+        <div class="container mw-1690">
+            <div class="row g-0">
+                <div class="col-6 col-md-3">
+                    <a href="customer/login.php.html" class="text-decoration-none">
+                        <div class="quick-banking-item">
+                            <i class="ti ti-building-bank"></i>
+                            <span>Bank Accounts</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="services.php.html" class="text-decoration-none">
+                        <div class="quick-banking-item">
+                            <i class="ti ti-home-dollar"></i>
+                            <span>Mortgages</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="services.php.html" class="text-decoration-none">
+                        <div class="quick-banking-item">
+                            <i class="ti ti-piggy-bank"></i>
+                            <span>Savings</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="services.php.html" class="text-decoration-none">
+                        <div class="quick-banking-item">
+                            <i class="ti ti-credit-card"></i>
+                            <span>Loans & Credit</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BANKING SERVICES ===== -->
+    <div class="banking-services-area">
+        <div class="container mw-1690">
+            <div class="text-center mb-5" data-cues="slideInUp" data-duration="900">
+                <span class="top-title">Our Services</span>
+                <h2 class="main-title mx-auto">Everything You Need To <span class="under-line">Manage</span> Your Money</h2>
+            </div>
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ti ti-wallet"></i>
+                        </div>
+                        <h3>Current Accounts</h3>
+                        <p>Everyday banking made simple. Enjoy fee-free transactions, instant notifications, and seamless online banking access.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ti ti-piggy-bank"></i>
+                        </div>
+                        <h3>Savings Accounts</h3>
+                        <p>Grow your money with competitive interest rates. Choose from instant access, fixed-term, or regular saver accounts.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ti ti-home-dollar"></i>
+                        </div>
+                        <h3>Mortgages</h3>
+                        <p>Find the right mortgage for your dream home. Competitive rates for first-time buyers, movers, and remortgages.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ti ti-credit-card"></i>
+                        </div>
+                        <h3>Loans & Credit</h3>
+                        <p>Personal loans with transparent rates and flexible repayment terms. Borrow what you need with no hidden charges.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <div class="features-area-two ptb-120">
+        <div class="container mw-1690">
+            <div class="row g-4">
+                <div class="col-xl-4">
+                    <div class="features-content" data-cues="slideInUp" data-duration="900">
+                        <span class="top-title">Getting Started</span>
+                        <h2 class="main-title mw-100">Open Your Account And <span class="under-line">Start</span> Banking In Minutes</h2>
+                        <p>Managing your money has never been easier, faster, or more secure. Our banking service is designed around you.</p>
+                        <a href="customer/register.php.html" class="default-btn shadow-none border-0 mt-4 mt-xl-5">Get Started</a>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                        <div class="col-md-6">
+                            <div class="features-single-item2">
+                                <h3>Open Your Account</h3>
+                                <p>Getting started is quick and easy. Simply provide your basic information to open a current or savings account in just a few minutes.</p>
+                                <div class="icon">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <img src="assets/images/feature-icon4.png" alt="feature-icon">
+                                        <span class="step">STEP 01</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="features-single-item2">
+                                <h3>Verify Your Identity</h3>
+                                <p>To keep your funds safe and comply with regulations, we require a quick verification. Just upload a valid photo ID and proof of address.</p>
+                                <div class="icon">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <img src="assets/images/feature-icon5.png" alt="feature-icon">
+                                        <span class="step">STEP 02</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="features-single-item2">
+                                <h3>Fund Your Account</h3>
+                                <p>Deposit funds securely via bank transfer or debit card. Your money is available instantly in your new account.</p>
+                                <div class="icon">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <img src="assets/images/feature-icon6.png" alt="feature-icon">
+                                        <span class="step">STEP 03</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="features-single-item2">
+                                <h3>Bank With Confidence</h3>
+                                <p>Send money, pay bills, set up standing orders, and manage your finances all from your secure online dashboard.</p>
+                                <div class="icon">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <img src="assets/images/feature-icon7.png" alt="feature-icon">
+                                        <span class="step">STEP 04</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ABOUT US ===== -->
+    <div class="about-area ptb-120">
+        <div class="container mw-1690">
+            <div class="mb-50 mt-0 text-center">
+                <span class="top-title">About VanguardTrust</span>
+                <h2 class="main-title mx-auto">Trusted <span class="under-line">Banking</span> Solutions For Your Financial Future</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="about-img h-100 reveal">
+                        <img src="assets/images/about-img2.jpg" class="h-100 object-fit-cover" alt="about-img">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-content2" data-cues="slideInUp" data-duration="900">
+                        <div class="d-sm-flex about-single-info gap-30">
+                            <div class="flex-shrink-0 mb-3 mb-sm-0">
+                                <div class="icon">
+                                    <img src="assets/images/about-icon1.png" alt="about-icon">
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Your Money, Protected</h3>
+                                <p>Your security is our top priority. We use advanced encryption and multi-factor authentication to safeguard every transaction you make.</p>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex about-single-info gap-30">
+                            <div class="flex-shrink-0 mb-3 mb-sm-0">
+                                <div class="icon">
+                                    <img src="assets/images/about-icon2.png" alt="about-icon">
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Transparent & Fair</h3>
+                                <p>No hidden fees, no surprises. We believe in clear, upfront pricing so you always know exactly what you're paying for.</p>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex about-single-info gap-30">
+                            <div class="flex-shrink-0 mb-3 mb-sm-0">
+                                <div class="icon">
+                                    <img src="assets/images/about-icon3.png" alt="about-icon">
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Banking Without Borders</h3>
+                                <p>Send and receive money internationally with competitive exchange rates. Manage multiple currencies from one account with ease.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FUN FACTS ===== -->
+    <div class="fun-fact-area">
+        <div class="container mw-1690">
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-xl-3 col-sm-6">
+                    <div class="fun-fact-single-item d-flex align-items-center style-two gap-20">
+                        <div class="flex-shrink-0">
+                            <h2 style="color: #004d9b !important;">2<span>M+</span></h2>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-secondary">Customers Worldwide</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="fun-fact-single-item d-flex align-items-center style-two gap-20">
+                        <div class="flex-shrink-0">
+                            <h2 style="color: #004d9b !important;">50<span>+</span></h2>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-secondary">Countries Served</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="fun-fact-single-item d-flex align-items-center style-two gap-20">
+                        <div class="flex-shrink-0">
+                            <h2 style="color: #004d9b !important;">99<span>.9%</span></h2>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-secondary">System Uptime</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="fun-fact-single-item d-flex align-items-center style-two gap-20">
+                        <div class="flex-shrink-0">
+                            <h2 style="color: #004d9b !important;">24<span>/7</span></h2>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-secondary">Customer Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CALCULATOR / TOOLS SECTION ===== -->
+    <div class="calculator-section">
+        <div class="container mw-1690">
+            <div class="text-center mb-5" data-cues="slideInUp" data-duration="900">
+                <span class="top-title">Financial Tools</span>
+                <h2 class="main-title mx-auto">Plan Your <span class="under-line">Finances</span> With Our Helpful Tools</h2>
+            </div>
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-lg-4 col-md-6">
+                    <div class="calc-card">
+                        <h3>Mortgage Calculator</h3>
+                        <p>Find out how much you could borrow and estimate your monthly repayments.</p>
+                        <a href="services.php.html" class="calc-btn">Calculate Now</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="calc-card">
+                        <h3>Savings Calculator</h3>
+                        <p>See how your savings could grow over time with our competitive interest rates.</p>
+                        <a href="services.php.html" class="calc-btn">Start Saving</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="calc-card">
+                        <h3>Loan Calculator</h3>
+                        <p>Work out your monthly repayments and total cost of borrowing before you apply.</p>
+                        <a href="services.php.html" class="calc-btn">Get a Quote</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+    <div class="why-choose-us-area ptb-120">
+        <div class="container mw-1690">
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-xxl-4 col-md-6">
+                    <span class="top-title">Why Choose Us</span>
+                    <h2 class="mb-3 main-title">Managing Your <span class="under-line">Money</span> Has Never Been Simpler</h2>
+                    <p>With current accounts, savings, mortgages, and loans all in one place, manage your entire financial life seamlessly.</p>
+                    <a href="customer/register.php.html" class="default-btn shadow-none border-0 active mt-xl-5 mt-4" style="color: #ffffff !important; background-color: #004d9b !important;">Open Account</a>
+                </div>
+                <div class="col-xxl-4 col-md-6">
+                    <div class="why-choose-us-img2 text-center">
+                        <img height="100" src="assets/images/choose-us.jpg" alt="choose-us-img">
+                    </div>
+                </div>
+                <div class="col-xxl-4">
+                    <div class="why-choose-us-content ms-xxl-5">
+                        <div class="d-flex gap-30 why-choose-us-item-two">
+                            <div class="flex-shrink-0">
+                                <i class="ti ti-checks" style="background-color: #004d9b !important;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Secure Online Banking</h3>
+                                <p>Bank safely with multi-layer security, fraud monitoring, and encrypted transactions on every device.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-30 why-choose-us-item-two">
+                            <div class="flex-shrink-0">
+                                <i class="ti ti-checks" style="background-color: #004d9b !important;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Competitive Rates</h3>
+                                <p>Whether you're saving or borrowing, enjoy some of the most competitive rates on the market.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-30 why-choose-us-item-two">
+                            <div class="flex-shrink-0">
+                                <i class="ti ti-checks" style="background-color: #004d9b !important;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>24/7 Account Access</h3>
+                                <p>Access your accounts anytime, anywhere. Our mobile app and online banking are always available.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-30 why-choose-us-item-two">
+                            <div class="flex-shrink-0">
+                                <i class="ti ti-checks" style="background-color: #004d9b !important;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3>Dedicated Support</h3>
+                                <p>Our friendly team is here to help. Reach us by phone, email, or live chat whenever you need assistance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <div class="testimonials-area-two ptb-120">
+        <div class="container mw-1690">
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-xl-4">
+                    <span class="top-title">Testimonials</span>
+                    <h2 class="main-title mb-3">Real Stories <span class="under-line">From</span> Our Happy Customers</h2>
+                    <p>We adhere to strict regulatory standards and use bank-level security protocols to give you complete peace of mind.</p>
+                    <a href="testimonials.html" class="default-btn shadow-none border-0 mt-xl-5 mt-4">Browse More</a>
+                </div>
+                <div class="col-xl-8">
+                    <div class="row g-4">
+                        <div class="col-lg-4">
+                            <div class="nav testimonials-tabs flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <div class="nav-link active" id="v-pills-testimonials1-tab" data-bs-toggle="pill" data-bs-target="#v-pills-testimonials1" role="tab" aria-controls="v-pills-testimonials1" aria-selected="true">
+                                    <div class="d-flex align-items-center gap-20">
+                                        <div class="flex-shrink-0">
+                                            <img src="assets/images/user1.jpg" class="rounded-circle" alt="user">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h3>Sarah Mitchell</h3>
+                                            <span>Homeowner</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-link" id="v-pills-testimonials2-tab" data-bs-toggle="pill" data-bs-target="#v-pills-testimonials2" role="tab" aria-controls="v-pills-testimonials2" aria-selected="false">
+                                    <div class="d-flex align-items-center gap-20">
+                                        <div class="flex-shrink-0">
+                                            <img src="assets/images/user2.jpg" class="rounded-circle" alt="user">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h3>James Cooper</h3>
+                                            <span>Small Business Owner</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-link" id="v-pills-testimonials3-tab" data-bs-toggle="pill" data-bs-target="#v-pills-testimonials3" role="tab" aria-controls="v-pills-testimonials3" aria-selected="false">
+                                    <div class="d-flex align-items-center gap-20">
+                                        <div class="flex-shrink-0">
+                                            <img src="assets/images/user3.jpg" class="rounded-circle" alt="user">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h3>Emily Richards</h3>
+                                            <span>First-Time Buyer</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-testimonials1" role="tabpanel" aria-labelledby="v-pills-testimonials1-tab" tabindex="0">
+                                    <div class="testimonials-single-item-two">
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-xl-1 gap-10">
+                                            <h3 class="mb-0">"Made the mortgage process so easy."</h3>
+                                            <div class="d-flex gap-1">
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                            </div>
+                                        </div>
+                                        <p>"I was worried about getting my first mortgage, but the team made the whole process simple and stress-free. I could track everything through my dashboard and the rates were fantastic."</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-4">
+                                            <img src="assets/images/trust.png" alt="trust">
+                                            <img src="assets/images/quat.svg" alt="quat">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-testimonials2" role="tabpanel" aria-labelledby="v-pills-testimonials2-tab" tabindex="0">
+                                    <div class="testimonials-single-item-two">
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-1">
+                                            <h3 class="mb-0">"Banking made effortless."</h3>
+                                            <div class="d-flex gap-1">
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                            </div>
+                                        </div>
+                                        <p>"Managing my business finances used to be a headache. Now everything is in one place — payments, transfers, and savings. The mobile app is brilliant and customer support is always helpful."</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-4">
+                                            <img src="assets/images/trust.png" alt="trust">
+                                            <img src="assets/images/quat.svg" alt="quat">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-testimonials3" role="tabpanel" aria-labelledby="v-pills-testimonials3-tab" tabindex="0">
+                                    <div class="testimonials-single-item-two">
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-1">
+                                            <h3 class="mb-0">"Finally, a bank I can trust."</h3>
+                                            <div class="d-flex gap-1">
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                                <i class="ti ti-star-filled"></i>
+                                            </div>
+                                        </div>
+                                        <p>"As a first-time buyer, I needed a bank that would guide me through the process. The savings account helped me build my deposit and the mortgage team were incredibly supportive."</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-4">
+                                            <img src="assets/images/trust.png" alt="trust">
+                                            <img src="assets/images/quat.svg" alt="quat">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CTA SECTION ===== -->
+    <div class="contact-us-area">
+        <div class="container mw-1690">
+            <div class="bg-img ptb-120 rounded-5 position-relative z-1 px-4">
+                <div class="text-center" data-cues="slideInUp" data-duration="900">
+                    <span class="top-title">Get Started Today</span>
+                    <h2 class="main-title mw-1055 mx-auto">The Trusted Banking Platform For <span class="under-line">Everyone</span>. VanguardTrust Makes It Simple</h2>
+                    <div class="d-flex gap-30 flex-wrap justify-content-center mt-4">
+                        <a href="customer/register.php.html" class="default-btn shadow-none border-0 active" style="background-color: #ffffff !important; color: #004d9b !important;">Personal Account</a>
+                        <a href="customer/register.php.html" class="default-btn shadow-none border-0 border-btn">Business Account</a>
+                    </div>
+                </div>
+                <img src="assets/images/shape8.png" class="shape8 position-absolute top-0 start-0 p-5 d-none d-xl-inline-block" alt="shape8">
+                <img src="assets/images/shape9.png" class="shape8 position-absolute bottom-0 end-0 p-5 d-none d-xl-inline-block" alt="shape8">
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PAYMENT METHODS ===== -->
+    <div class="pay-support-area bg-dark-div ptb-120">
+        <div class="container mw-1690">
+            <div class="subscribe-wrap">
+                <div class="row g-4 align-items-center" data-cues="slideInUp" data-duration="900">
+                    <div class="col-lg-4">
+                        <span class="partner-title">DEPOSIT & WITHDRAW SECURELY WITH ALL MAJOR PAYMENT METHODS</span>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="d-flex flex-wrap gap-10 justify-content-between align-items-center">
+                            <img src="assets/images/visa.png" alt="visa">
+                            <img src="assets/images/apple-pay.png" alt="apple-pay">
+                            <img src="assets/images/paypal.png" alt="paypal">
+                            <img src="assets/images/city-max.png" alt="city-max">
+                            <img src="assets/images/discover.png" alt="discover">
+                            <img src="assets/images/master-card.png" alt="master-card">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer-area bg-dark-div pb-120">
+        <div class="container mw-1690">
+            <div class="row g-4" data-cues="slideInUp" data-duration="900">
+                <div class="col-lg-4 col-sm-6">
+                    <div class="footer-single-widget">
+                        <a href="index.php.html" class="d-inline-block mb-4">
+                            <img src="assets/images/brand/logo_vanguardtrust_white.svg" width="100" height="100" alt="white-logo">
+                        </a>
+                        <p class="text-white">Trusted banking services with transparent rates, secure accounts, and dedicated customer support — helping you manage your money with confidence.</p>
+                        <ul class="p-0 mb-0 mt-4 list-unstyled social-link d-flex gap-10 align-items-center">
+                            <li class="mb-0"><span class="text-white">Follow Us:</span></li>
+                            <li class="mb-0"><a href="https://www.facebook.com/" target="_blank"><i class="ti ti-brand-facebook"></i></a></li>
+                            <li class="mb-0"><a href="https://www.instagram.com/" target="_blank"><i class="ti ti-brand-instagram"></i></a></li>
+                            <li class="mb-0"><a href="https://www.x.com/" target="_blank"><i class="ti ti-brand-x"></i></a></li>
+                            <li class="mb-0"><a href="https://www.linkedin.com/" target="_blank"><i class="ti ti-brand-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="footer-single-widget">
+                        <h3>Quick Links</h3>
+                        <ul class="import-link p-0 m-0 list-unstyled">
+                            <li><a href="about-us.php.html">About Us</a></li>
+                            <li><a href="services.php.html">Current Accounts</a></li>
+                            <li><a href="services.php.html">Savings</a></li>
+                            <li><a href="services.php.html">Mortgages</a></li>
+                            <li><a href="services.php.html">Loans & Credit</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="footer-single-widget">
+                        <h3>Get In Touch</h3>
+                        <ul class="p-0 m-0 list-unstyled info-list">
+                            <li class="d-flex">
+                                <div class="flex-shrink-0"><i class="ti ti-map-pin-filled"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6>Location</h6>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="flex-shrink-0"><i class="ti ti-mail-filled"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6>Email</h6>
+                                    <a href="mailto:contact@vanguardtrust.com"><span>contact@vanguardtrust.com</span></a>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="flex-shrink-0"><i class="ti ti-phone-filled"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6>Phone</h6>
+                                    <a href="tel:+1 2602585993">+1 2602585993</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     <script type="text/javascript">
+    (function () {
+        var options = {
+            whatsapp: "+12268589452", // WhatsApp number
+            call_to_action: "Message us", // Call to action
+            position: "left", // Position may be 'right' or 'left'
+        };
+        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+    })();
+</script>
+    
+<!-- Smartsupp Live Chat script -->
+<script type="text/javascript">
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = 'eec3cc05e5c4107212a5e720ac930c62c73980bd';
+window.smartsupp||(function(d) {
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+  c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+})(document);
+</script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
+
+    <button type="button" id="backtotop" style="background-color: #004d9b !important;">
+        <i class="ti ti-arrow-narrow-up"></i>
+    </button>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <script src="assets/js/scrollCue.min.js"></script>
+    <script src="assets/js/fslightbox.js"></script>
+    <script src="assets/js/ukiyo.min.js"></script>
+    <script src="assets/js/lenis.js"></script>
+    <script src="assets/js/gsap.min.js"></script>
+    <script src="assets/js/ScrollTrigger.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    </body>
+
+</html>
