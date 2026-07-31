@@ -19,8 +19,8 @@
 
     <style>
       :root {
-        --vt-primary: #003399;
-        --vt-primary-2: #005d9d;
+        --vt-primary: #0B0F14;
+        --vt-primary-2: #0F172A;
         --vt-bg: #f6f8fc;
         --vt-card: #ffffff;
         --vt-text: #0f172a;
@@ -704,12 +704,12 @@
                   <svg viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Account activity chart">
                     <defs>
                       <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0" stop-color="#003399" stop-opacity="0.95" />
-                        <stop offset="1" stop-color="#005d9d" stop-opacity="0.95" />
+                        <stop offset="0" stop-color="#0B0F14" stop-opacity="0.95" />
+                        <stop offset="1" stop-color="#0F172A" stop-opacity="0.95" />
                       </linearGradient>
                       <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#003399" stop-opacity="0.18" />
-                        <stop offset="1" stop-color="#003399" stop-opacity="0.02" />
+                        <stop offset="0" stop-color="#0B0F14" stop-opacity="0.18" />
+                        <stop offset="1" stop-color="#0B0F14" stop-opacity="0.02" />
                       </linearGradient>
                     </defs>
                     <path

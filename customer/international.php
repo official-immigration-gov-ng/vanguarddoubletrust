@@ -19,8 +19,8 @@
 
     <style>
       :root {
-        --vt-primary: #003399;
-        --vt-primary-2: #005d9d;
+        --vt-primary: #0B0F14;
+        --vt-primary-2: #0F172A;
         --vt-bg: #f6f8fc;
         --vt-card: #ffffff;
         --vt-text: #0f172a;

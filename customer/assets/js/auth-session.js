@@ -537,7 +537,7 @@
         prev.href = "#";
         prev.textContent = "Previous";
         prev.style.fontWeight = "900";
-        prev.style.color = state.page > 1 ? "#003399" : "#94a3b8";
+        prev.style.color = state.page > 1 ? "#0B0F14" : "#94a3b8";
         prev.style.textDecoration = "none";
         prev.onclick = (e) => {
           e.preventDefault();
@@ -551,7 +551,7 @@
         next.href = "#";
         next.textContent = "Next";
         next.style.fontWeight = "900";
-        next.style.color = state.page < pages ? "#003399" : "#94a3b8";
+        next.style.color = state.page < pages ? "#0B0F14" : "#94a3b8";
         next.style.textDecoration = "none";
         next.onclick = (e) => {
           e.preventDefault();
@@ -889,7 +889,7 @@
         prev.href = "#";
         prev.textContent = "Previous";
         prev.style.fontWeight = "900";
-        prev.style.color = state.page > 1 ? "#003399" : "#94a3b8";
+        prev.style.color = state.page > 1 ? "#0B0F14" : "#94a3b8";
         prev.style.textDecoration = "none";
         prev.style.padding = "6px 10px";
         prev.style.border = "1px solid rgba(15,23,42,0.12)";
@@ -906,7 +906,7 @@
         next.href = "#";
         next.textContent = "Next";
         next.style.fontWeight = "900";
-        next.style.color = state.page < pages ? "#003399" : "#94a3b8";
+        next.style.color = state.page < pages ? "#0B0F14" : "#94a3b8";
         next.style.textDecoration = "none";
         next.style.padding = "6px 10px";
         next.style.border = "1px solid rgba(15,23,42,0.12)";
