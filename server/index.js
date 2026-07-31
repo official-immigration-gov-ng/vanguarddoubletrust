@@ -41,6 +41,15 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  const p = String(req.path || "");
+  if (p.startsWith("/customer/") && (p.endsWith(".php") || p.endsWith(".php.html"))) {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("Content-Disposition", "inline");
+  }
+  next();
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(siteRoot, "index.php.html"));
 });
@@ -249,59 +258,87 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
+function sendHtmlFile(res, absPath) {
+  try {
+    const html = fs.readFileSync(absPath, "utf8");
+    res.setHeader("Content-Disposition", "inline");
+    res.status(200).type("html").send(html);
+  } catch {
+    res.status(404).end();
+  }
+}
+
 app.get("/customer/account.html", requireAuth, (req, res) => {
+  res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "account.html"));
 });
 
 app.get("/customer/accountdetails.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "accountdetails.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "accountdetails.php"));
 });
 
 app.get("/customer/dashboard.php", requireAuth, (req, res) => {
+  res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
 });
 
 app.get("/customer/dashboard.php.html", requireAuth, (req, res) => {
+  res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
 });
 
 app.get("/customer/myprofile.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "myprofile.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "myprofile.php"));
 });
 
 app.get("/customer/statement.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "statement.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "statement.php"));
 });
 
 app.get("/customer/stocks.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "stocks.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "stocks.php"));
 });
 
 app.get("/customer/international.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "international.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "international.php"));
 });
 
 app.get("/customer/transferhistory.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "transferhistory.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "transferhistory.php"));
 });
 
 app.get("/customer/card.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "card.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "card.php"));
 });
 
 app.get("/customer/pin.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "pin.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "pin.php"));
 });
 
 app.get("/customer/password.php", requireAuth, (req, res) => {
-  res.sendFile(path.join(siteRoot, "customer", "password.php"));
+  sendHtmlFile(res, path.join(siteRoot, "customer", "password.php"));
+});
+
+app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => {
+  const rel = req.params?.[0];
+  if (!rel) {
+    next();
+    return;
+  }
+  sendHtmlFile(res, path.join(siteRoot, "customer", rel));
 });
 
 app.use(
   express.static(siteRoot, {
     index: false,
     dotfiles: "deny",
-    fallthrough: true
+    fallthrough: true,
+    setHeaders(res, filePath) {
+      if (String(filePath || "").toLowerCase().endsWith(".php")) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.setHeader("Content-Disposition", "inline");
+      }
+    }
   })
 );
 

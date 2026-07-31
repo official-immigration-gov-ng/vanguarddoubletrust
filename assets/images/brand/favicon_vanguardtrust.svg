@@ -1,19 +1,52 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="64" height="64">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0D2B49"/>
-      <stop offset="1" stop-color="#071A2E"/>
-    </linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#D7B275"/>
+      <stop offset="0" stop-color="#C8A063"/>
       <stop offset="1" stop-color="#9C7A46"/>
     </linearGradient>
   </defs>
-  <rect x="0" y="0" width="64" height="64" rx="12" ry="12" fill="url(#bg)"/>
-  <g transform="translate(14,12)">
-    <path d="M0,0 L36,0 L36,22 C36,34 28,40 18,44 C8,40 0,34 0,22 Z"
-          fill="none" stroke="url(#gold)" stroke-width="2.2" stroke-linejoin="round"/>
-    <path d="M7,7 L18,28 L29,7"
-          fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(72,256)">
+    <path
+      d="M0,0 L336,0 L336,224 C336,348 258,412 168,448 C78,412 0,348 0,224 Z"
+      fill="none"
+      stroke="url(#gold)"
+      stroke-width="26"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M78,72 L168,320 L258,72"
+      fill="none"
+      stroke="#0A2540"
+      stroke-width="54"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M78,72 L168,320 L258,72"
+      fill="none"
+      stroke="url(#gold)"
+      stroke-width="20"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="0.55"
+    />
+  </g>
+  <g font-family="'Playfair Display', Georgia, 'Times New Roman', serif" font-weight="700" fill="#0A2540">
+    <text x="448" y="440" font-size="118" letter-spacing="0.5">
+      Vanguard<tspan fill="#B08D57">Trust</tspan>
+    </text>
+    <line x1="448" y1="472" x2="952" y2="472" stroke="#0A2540" stroke-width="3" opacity="0.12" />
+    <text
+      x="448"
+      y="520"
+      font-family="'Inter', Arial, sans-serif"
+      font-weight="500"
+      font-size="34"
+      letter-spacing="7"
+      fill="#0A2540"
+      opacity="0.72"
+    >
+      WEALTH TRUST STEWARDSHIP
+    </text>
   </g>
 </svg>
