@@ -1,7 +1,4 @@
-const crypto = require("crypto");
-
-const Session = require("./models/Session");
-const User = require("./models/User");
+const { getAuth, getFirestore } = require("./firebase");
 
 function getCookieName() {
   return process.env.SESSION_COOKIE_NAME || "vt_session";
@@ -27,33 +24,35 @@ function getSessionExpiresInMs() {
 async function requireAuth(req, res, next) {
   try {
     const cookieName = getCookieName();
-    const token = req.cookies?.[cookieName];
-    if (!token) {
+    const sessionCookie = req.cookies?.[cookieName];
+    if (!sessionCookie) {
       res.status(401).redirect("/customer/login.php.html");
       return;
     }
 
-    const session = await Session.findOne({ token, expiresAt: { $gt: new Date() } }).lean();
-    if (!session) {
+    const auth = getAuth();
+    const decoded = await auth.verifySessionCookie(sessionCookie, true);
+    if (!decoded?.uid) {
       res.clearCookie(getCookieName(), getCookieOptions());
       res.status(401).redirect("/customer/login.php.html");
       return;
     }
 
-    const user = await User.findById(session.userId).lean();
-    if (!user) {
-      res.clearCookie(getCookieName(), getCookieOptions());
-      res.status(401).redirect("/customer/login.php.html");
-      return;
-    }
+    const uid = String(decoded.uid);
+    const email = decoded.email || null;
+    const db = getFirestore();
+    let doc = null;
+    try {
+      const snap = await db.collection("users").doc(uid).get();
+      doc = snap.exists ? snap.data() : null;
+    } catch {}
 
     req.user = {
-      uid: String(user._id),
-      email: user.email,
-      profile: user.profile || null,
-      account: user.account || null
+      uid,
+      email,
+      profile: doc?.profile || null,
+      account: doc?.account || null
     };
-    req.session = session;
     next();
   } catch (e) {
     res.clearCookie(getCookieName(), getCookieOptions());
@@ -61,23 +60,9 @@ async function requireAuth(req, res, next) {
   }
 }
 
-async function createSessionForUser(userId) {
-  const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + getSessionExpiresInMs());
-  await Session.create({ token, userId, expiresAt });
-  return { token, expiresAt };
-}
-
-async function destroySessionByToken(token) {
-  if (!token) return;
-  await Session.deleteOne({ token });
-}
-
 module.exports = {
   getCookieName,
   getCookieOptions,
   getSessionExpiresInMs,
-  requireAuth,
-  createSessionForUser,
-  destroySessionByToken
+  requireAuth
 };

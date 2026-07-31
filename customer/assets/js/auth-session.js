@@ -40,20 +40,33 @@
     window.firebase.initializeApp(getFirebaseConfig());
   }
 
-  async function sessionLogin(email, password) {
-    const res = await fetch("/api/auth/login", {
+  async function sessionLoginWithIdToken(idToken) {
+    const res = await fetch("/api/sessionLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ idToken })
     });
     if (!res.ok) {
-      throw new Error("Session login failed");
+      let msg = "Session login failed";
+      try {
+        const data = await res.json();
+        msg = String(data?.detail || data?.error || msg);
+      } catch {}
+      throw new Error(msg);
     }
   }
 
+  async function sessionLogin(email, password) {
+    initFirebaseOnce();
+    const auth = window.firebase.auth();
+    await auth.signInWithEmailAndPassword(String(email || "").trim(), String(password || ""));
+    const idToken = await auth.currentUser.getIdToken(true);
+    await sessionLoginWithIdToken(idToken);
+  }
+
   async function sessionLogout() {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    await fetch("/api/sessionLogout", { method: "POST", credentials: "include" });
   }
 
   async function upsertProfile(profile) {
@@ -196,28 +209,26 @@
       }
 
       try {
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            firstname,
-            lastname,
-            phone,
-            email,
-            country,
-            state,
-            city,
-            dob,
-            gender,
-            acctype,
-            brname,
-            password,
-            accountPin,
-            transferPin
-          })
+        initFirebaseOnce();
+        const auth = window.firebase.auth();
+        await auth.createUserWithEmailAndPassword(String(email || "").trim(), String(password || ""));
+        const idToken = await auth.currentUser.getIdToken(true);
+        await sessionLoginWithIdToken(idToken);
+        await upsertProfile({
+          firstname,
+          lastname,
+          phone,
+          email,
+          country,
+          state,
+          city,
+          dob,
+          gender,
+          acctype,
+          brname,
+          accountPin,
+          transferPin
         });
-        if (!res.ok) throw new Error("Registration failed");
         window.location.href = "/customer/dashboard.php";
       } catch (err) {
         modalError("Registration failed", err?.message || "Unable to create account");

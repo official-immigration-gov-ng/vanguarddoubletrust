@@ -1,22 +1,14 @@
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const express = require("express");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
-const bcrypt = require("bcryptjs");
 
-const { connectMongo } = require("./db");
-const User = require("./models/User");
-const {
-  getCookieName,
-  getCookieOptions,
-  getSessionExpiresInMs,
-  createSessionForUser,
-  destroySessionByToken,
-  requireAuth
-} = require("./auth");
+const { getAuth, getFirestore } = require("./firebase");
+const { getCookieName, getCookieOptions, getSessionExpiresInMs, requireAuth } = require("./auth");
 
 dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
@@ -64,7 +56,7 @@ app.get(/^\/css2(-\d+)?$/, (req, res) => {
   });
 });
 
-app.get("/firebase-config.js", (req, res) => {
+function sendFirebaseConfigJs(req, res) {
   try {
     const raw = process.env.FIREBASE_WEB_CONFIG_JSON;
     if (!raw) {
@@ -76,21 +68,62 @@ app.get("/firebase-config.js", (req, res) => {
   } catch {
     res.status(200).type("application/javascript").send("window.__FIREBASE_CONFIG__ = null;");
   }
-});
+}
+
+app.get("/firebase-config.js", sendFirebaseConfigJs);
+app.get("/customer/firebase-config.js", sendFirebaseConfigJs);
 
 app.post("/api/sessionLogin", async (req, res) => {
-  res.status(410).json({ error: "Deprecated" });
+  try {
+    const idToken = String(req.body?.idToken || "");
+    if (!idToken) {
+      res.status(400).json({ error: "Missing idToken" });
+      return;
+    }
+
+    const auth = getAuth();
+    const decoded = await auth.verifyIdToken(idToken);
+    const uid = String(decoded.uid);
+    const email = decoded.email || null;
+
+    const expiresIn = getSessionExpiresInMs();
+    const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
+    res.cookie(getCookieName(), sessionCookie, { ...getCookieOptions(), maxAge: expiresIn });
+
+    try {
+      await ensureUserDoc(uid, email);
+      await touchLastLogin(uid);
+    } catch (e) {
+      process.stderr.write(`[firebase] Firestore bootstrap failed: ${e?.message || e}\n`);
+    }
+
+    res.status(200).json({ ok: true });
+  } catch (e) {
+    process.stderr.write(`[firebase] Session login failed: ${e?.message || e}\n`);
+    res.status(401).json({
+      error: "Session login failed",
+      detail: process.env.NODE_ENV === "production" ? undefined : String(e?.message || e)
+    });
+  }
 });
 
-app.post("/api/sessionLogout", (req, res) => {
-  res.status(410).json({ error: "Deprecated" });
-});
+app.post("/api/sessionLogout", async (req, res) => {
+  const cookieName = getCookieName();
+  const sessionCookie = req.cookies?.[cookieName];
+  res.clearCookie(cookieName, getCookieOptions());
 
-function safeEmail(v) {
-  const s = String(v || "").trim().toLowerCase();
-  if (!s || !s.includes("@")) return "";
-  return s;
-}
+  try {
+    if (sessionCookie) {
+      const auth = getAuth();
+      const decoded = await auth.verifySessionCookie(sessionCookie).catch(() => null);
+      if (decoded?.sub) {
+        await auth.revokeRefreshTokens(decoded.sub).catch(() => {});
+      }
+    }
+  } catch {}
+
+  res.status(200).json({ ok: true });
+});
 
 function generateAccountNumber() {
   const n = Math.floor(1000000000 + Math.random() * 9000000000);
@@ -98,115 +131,58 @@ function generateAccountNumber() {
 }
 
 app.post("/api/auth/register", async (req, res) => {
-  try {
-    const body = req.body || {};
-    const email = safeEmail(body.email);
-    const password = String(body.password || "");
-    if (!email || password.length < 8) {
-      res.status(400).json({ error: "Invalid email or password" });
-      return;
-    }
+  res.status(410).json({ error: "Deprecated. Use Firebase client auth + /api/sessionLogin." });
+});
 
-    const existing = await User.findOne({ email }).lean();
-    if (existing) {
-      res.status(409).json({ error: "Email already registered" });
-      return;
-    }
+app.post("/api/auth/login", async (req, res) => {
+  res.status(410).json({ error: "Deprecated. Use Firebase client auth + /api/sessionLogin." });
+});
 
-    const passwordHash = await bcrypt.hash(password, 12);
-    const now = new Date();
+app.post("/api/auth/logout", async (req, res) => {
+  res.status(410).json({ error: "Deprecated. Use /api/sessionLogout." });
+});
 
-    const user = await User.create({
-      email,
-      passwordHash,
-      profile: {
-        firstname: String(body.firstname || "").trim(),
-        lastname: String(body.lastname || "").trim(),
-        phone: String(body.phone || "").trim(),
-        country: String(body.country || "").trim(),
-        state: String(body.state || "").trim(),
-        city: String(body.city || "").trim(),
-        dob: String(body.dob || "").trim(),
-        gender: String(body.gender || "").trim(),
-        acctype: String(body.acctype || "").trim(),
-        brname: String(body.brname || "").trim()
-      },
+function sha256Hex(value) {
+  return crypto.createHash("sha256").update(String(value || ""), "utf8").digest("hex");
+}
+
+function isStrongSecret(value) {
+  const s = String(value || "");
+  return s.length >= 8 && /[A-Z]/.test(s) && /\d/.test(s) && /[^A-Za-z0-9]/.test(s);
+}
+
+async function ensureUserDoc(uid, email) {
+  const db = getFirestore();
+  const ref = db.collection("users").doc(String(uid));
+  const snap = await ref.get().catch(() => null);
+  if (snap?.exists) return;
+
+  const nowIso = new Date().toISOString();
+  await ref.set(
+    {
+      email: email || null,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      profile: {},
       account: {
         accountNumber: generateAccountNumber(),
         status: "ACTIVE",
         branchCode: "RBSUS001",
-        openingDate: now,
-        lastLogin: now,
+        openingDate: nowIso,
+        lastLogin: nowIso,
         currency: "USD",
         balance: 4365423
       }
-    });
+    },
+    { merge: true }
+  );
+}
 
-    if (typeof body.accountPin === "string" && /^\d{6}$/.test(body.accountPin.trim())) {
-      user.accountPinHash = await bcrypt.hash(body.accountPin.trim(), 12);
-    }
-    if (typeof body.transferPin === "string" && /^\d{4}$/.test(body.transferPin.trim())) {
-      user.transferPinHash = await bcrypt.hash(body.transferPin.trim(), 12);
-    }
-    await user.save();
-
-    const { token, expiresAt } = await createSessionForUser(user._id);
-    res.cookie(getCookieName(), token, {
-      ...getCookieOptions(),
-      maxAge: expiresAt.getTime() - Date.now()
-    });
-
-    res.status(200).json({ ok: true });
-  } catch {
-    res.status(500).json({ error: "Registration failed" });
-  }
-});
-
-app.post("/api/auth/login", async (req, res) => {
-  try {
-    const email = safeEmail(req.body?.email);
-    const password = String(req.body?.password || "");
-    if (!email || !password) {
-      res.status(400).json({ error: "Missing email or password" });
-      return;
-    }
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      res.status(401).json({ error: "Invalid credentials" });
-      return;
-    }
-
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) {
-      res.status(401).json({ error: "Invalid credentials" });
-      return;
-    }
-
-    user.account = user.account || {};
-    user.account.lastLogin = new Date();
-    await user.save();
-
-    const { token, expiresAt } = await createSessionForUser(user._id);
-    res.cookie(getCookieName(), token, {
-      ...getCookieOptions(),
-      maxAge: expiresAt.getTime() - Date.now()
-    });
-
-    res.status(200).json({ ok: true });
-  } catch {
-    res.status(500).json({ error: "Login failed" });
-  }
-});
-
-app.post("/api/auth/logout", async (req, res) => {
-  const token = req.cookies?.[getCookieName()];
-  try {
-    await destroySessionByToken(token);
-  } catch {}
-  res.clearCookie(getCookieName(), getCookieOptions());
-  res.status(200).json({ ok: true });
-});
+async function touchLastLogin(uid) {
+  const db = getFirestore();
+  const ref = db.collection("users").doc(String(uid));
+  await ref.set({ account: { lastLogin: new Date().toISOString() }, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+}
 
 app.get("/api/me", requireAuth, async (req, res) => {
   res.json({
@@ -233,45 +209,52 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     transferPin
   } = req.body || {};
 
-  const updates = { profile: {}, account: {} };
-
-  if (typeof firstname === "string") updates.profile.firstname = firstname.trim();
-  if (typeof lastname === "string") updates.profile.lastname = lastname.trim();
-  if (typeof phone === "string") updates.profile.phone = phone.trim();
-  if (typeof country === "string") updates.profile.country = country.trim();
-  if (typeof state === "string") updates.profile.state = state.trim();
-  if (typeof city === "string") updates.profile.city = city.trim();
-  if (typeof dob === "string") updates.profile.dob = dob.trim();
-  if (typeof gender === "string") updates.profile.gender = gender.trim();
-  if (typeof acctype === "string") updates.profile.acctype = acctype.trim();
-  if (typeof brname === "string") updates.profile.brname = brname.trim();
-
-  const extra = {};
-  if (typeof accountPin === "string" && /^\d{6}$/.test(accountPin.trim())) {
-    extra.accountPinHash = await bcrypt.hash(accountPin.trim(), 12);
-  }
-  if (typeof transferPin === "string" && /^\d{4}$/.test(transferPin.trim())) {
-    extra.transferPinHash = await bcrypt.hash(transferPin.trim(), 12);
-  }
-
   const uid = req.user.uid;
-  const user = await User.findById(uid);
-  if (!user) {
-    res.status(404).json({ error: "User not found" });
-    return;
+  await ensureUserDoc(uid, req.user.email);
+
+  const updates = { updatedAt: new Date().toISOString() };
+
+  if (typeof firstname === "string") updates["profile.firstname"] = firstname.trim();
+  if (typeof lastname === "string") updates["profile.lastname"] = lastname.trim();
+  if (typeof phone === "string") updates["profile.phone"] = phone.trim();
+  if (typeof country === "string") updates["profile.country"] = country.trim();
+  if (typeof state === "string") updates["profile.state"] = state.trim();
+  if (typeof city === "string") updates["profile.city"] = city.trim();
+  if (typeof dob === "string") updates["profile.dob"] = dob.trim();
+  if (typeof gender === "string") updates["profile.gender"] = gender.trim();
+  if (typeof acctype === "string") updates["profile.acctype"] = acctype.trim();
+  if (typeof brname === "string") updates["profile.brname"] = brname.trim();
+
+  if (typeof accountPin === "string" && accountPin.trim()) {
+    const v = accountPin.trim();
+    if (!isStrongSecret(v)) {
+      res.status(400).json({ error: "accountPin must be 8+ chars with uppercase, number, and special character." });
+      return;
+    }
+    updates["security.accountPinHash"] = sha256Hex(v);
   }
 
-  user.profile = { ...(user.profile?.toObject?.() || user.profile || {}), ...updates.profile };
-  user.account = { ...(user.account?.toObject?.() || user.account || {}), ...updates.account };
-  if (extra.accountPinHash) user.accountPinHash = extra.accountPinHash;
-  if (extra.transferPinHash) user.transferPinHash = extra.transferPinHash;
-  await user.save();
+  if (typeof transferPin === "string" && transferPin.trim()) {
+    const v = transferPin.trim();
+    if (!isStrongSecret(v)) {
+      res.status(400).json({ error: "transferPin must be 8+ chars with uppercase, number, and special character." });
+      return;
+    }
+    updates["security.transferPinHash"] = sha256Hex(v);
+  }
+
+  const db = getFirestore();
+  await db.collection("users").doc(String(uid)).set(updates, { merge: true });
 
   res.json({ ok: true });
 });
 
 app.get("/customer/account.html", requireAuth, (req, res) => {
   res.sendFile(path.join(siteRoot, "customer", "account.html"));
+});
+
+app.get("/customer/accountdetails.php", requireAuth, (req, res) => {
+  res.sendFile(path.join(siteRoot, "customer", "accountdetails.php"));
 });
 
 app.get("/customer/dashboard.php", requireAuth, (req, res) => {
@@ -327,12 +310,6 @@ app.use((req, res) => {
 });
 
 const port = Number(process.env.PORT || 3000);
-(async () => {
-  await connectMongo();
-  app.listen(port, () => {
-    process.stdout.write(`Server running on http://localhost:${port}\n`);
-  });
-})().catch((e) => {
-  process.stderr.write(`${e?.message || e}\n`);
-  process.exit(1);
+app.listen(port, () => {
+  process.stdout.write(`Server running on http://localhost:${port}\n`);
 });

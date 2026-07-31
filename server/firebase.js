@@ -1,9 +1,21 @@
 const admin = require("firebase-admin");
+const fs = require("fs");
+const path = require("path");
 
 function getServiceAccount() {
+  const envPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+  const defaultPath = path.join(__dirname, "serviceAccount.json");
+  const filePath = envPath ? path.resolve(envPath) : defaultPath;
+  try {
+    if (fs.existsSync(filePath)) {
+      const rawFile = fs.readFileSync(filePath, "utf8");
+      return JSON.parse(rawFile);
+    }
+  } catch {}
+
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if (!raw) {
-    throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_JSON");
+    throw new Error("Missing Firebase service account. Set FIREBASE_SERVICE_ACCOUNT_PATH or FIREBASE_SERVICE_ACCOUNT_JSON.");
   }
   return JSON.parse(raw);
 }
@@ -33,4 +45,3 @@ module.exports = {
   getAuth,
   getFirestore
 };
-
