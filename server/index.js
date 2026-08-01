@@ -334,9 +334,14 @@ app.use(
     dotfiles: "deny",
     fallthrough: true,
     setHeaders(res, filePath) {
-      if (String(filePath || "").toLowerCase().endsWith(".php")) {
+      const lower = String(filePath || "").toLowerCase();
+      if (lower.endsWith(".php")) {
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         res.setHeader("Content-Disposition", "inline");
+        return;
+      }
+      if (lower.endsWith(".css") || lower.endsWith(".js")) {
+        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
       }
     }
   })
@@ -347,6 +352,10 @@ app.use((req, res) => {
 });
 
 const port = Number(process.env.PORT || 3000);
-app.listen(port, () => {
-  process.stdout.write(`Server running on http://localhost:${port}\n`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    process.stdout.write(`Server running on http://localhost:${port}\n`);
+  });
+}
+
+module.exports = app;
