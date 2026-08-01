@@ -6,11 +6,16 @@ function getCookieName() {
 
 function getCookieOptions() {
   const isProd = process.env.NODE_ENV === "production";
+  const crossSite =
+    String(process.env.CROSS_SITE_COOKIES || "").toLowerCase() === "true" || String(process.env.CROSS_SITE_COOKIES || "") === "1";
+  const sameSite = crossSite ? "none" : "lax";
+  const domain = process.env.COOKIE_DOMAIN ? String(process.env.COOKIE_DOMAIN) : undefined;
   return {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "lax",
-    path: "/"
+    secure: crossSite ? true : isProd,
+    sameSite,
+    path: "/",
+    ...(domain ? { domain } : {})
   };
 }
 
@@ -26,6 +31,10 @@ async function requireAuth(req, res, next) {
     const cookieName = getCookieName();
     const sessionCookie = req.cookies?.[cookieName];
     if (!sessionCookie) {
+      if (String(req.path || "").startsWith("/api/")) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
       res.status(401).redirect("/customer/login.php.html");
       return;
     }
@@ -34,6 +43,10 @@ async function requireAuth(req, res, next) {
     const decoded = await auth.verifySessionCookie(sessionCookie, true);
     if (!decoded?.uid) {
       res.clearCookie(getCookieName(), getCookieOptions());
+      if (String(req.path || "").startsWith("/api/")) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
       res.status(401).redirect("/customer/login.php.html");
       return;
     }
@@ -56,6 +69,10 @@ async function requireAuth(req, res, next) {
     next();
   } catch (e) {
     res.clearCookie(getCookieName(), getCookieOptions());
+    if (String(req.path || "").startsWith("/api/")) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     res.status(401).redirect("/customer/login.php.html");
   }
 }

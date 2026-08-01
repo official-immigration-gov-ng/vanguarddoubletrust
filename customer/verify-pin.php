@@ -166,6 +166,7 @@
     <script src="assets/libs/node-waves/waves.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="assets/js/runtime-config.js"></script>
     <script src="firebase-config.js"></script>
     <script src="assets/js/auth-session.js"></script>
   </body>

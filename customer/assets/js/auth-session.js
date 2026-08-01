@@ -1,4 +1,23 @@
 (() => {
+  function apiBase() {
+    const raw = String(window.__VT_API_BASE__ || "").trim();
+    if (raw) return raw.replace(/\/+$/, "");
+    try {
+      const saved = String(window.localStorage.getItem("vt_api_base") || "").trim();
+      if (saved) return saved.replace(/\/+$/, "");
+    } catch {}
+    return "";
+  }
+
+  function apiUrl(pathname) {
+    const p = String(pathname || "");
+    const base = apiBase();
+    if (!base) return p;
+    if (p.startsWith("http://") || p.startsWith("https://")) return p;
+    const rel = p.startsWith("/") ? p : `/${p}`;
+    return `${base}${rel}`;
+  }
+
   function hasSwal() {
     return typeof window !== "undefined" && window.Swal && typeof window.Swal.fire === "function";
   }
@@ -41,7 +60,7 @@
   }
 
   async function sessionLoginWithIdToken(idToken) {
-    const res = await fetch("/api/sessionLogin", {
+    const res = await fetch(apiUrl("/api/sessionLogin"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -66,11 +85,11 @@
   }
 
   async function sessionLogout() {
-    await fetch("/api/sessionLogout", { method: "POST", credentials: "include" });
+    await fetch(apiUrl("/api/sessionLogout"), { method: "POST", credentials: "include" });
   }
 
   async function upsertProfile(profile) {
-    const res = await fetch("/api/profile", {
+    const res = await fetch(apiUrl("/api/profile"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -82,7 +101,7 @@
   }
 
   async function getMe() {
-    const res = await fetch("/api/me", { credentials: "include" });
+    const res = await fetch(apiUrl("/api/me"), { credentials: "include" });
     if (!res.ok) return null;
     const ct = res.headers.get("content-type") || "";
     if (!ct.includes("application/json")) {
@@ -182,7 +201,7 @@
   }
 
   async function verifyAccountPin(accountPin) {
-    const res = await fetch("/api/pin/verify", {
+    const res = await fetch(apiUrl("/api/pin/verify"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

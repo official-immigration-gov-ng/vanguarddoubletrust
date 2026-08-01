@@ -20,6 +20,38 @@ const pinCookieSecret = process.env.PIN_COOKIE_SECRET || crypto.randomBytes(32).
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
+const corsOrigins = String(process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (!origin) {
+    next();
+    return;
+  }
+
+  const allowed = corsOrigins.length === 0 ? false : corsOrigins.includes(origin);
+  if (!allowed) {
+    next();
+    return;
+  }
+
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Vary", "Origin");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
+
+  next();
+});
+
 app.use(
   helmet({
     contentSecurityPolicy: false
@@ -436,7 +468,7 @@ app.use((req, res) => {
 
 const port = Number(process.env.PORT || 3000);
 if (require.main === module) {
-  app.listen(port, () => {
+  app.listen(port, "0.0.0.0", () => {
     process.stdout.write(`Server running on http://localhost:${port}\n`);
   });
 }
