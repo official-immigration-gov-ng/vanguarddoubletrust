@@ -14,6 +14,9 @@ dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 const app = express();
 
+const pinCookieName = process.env.PIN_COOKIE_NAME || "vt_pin_verified";
+const pinCookieSecret = process.env.PIN_COOKIE_SECRET || crypto.randomBytes(32).toString("hex");
+
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
@@ -98,6 +101,7 @@ app.post("/api/sessionLogin", async (req, res) => {
     const expiresIn = getSessionExpiresInMs();
     const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
     res.cookie(getCookieName(), sessionCookie, { ...getCookieOptions(), maxAge: expiresIn });
+    res.clearCookie(pinCookieName, getCookieOptions());
 
     try {
       await ensureUserDoc(uid, email);
@@ -120,6 +124,7 @@ app.post("/api/sessionLogout", async (req, res) => {
   const cookieName = getCookieName();
   const sessionCookie = req.cookies?.[cookieName];
   res.clearCookie(cookieName, getCookieOptions());
+  res.clearCookie(pinCookieName, getCookieOptions());
 
   try {
     if (sessionCookie) {
@@ -160,6 +165,51 @@ function isStrongSecret(value) {
   return s.length >= 8 && /[A-Z]/.test(s) && /\d/.test(s) && /[^A-Za-z0-9]/.test(s);
 }
 
+function isSixDigitPin(value) {
+  return /^\d{6}$/.test(String(value || "").trim());
+}
+
+function signPinCookie(uid, expMs) {
+  const payload = `${uid}.${expMs}`;
+  const sig = crypto.createHmac("sha256", pinCookieSecret).update(payload).digest("hex");
+  return `${payload}.${sig}`;
+}
+
+function verifyPinCookie(token, uid) {
+  const raw = String(token || "");
+  const parts = raw.split(".");
+  if (parts.length !== 3) return false;
+  const [tUid, tExp, tSig] = parts;
+  if (!tUid || !tExp || !tSig) return false;
+  if (String(tUid) !== String(uid)) return false;
+  const expMs = Number(tExp);
+  if (!Number.isFinite(expMs) || expMs <= Date.now()) return false;
+  const expected = crypto.createHmac("sha256", pinCookieSecret).update(`${tUid}.${tExp}`).digest("hex");
+  try {
+    const a = Buffer.from(String(tSig), "hex");
+    const b = Buffer.from(String(expected), "hex");
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
+function isPinVerified(req) {
+  const token = req.cookies?.[pinCookieName];
+  const uid = req.user?.uid;
+  if (!token || !uid) return false;
+  return verifyPinCookie(token, uid);
+}
+
+function requirePinVerified(req, res, next) {
+  if (isPinVerified(req)) {
+    next();
+    return;
+  }
+  res.redirect("/customer/verify-pin.php");
+}
+
 async function ensureUserDoc(uid, email) {
   const db = getFirestore();
   const ref = db.collection("users").doc(String(uid));
@@ -198,8 +248,37 @@ app.get("/api/me", requireAuth, async (req, res) => {
     uid: req.user.uid,
     email: req.user.email || null,
     profile: req.user.profile || null,
-    account: req.user.account || null
+    account: req.user.account || null,
+    pinVerified: isPinVerified(req)
   });
+});
+
+app.post("/api/pin/verify", requireAuth, async (req, res) => {
+  const pin = String(req.body?.accountPin || "").trim();
+  if (!isSixDigitPin(pin)) {
+    res.status(400).json({ error: "Account PIN must be exactly 6 digits." });
+    return;
+  }
+
+  const uid = req.user.uid;
+  const db = getFirestore();
+  const snap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+  const data = snap?.exists ? snap.data() : null;
+  const storedHash = data?.security?.accountPinHash || null;
+  if (!storedHash) {
+    res.status(400).json({ error: "Account PIN is not set for this account." });
+    return;
+  }
+
+  const hash = sha256Hex(pin);
+  if (String(hash) !== String(storedHash)) {
+    res.status(401).json({ error: "Invalid Account PIN." });
+    return;
+  }
+
+  const expMs = Date.now() + getSessionExpiresInMs();
+  res.cookie(pinCookieName, signPinCookie(uid, expMs), getCookieOptions());
+  res.status(200).json({ ok: true });
 });
 
 app.put("/api/profile", requireAuth, async (req, res) => {
@@ -236,8 +315,8 @@ app.put("/api/profile", requireAuth, async (req, res) => {
 
   if (typeof accountPin === "string" && accountPin.trim()) {
     const v = accountPin.trim();
-    if (!isStrongSecret(v)) {
-      res.status(400).json({ error: "accountPin must be 8+ chars with uppercase, number, and special character." });
+    if (!isSixDigitPin(v)) {
+      res.status(400).json({ error: "accountPin must be exactly 6 digits." });
       return;
     }
     updates["security.accountPinHash"] = sha256Hex(v);
@@ -268,58 +347,62 @@ function sendHtmlFile(res, absPath) {
   }
 }
 
-app.get("/customer/account.html", requireAuth, (req, res) => {
+app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
+  sendHtmlFile(res, path.join(siteRoot, "customer", "verify-pin.php"));
+});
+
+app.get("/customer/account.html", requireAuth, requirePinVerified, (req, res) => {
   res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "account.html"));
 });
 
-app.get("/customer/accountdetails.php", requireAuth, (req, res) => {
+app.get("/customer/accountdetails.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "accountdetails.php"));
 });
 
-app.get("/customer/dashboard.php", requireAuth, (req, res) => {
+app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) => {
   res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
 });
 
-app.get("/customer/dashboard.php.html", requireAuth, (req, res) => {
+app.get("/customer/dashboard.php.html", requireAuth, requirePinVerified, (req, res) => {
   res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
 });
 
-app.get("/customer/myprofile.php", requireAuth, (req, res) => {
+app.get("/customer/myprofile.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "myprofile.php"));
 });
 
-app.get("/customer/statement.php", requireAuth, (req, res) => {
+app.get("/customer/statement.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "statement.php"));
 });
 
-app.get("/customer/stocks.php", requireAuth, (req, res) => {
+app.get("/customer/stocks.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "stocks.php"));
 });
 
-app.get("/customer/international.php", requireAuth, (req, res) => {
+app.get("/customer/international.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "international.php"));
 });
 
-app.get("/customer/transferhistory.php", requireAuth, (req, res) => {
+app.get("/customer/transferhistory.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "transferhistory.php"));
 });
 
-app.get("/customer/card.php", requireAuth, (req, res) => {
+app.get("/customer/card.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "card.php"));
 });
 
-app.get("/customer/pin.php", requireAuth, (req, res) => {
+app.get("/customer/pin.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "pin.php"));
 });
 
-app.get("/customer/password.php", requireAuth, (req, res) => {
+app.get("/customer/password.php", requireAuth, requirePinVerified, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "password.php"));
 });
 
-app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => {
+app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, requirePinVerified, (req, res, next) => {
   const rel = req.params?.[0];
   if (!rel) {
     next();

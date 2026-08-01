@@ -174,11 +174,92 @@
 
       try {
         await sessionLogin(email, password);
-        window.location.href = "/customer/dashboard.php";
+        window.location.href = "/customer/verify-pin.php";
       } catch (err) {
         modalError("Login failed", err?.message || "Unable to sign in");
       }
     });
+  }
+
+  async function verifyAccountPin(accountPin) {
+    const res = await fetch("/api/pin/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ accountPin })
+    });
+    if (!res.ok) {
+      let msg = "Invalid Account PIN";
+      try {
+        const data = await res.json();
+        msg = String(data?.error || data?.detail || msg);
+      } catch {}
+      throw new Error(msg);
+    }
+  }
+
+  function wirePinVerifyPage() {
+    const root = document.getElementById("pinVerifyRoot");
+    if (!root) return;
+
+    const form = document.getElementById("pinVerifyForm");
+    const pinInput = document.getElementById("accountPin");
+    const nameEl = document.getElementById("pinVerifyName");
+    const initialsEl = document.getElementById("avatarInitials");
+    const logoutBtn = document.getElementById("pinVerifyLogout");
+
+    logoutBtn?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      try {
+        await sessionLogout();
+      } finally {
+        try {
+          if (window.firebase?.auth) {
+            initFirebaseOnce();
+            await window.firebase.auth().signOut();
+          }
+        } catch (_) {}
+        window.location.href = "/customer/login.php.html";
+      }
+    });
+
+    pinInput?.addEventListener("input", () => {
+      if (!pinInput) return;
+      pinInput.value = String(pinInput.value || "").replace(/[^\d]/g, "").slice(0, 6);
+    });
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pin = String(pinInput?.value || "").trim();
+      if (!/^\d{6}$/.test(pin)) {
+        toast("warning", "Account PIN must be exactly 6 digits");
+        return;
+      }
+      try {
+        await verifyAccountPin(pin);
+        window.location.href = "/customer/dashboard.php";
+      } catch (err) {
+        modalError("Verification failed", err?.message || "Invalid Account PIN");
+      }
+    });
+
+    (async () => {
+      const me = await getMe();
+      if (!me) {
+        window.location.href = "/customer/login.php.html";
+        return;
+      }
+      if (me?.pinVerified) {
+        window.location.href = "/customer/dashboard.php";
+        return;
+      }
+
+      const firstname = me?.profile?.firstname || "";
+      const lastname = me?.profile?.lastname || "";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      if (nameEl) nameEl.textContent = name;
+      if (initialsEl) initialsEl.textContent = initialsFromName(name);
+    })();
   }
 
   function wireRegisterForm() {
@@ -229,7 +310,7 @@
           accountPin,
           transferPin
         });
-        window.location.href = "/customer/dashboard.php";
+        window.location.href = "/customer/verify-pin.php";
       } catch (err) {
         modalError("Registration failed", err?.message || "Unable to create account");
       }
@@ -1758,6 +1839,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     wireLoginForm();
     wireRegisterForm();
+    wirePinVerifyPage();
     wireDashboardPage();
     wireProfilePage();
     wireStatementPage();
