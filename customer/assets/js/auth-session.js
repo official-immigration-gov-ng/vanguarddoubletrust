@@ -368,10 +368,15 @@
       const name = me?.profile?.firstname
         ? `${me.profile.firstname} ${me?.profile?.lastname || ""}`.trim()
         : me?.email || me?.uid || "VanguardTrust";
+      const liveBalance = balanceFromMe(me);
 
       setText("dashboardUserName", name);
       setText("dashboardUserEmail", me?.email || "");
       setText("avatarInitials", initialsFromName(name));
+      setText("balanceAmount", formatMoney(liveBalance));
+      setText("savingAccountValue", formatMoney(liveBalance));
+      setText("portfolioValue", "$0.00");
+      setText("totalAssets", formatMoney(liveBalance));
     })();
   }
 
@@ -416,12 +421,12 @@
       setText("emailAddress", me?.email || "--");
       setText("phoneNumber", me?.profile?.phone || "--");
 
-      const opening = me?.profile?.createdAt || me?.profile?.created_at || me?.profile?.created || null;
+      const opening = me?.account?.openingDate || me?.createdAt || me?.profile?.createdAt || me?.profile?.created_at || me?.profile?.created || null;
       setText("accountOpening", formatDate(opening) || formatDate(new Date()));
-      setText("lastLogin", formatDateTime(new Date()));
+      setText("lastLogin", formatDateTime(me?.account?.lastLogin || new Date()));
       setText("gender", me?.profile?.gender || "--");
 
-      const acct = me?.profile?.accountNumber || accountNumberFromUid(me?.uid);
+      const acct = accountNumberFromMe(me);
       setText("accountNumber", acct || "--");
     })();
   }
@@ -437,6 +442,15 @@
     const n = Number(amount);
     if (!Number.isFinite(n)) return "$0.00";
     return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
+  }
+
+  function accountNumberFromMe(me) {
+    return me?.account?.accountNumber || me?.profile?.accountNumber || accountNumberFromUid(me?.uid);
+  }
+
+  function balanceFromMe(me) {
+    const n = Number(me?.account?.balance);
+    return Number.isFinite(n) && n >= 0 ? n : getBalanceUSD();
   }
 
   function safeStorageKey(name) {
@@ -694,7 +708,7 @@
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
       const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
-      const acct = me?.profile?.accountNumber || accountNumberFromUid(me?.uid);
+      const acct = accountNumberFromMe(me);
 
       setText("statementUserName", name);
       setText("statementUserEmail", me?.email || "");
@@ -703,7 +717,7 @@
       setText("stAccountHolder", name);
       setText("stAccountNumber", maskAccountNumber(acct) || "--");
 
-      setText("stCurrentBalance", formatMoney(getBalanceUSD()));
+      setText("stCurrentBalance", formatMoney(balanceFromMe(me)));
 
       render();
     })();
@@ -863,9 +877,9 @@
       setText("avatarInitials", initialsFromName(name));
       setText("helloLine", `Dear ${name}`);
 
-      if (balEl) balEl.textContent = formatMoney(getBalanceUSD());
+      if (balEl) balEl.textContent = formatMoney(balanceFromMe(me));
 
-      const acct = me?.profile?.accountNumber || accountNumberFromUid(me?.uid) || "3623953156";
+      const acct = accountNumberFromMe(me) || "3623953156";
       if (debitFrom) {
         debitFrom.innerHTML = "";
         const opt = document.createElement("option");

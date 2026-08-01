@@ -14,10 +14,18 @@ dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 const app = express();
 
+function deriveFallbackSecret(purpose) {
+  const seed = process.env.FIREBASE_SERVICE_ACCOUNT_JSON ? String(process.env.FIREBASE_SERVICE_ACCOUNT_JSON) : "";
+  if (seed) {
+    return crypto.createHash("sha256").update(`${purpose}:${seed}`, "utf8").digest("hex");
+  }
+  return crypto.randomBytes(32).toString("hex");
+}
+
 const pinCookieName = process.env.PIN_COOKIE_NAME || "vt_pin_verified";
-const pinCookieSecret = process.env.PIN_COOKIE_SECRET || crypto.randomBytes(32).toString("hex");
+const pinCookieSecret = process.env.PIN_COOKIE_SECRET || deriveFallbackSecret("vt_pin_cookie_secret");
 const adminCookieName = process.env.ADMIN_COOKIE_NAME || "vt_admin_session";
-const adminCookieSecret = process.env.ADMIN_COOKIE_SECRET || crypto.randomBytes(32).toString("hex");
+const adminCookieSecret = process.env.ADMIN_COOKIE_SECRET || deriveFallbackSecret("vt_admin_cookie_secret");
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");

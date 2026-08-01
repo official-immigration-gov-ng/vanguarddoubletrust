@@ -12,11 +12,17 @@
     }
   })();
 
-  const base = normalize(rawBase || saved);
+  const host = window.location.hostname;
+  const allowSaved = host === "localhost" || host === "127.0.0.1" || window.location.protocol === "file:";
+  const base = normalize(rawBase || (allowSaved ? saved : ""));
   if (base) {
     window.__VT_API_BASE__ = base;
     try {
       window.localStorage.setItem("vt_api_base", base);
+    } catch {}
+  } else if (!allowSaved) {
+    try {
+      window.localStorage.removeItem("vt_api_base");
     } catch {}
   }
 

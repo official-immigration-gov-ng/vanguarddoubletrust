@@ -64,7 +64,9 @@ async function requireAuth(req, res, next) {
       uid,
       email,
       profile: doc?.profile || null,
-      account: doc?.account || null
+      account: doc?.account || null,
+      createdAt: doc?.createdAt || null,
+      updatedAt: doc?.updatedAt || null
     };
     next();
   } catch (e) {
