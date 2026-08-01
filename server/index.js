@@ -221,8 +221,22 @@ function signPinCookie(uid, expMs) {
   return `${payload}.${sig}`;
 }
 
+function base64UrlEncode(value) {
+  return Buffer.from(String(value || ""), "utf8")
+    .toString("base64")
+    .replace(/=/g, "")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_");
+}
+
+function base64UrlDecode(value) {
+  const raw = String(value || "").replace(/-/g, "+").replace(/_/g, "/");
+  const pad = raw.length % 4 === 0 ? "" : "=".repeat(4 - (raw.length % 4));
+  return Buffer.from(raw + pad, "base64").toString("utf8");
+}
+
 function signAdminCookie(email, expMs) {
-  const payload = `${email}.${expMs}`;
+  const payload = base64UrlEncode(JSON.stringify({ e: String(email || ""), x: Number(expMs) }));
   const sig = crypto.createHmac("sha256", adminCookieSecret).update(payload).digest("hex");
   return `${payload}.${sig}`;
 }
@@ -250,18 +264,21 @@ function verifyPinCookie(token, uid) {
 function verifyAdminCookie(token, email) {
   const raw = String(token || "");
   const parts = raw.split(".");
-  if (parts.length !== 3) return false;
-  const [tEmail, tExp, tSig] = parts;
-  if (!tEmail || !tExp || !tSig) return false;
-  if (String(tEmail) !== String(email)) return false;
-  const expMs = Number(tExp);
-  if (!Number.isFinite(expMs) || expMs <= Date.now()) return false;
-  const expected = crypto.createHmac("sha256", adminCookieSecret).update(`${tEmail}.${tExp}`).digest("hex");
+  if (parts.length !== 2) return false;
+  const [payload, tSig] = parts;
+  if (!payload || !tSig) return false;
+  const expected = crypto.createHmac("sha256", adminCookieSecret).update(payload).digest("hex");
   try {
     const a = Buffer.from(String(tSig), "hex");
     const b = Buffer.from(String(expected), "hex");
     if (a.length !== b.length) return false;
-    return crypto.timingSafeEqual(a, b);
+    if (!crypto.timingSafeEqual(a, b)) return false;
+
+    const decoded = JSON.parse(base64UrlDecode(payload));
+    const tEmail = decoded?.e;
+    const expMs = Number(decoded?.x);
+    if (!tEmail || !Number.isFinite(expMs) || expMs <= Date.now()) return false;
+    return String(tEmail) === String(email);
   } catch {
     return false;
   }
