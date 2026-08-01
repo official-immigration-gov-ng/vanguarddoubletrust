@@ -16,6 +16,8 @@ const app = express();
 
 const pinCookieName = process.env.PIN_COOKIE_NAME || "vt_pin_verified";
 const pinCookieSecret = process.env.PIN_COOKIE_SECRET || crypto.randomBytes(32).toString("hex");
+const adminCookieName = process.env.ADMIN_COOKIE_NAME || "vt_admin_session";
+const adminCookieSecret = process.env.ADMIN_COOKIE_SECRET || crypto.randomBytes(32).toString("hex");
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
@@ -117,6 +119,10 @@ function sendFirebaseConfigJs(req, res) {
 app.get("/firebase-config.js", sendFirebaseConfigJs);
 app.get("/customer/firebase-config.js", sendFirebaseConfigJs);
 
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, service: "vanguardtrust", ts: new Date().toISOString() });
+});
+
 app.post("/api/sessionLogin", async (req, res) => {
   try {
     const idToken = String(req.body?.idToken || "");
@@ -207,6 +213,12 @@ function signPinCookie(uid, expMs) {
   return `${payload}.${sig}`;
 }
 
+function signAdminCookie(email, expMs) {
+  const payload = `${email}.${expMs}`;
+  const sig = crypto.createHmac("sha256", adminCookieSecret).update(payload).digest("hex");
+  return `${payload}.${sig}`;
+}
+
 function verifyPinCookie(token, uid) {
   const raw = String(token || "");
   const parts = raw.split(".");
@@ -217,6 +229,26 @@ function verifyPinCookie(token, uid) {
   const expMs = Number(tExp);
   if (!Number.isFinite(expMs) || expMs <= Date.now()) return false;
   const expected = crypto.createHmac("sha256", pinCookieSecret).update(`${tUid}.${tExp}`).digest("hex");
+  try {
+    const a = Buffer.from(String(tSig), "hex");
+    const b = Buffer.from(String(expected), "hex");
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
+function verifyAdminCookie(token, email) {
+  const raw = String(token || "");
+  const parts = raw.split(".");
+  if (parts.length !== 3) return false;
+  const [tEmail, tExp, tSig] = parts;
+  if (!tEmail || !tExp || !tSig) return false;
+  if (String(tEmail) !== String(email)) return false;
+  const expMs = Number(tExp);
+  if (!Number.isFinite(expMs) || expMs <= Date.now()) return false;
+  const expected = crypto.createHmac("sha256", adminCookieSecret).update(`${tEmail}.${tExp}`).digest("hex");
   try {
     const a = Buffer.from(String(tSig), "hex");
     const b = Buffer.from(String(expected), "hex");
@@ -240,6 +272,43 @@ function requirePinVerified(req, res, next) {
     return;
   }
   res.redirect("/customer/verify-pin.php");
+}
+
+function adminCredentials() {
+  return {
+    email: String(process.env.ADMIN_EMAIL || "").trim().toLowerCase(),
+    password: String(process.env.ADMIN_PASSWORD || "")
+  };
+}
+
+function isAdminConfigured() {
+  const creds = adminCredentials();
+  return Boolean(creds.email && creds.password);
+}
+
+function isAdminAuthenticated(req) {
+  const creds = adminCredentials();
+  if (!creds.email) return false;
+  const token = req.cookies?.[adminCookieName];
+  if (!token) return false;
+  return verifyAdminCookie(token, creds.email);
+}
+
+function requireAdminAuth(req, res, next) {
+  if (!isAdminConfigured()) {
+    res.status(503).json({ error: "Admin credentials are not configured on the server." });
+    return;
+  }
+  if (!isAdminAuthenticated(req)) {
+    if (String(req.path || "").startsWith("/api/")) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    res.redirect("/admin/login.html");
+    return;
+  }
+  req.admin = { email: adminCredentials().email };
+  next();
 }
 
 async function ensureUserDoc(uid, email) {
@@ -281,6 +350,8 @@ app.get("/api/me", requireAuth, async (req, res) => {
     email: req.user.email || null,
     profile: req.user.profile || null,
     account: req.user.account || null,
+    createdAt: req.user.createdAt || null,
+    updatedAt: req.user.updatedAt || null,
     pinVerified: isPinVerified(req)
   });
 });
@@ -369,6 +440,119 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
+app.post("/api/admin/login", async (req, res) => {
+  if (!isAdminConfigured()) {
+    res.status(503).json({ error: "Admin credentials are not configured on the server." });
+    return;
+  }
+
+  const email = String(req.body?.email || "").trim().toLowerCase();
+  const password = String(req.body?.password || "");
+  const creds = adminCredentials();
+
+  if (email !== creds.email || password !== creds.password) {
+    res.status(401).json({ error: "Invalid admin credentials." });
+    return;
+  }
+
+  const expiresIn = getSessionExpiresInMs();
+  res.cookie(adminCookieName, signAdminCookie(creds.email, Date.now() + expiresIn), {
+    ...getCookieOptions(),
+    maxAge: expiresIn
+  });
+  res.status(200).json({ ok: true, email: creds.email });
+});
+
+app.post("/api/admin/logout", (req, res) => {
+  res.clearCookie(adminCookieName, getCookieOptions());
+  res.status(200).json({ ok: true });
+});
+
+app.get("/api/admin/session", requireAdminAuth, (req, res) => {
+  res.json({ ok: true, admin: req.admin });
+});
+
+app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
+  try {
+    const db = getFirestore();
+    const snap = await db.collection("users").get();
+    const users = snap.docs
+      .map((doc) => {
+        const data = doc.data() || {};
+        const profile = data.profile || {};
+        const account = data.account || {};
+        return {
+          uid: doc.id,
+          email: data.email || null,
+          firstname: profile.firstname || "",
+          lastname: profile.lastname || "",
+          phone: profile.phone || "",
+          accountNumber: account.accountNumber || "",
+          balance: Number(account.balance || 0),
+          status: account.status || "ACTIVE",
+          currency: account.currency || "USD",
+          updatedAt: data.updatedAt || null,
+          createdAt: data.createdAt || null
+        };
+      })
+      .sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+
+    res.json({
+      ok: true,
+      users,
+      summary: {
+        totalUsers: users.length,
+        totalBalance: users.reduce((sum, user) => sum + Number(user.balance || 0), 0)
+      }
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Unable to load users." });
+  }
+});
+
+app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
+  const uid = String(req.params?.uid || "").trim();
+  if (!uid) {
+    res.status(400).json({ error: "Missing user id." });
+    return;
+  }
+
+  const updates = { updatedAt: new Date().toISOString() };
+  const balance = req.body?.balance;
+  const status = req.body?.status;
+  const firstname = req.body?.firstname;
+  const lastname = req.body?.lastname;
+
+  if (balance != null && balance !== "") {
+    const nextBalance = Number(balance);
+    if (!Number.isFinite(nextBalance) || nextBalance < 0) {
+      res.status(400).json({ error: "Balance must be a valid non-negative number." });
+      return;
+    }
+    updates["account.balance"] = nextBalance;
+  }
+
+  if (typeof status === "string" && status.trim()) {
+    updates["account.status"] = status.trim().toUpperCase();
+  }
+
+  if (typeof firstname === "string") {
+    updates["profile.firstname"] = firstname.trim();
+  }
+
+  if (typeof lastname === "string") {
+    updates["profile.lastname"] = lastname.trim();
+  }
+
+  try {
+    const db = getFirestore();
+    await db.collection("users").doc(uid).set(updates, { merge: true });
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "Unable to update user." });
+  }
+});
+
 function sendHtmlFile(res, absPath) {
   try {
     const html = fs.readFileSync(absPath, "utf8");
@@ -378,6 +562,18 @@ function sendHtmlFile(res, absPath) {
     res.status(404).end();
   }
 }
+
+app.get("/admin", (req, res) => {
+  res.redirect(isAdminAuthenticated(req) ? "/admin/dashboard.html" : "/admin/login.html");
+});
+
+app.get("/admin/login.html", (req, res) => {
+  sendHtmlFile(res, path.join(siteRoot, "admin", "login.html"));
+});
+
+app.get("/admin/dashboard.html", requireAdminAuth, (req, res) => {
+  sendHtmlFile(res, path.join(siteRoot, "admin", "dashboard.html"));
+});
 
 app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "customer", "verify-pin.php"));
@@ -463,6 +659,10 @@ app.use(
 );
 
 app.use((req, res) => {
+  if (String(req.path || "").startsWith("/api/")) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   res.status(404).sendFile(path.join(siteRoot, "index.php.html"));
 });
 
