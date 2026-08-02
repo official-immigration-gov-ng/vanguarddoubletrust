@@ -707,12 +707,28 @@ app.get("/admin", (req, res) => {
   res.redirect(isAdminAuthenticated(req) ? "/admin/dashboard.html" : "/admin/login.html");
 });
 
+app.get("/admin/login", (req, res) => {
+  res.redirect("/admin/login.html");
+});
+
 app.get("/admin/login.html", (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "admin", "login.html"));
 });
 
+app.get("/admin/dashboard", requireAdminAuth, (req, res) => {
+  res.redirect("/admin/dashboard.html");
+});
+
 app.get("/admin/dashboard.html", requireAdminAuth, (req, res) => {
   sendHtmlFile(res, path.join(siteRoot, "admin", "dashboard.html"));
+});
+
+app.get("/customer/login", (req, res) => {
+  res.redirect("/customer/login.php.html");
+});
+
+app.get("/customer/verify-pin", requireAuth, (req, res) => {
+  res.redirect("/customer/verify-pin.php");
 });
 
 app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
@@ -736,6 +752,10 @@ app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) =
 app.get("/customer/dashboard.php.html", requireAuth, requirePinVerified, (req, res) => {
   res.type("html");
   res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
+});
+
+app.get("/customer/dashboard", requireAuth, requirePinVerified, (req, res) => {
+  res.redirect("/customer/dashboard.php.html");
 });
 
 app.get("/customer/myprofile.php", requireAuth, requirePinVerified, (req, res) => {
