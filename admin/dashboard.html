@@ -201,7 +201,10 @@
             <h3 style="margin-bottom:6px">Customer Accounts</h3>
             <div class="muted">Update names, account status, and balance. Changes appear on the customer dashboard after refresh.</div>
           </div>
-          <input id="adminUserSearch" type="search" placeholder="Search by name, email, account number, or status" />
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
+            <button class="btn" id="adminCreateUserBtn" type="button">Create Customer</button>
+            <input id="adminUserSearch" type="search" placeholder="Search by name, email, account number, or status" />
+          </div>
         </div>
 
         <table>
@@ -221,6 +224,58 @@
         </table>
         <div class="flash" id="adminFlash"></div>
       </section>
+
+      <div id="adminCreateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); padding:18px; z-index:50">
+        <div class="card" style="max-width:760px; margin:0 auto; padding:22px">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px">
+            <div>
+              <h3 style="margin:0 0 6px">Create Customer Account</h3>
+              <div class="muted">Generate login + account details and register the customer.</div>
+            </div>
+            <button class="btn-secondary" id="adminCreateCloseBtn" type="button">Close</button>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; margin-bottom:14px">
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Customer First Name</label>
+              <input id="createFirstname" type="text" placeholder="Frank" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Customer Last Name</label>
+              <input id="createLastname" type="text" placeholder="James" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Login Email</label>
+              <input id="createEmail" type="email" placeholder="customer@email.com" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Login Password</label>
+              <input id="createPassword" type="text" placeholder="Generated password" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Account PIN (6 digits)</label>
+              <input id="createAccountPin" type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Transfer Code</label>
+              <input id="createTransferCode" type="text" placeholder="6 digits or strong code" />
+            </div>
+            <div>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Starting Balance</label>
+              <input id="createStartingBalance" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:flex-end; margin-bottom:12px">
+            <button class="btn-secondary" id="adminGenerateBtn" type="button">Generate</button>
+            <button class="btn" id="adminCreateSubmitBtn" type="button">Create Account</button>
+          </div>
+
+          <div class="muted" style="margin-bottom:8px">Generated Account Info (copy and send to customer)</div>
+          <textarea id="adminCreateOutput" style="width:100%; min-height:120px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#f8fafc" readonly></textarea>
+          <div class="flash" id="adminCreateFlash"></div>
+        </div>
+      </div>
     </div>
     <script src="/admin/assets/js/admin-session.js"></script>
   </body>

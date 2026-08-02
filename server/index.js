@@ -215,6 +215,12 @@ function isSixDigitPin(value) {
   return /^\d{6}$/.test(String(value || "").trim());
 }
 
+function isTransferCodeValid(value) {
+  const v = String(value || "").trim();
+  if (!v) return false;
+  return isSixDigitPin(v) || isStrongSecret(v);
+}
+
 function signPinCookie(uid, expMs) {
   const payload = `${uid}.${expMs}`;
   const sig = crypto.createHmac("sha256", pinCookieSecret).update(payload).digest("hex");
@@ -452,8 +458,8 @@ app.put("/api/profile", requireAuth, async (req, res) => {
 
   if (typeof transferPin === "string" && transferPin.trim()) {
     const v = transferPin.trim();
-    if (!isStrongSecret(v)) {
-      res.status(400).json({ error: "transferPin must be 8+ chars with uppercase, number, and special character." });
+    if (!isTransferCodeValid(v)) {
+      res.status(400).json({ error: "transferPin must be 6 digits or 8+ chars with uppercase, number, and special character." });
       return;
     }
     updates["security.transferPinHash"] = sha256Hex(v);
@@ -532,6 +538,115 @@ app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
     });
   } catch (e) {
     res.status(500).json({ error: "Unable to load users." });
+  }
+});
+
+app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
+  try {
+    const firstname = String(req.body?.firstname || "").trim();
+    const lastname = String(req.body?.lastname || "").trim();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const password = String(req.body?.password || "");
+    const accountPin = String(req.body?.accountPin || "").trim();
+    const transferCode = String(req.body?.transferCode || req.body?.transferPin || "").trim();
+    const startingBalanceRaw = req.body?.startingBalance;
+    const startingBalance =
+      startingBalanceRaw == null || startingBalanceRaw === "" ? 0 : Number(startingBalanceRaw);
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      res.status(400).json({ error: "Login email is required and must be valid." });
+      return;
+    }
+    if (!password || String(password).length < 6) {
+      res.status(400).json({ error: "Login password is required (min 6 characters)." });
+      return;
+    }
+    if (!firstname && !lastname) {
+      res.status(400).json({ error: "Customer name is required." });
+      return;
+    }
+    if (!isSixDigitPin(accountPin)) {
+      res.status(400).json({ error: "Account PIN must be exactly 6 digits." });
+      return;
+    }
+    if (!isTransferCodeValid(transferCode)) {
+      res.status(400).json({ error: "Transfer code must be 6 digits or 8+ chars with uppercase, number, and special character." });
+      return;
+    }
+    if (!Number.isFinite(startingBalance) || startingBalance < 0) {
+      res.status(400).json({ error: "Starting balance must be a valid non-negative number." });
+      return;
+    }
+
+    const auth = getAuth();
+    const created = await auth.createUser({
+      email,
+      password,
+      displayName: `${firstname} ${lastname}`.trim()
+    });
+
+    const uid = String(created.uid);
+    const nowIso = new Date().toISOString();
+    const accountNumber = generateAccountNumber();
+
+    const db = getFirestore();
+    await db
+      .collection("users")
+      .doc(uid)
+      .set(
+        {
+          email,
+          createdAt: nowIso,
+          updatedAt: nowIso,
+          profile: {
+            firstname,
+            lastname
+          },
+          security: {
+            accountPinHash: sha256Hex(accountPin),
+            transferPinHash: sha256Hex(transferCode)
+          },
+          account: {
+            accountNumber,
+            status: "ACTIVE",
+            branchCode: "RBSUS001",
+            openingDate: nowIso,
+            lastLogin: nowIso,
+            currency: "USD",
+            balance: startingBalance
+          }
+        },
+        { merge: true }
+      );
+
+    res.status(200).json({
+      ok: true,
+      user: {
+        uid,
+        email,
+        firstname,
+        lastname,
+        accountNumber
+      },
+      credentials: {
+        email,
+        password,
+        accountPin,
+        transferCode
+      },
+      account: {
+        accountNumber,
+        balance: startingBalance,
+        currency: "USD"
+      }
+    });
+  } catch (e) {
+    const code = String(e?.code || "");
+    if (code === "auth/email-already-exists") {
+      res.status(409).json({ error: "A user with this email already exists." });
+      return;
+    }
+    res.status(500).json({ error: "Unable to create user." });
   }
 });
 

@@ -5,6 +5,43 @@
     return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
   }
 
+  function randomInt(min, max) {
+    const lo = Math.ceil(min);
+    const hi = Math.floor(max);
+    return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+  }
+
+  function randomDigits(len) {
+    const n = randomInt(0, Math.pow(10, len) - 1);
+    return String(n).padStart(len, "0");
+  }
+
+  function randomPassword() {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+    const numbers = "23456789";
+    const specials = "!@#$%&*_-+";
+    const pick = (s) => s.charAt(Math.floor(Math.random() * s.length));
+    let out = "";
+    out += pick("ABCDEFGHJKLMNPQRSTUVWXYZ");
+    out += pick(numbers);
+    out += pick(specials);
+    for (let i = 0; i < 9; i++) out += pick(letters + numbers);
+    out += pick(specials);
+    return out;
+  }
+
+  function setModalOpen(open) {
+    const modal = document.getElementById("adminCreateModal");
+    if (!modal) return;
+    modal.style.display = open ? "block" : "none";
+  }
+
+  function setCreateOutput(text) {
+    const out = document.getElementById("adminCreateOutput");
+    if (!out) return;
+    out.value = text || "";
+  }
+
   async function api(path, options = {}) {
     const res = await fetch(path, {
       credentials: "include",
@@ -30,6 +67,13 @@
 
   function flash(message, isError) {
     const el = document.getElementById("adminFlash") || document.getElementById("adminLoginError");
+    if (!el) return;
+    el.textContent = message || "";
+    el.style.color = isError ? "#fecaca" : "#bbf7d0";
+  }
+
+  function flashCreate(message, isError) {
+    const el = document.getElementById("adminCreateFlash");
     if (!el) return;
     el.textContent = message || "";
     el.style.color = isError ? "#fecaca" : "#bbf7d0";
@@ -64,6 +108,10 @@
 
     const searchInput = document.getElementById("adminUserSearch");
     const logoutBtn = document.getElementById("adminLogoutBtn");
+    const createBtn = document.getElementById("adminCreateUserBtn");
+    const closeBtn = document.getElementById("adminCreateCloseBtn");
+    const generateBtn = document.getElementById("adminGenerateBtn");
+    const submitBtn = document.getElementById("adminCreateSubmitBtn");
     let state = { users: [] };
 
     logoutBtn?.addEventListener("click", async () => {
@@ -71,6 +119,93 @@
         await api("/api/admin/logout", { method: "POST" });
       } catch {}
       window.location.href = "/admin/login.html";
+    });
+
+    function collectCreateForm() {
+      return {
+        firstname: String(document.getElementById("createFirstname")?.value || "").trim(),
+        lastname: String(document.getElementById("createLastname")?.value || "").trim(),
+        email: String(document.getElementById("createEmail")?.value || "").trim(),
+        password: String(document.getElementById("createPassword")?.value || ""),
+        accountPin: String(document.getElementById("createAccountPin")?.value || "").trim(),
+        transferCode: String(document.getElementById("createTransferCode")?.value || "").trim(),
+        startingBalance: String(document.getElementById("createStartingBalance")?.value || "").trim()
+      };
+    }
+
+    function fillCreateForm(next) {
+      if (next.firstname != null) document.getElementById("createFirstname").value = next.firstname;
+      if (next.lastname != null) document.getElementById("createLastname").value = next.lastname;
+      if (next.email != null) document.getElementById("createEmail").value = next.email;
+      if (next.password != null) document.getElementById("createPassword").value = next.password;
+      if (next.accountPin != null) document.getElementById("createAccountPin").value = next.accountPin;
+      if (next.transferCode != null) document.getElementById("createTransferCode").value = next.transferCode;
+      if (next.startingBalance != null) document.getElementById("createStartingBalance").value = next.startingBalance;
+    }
+
+    function renderCreatedInfo(data) {
+      const user = data?.user || {};
+      const creds = data?.credentials || {};
+      const account = data?.account || {};
+      setCreateOutput(
+        [
+          `Customer Name: ${(user.firstname || "").trim()} ${(user.lastname || "").trim()}`.trim(),
+          `Account No: ${account.accountNumber || user.accountNumber || ""}`,
+          `Starting Balance: ${money(account.balance || 0)}`,
+          `Login Email: ${creds.email || user.email || ""}`,
+          `Login Password: ${creds.password || ""}`,
+          `Account PIN: ${creds.accountPin || ""}`,
+          `Transfer Code: ${creds.transferCode || ""}`,
+          ""
+        ].join("\n")
+      );
+    }
+
+    createBtn?.addEventListener("click", () => {
+      flashCreate("");
+      setCreateOutput("");
+      fillCreateForm({
+        password: randomPassword(),
+        accountPin: randomDigits(6),
+        transferCode: randomDigits(6),
+        startingBalance: "0"
+      });
+      setModalOpen(true);
+    });
+
+    closeBtn?.addEventListener("click", () => {
+      setModalOpen(false);
+    });
+
+    generateBtn?.addEventListener("click", () => {
+      flashCreate("");
+      const cur = collectCreateForm();
+      fillCreateForm({
+        password: cur.password || randomPassword(),
+        accountPin: /^\d{6}$/.test(cur.accountPin) ? cur.accountPin : randomDigits(6),
+        transferCode: cur.transferCode ? cur.transferCode : randomDigits(6)
+      });
+    });
+
+    submitBtn?.addEventListener("click", async () => {
+      flashCreate("");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating...";
+      try {
+        const payload = collectCreateForm();
+        const data = await api("/api/admin/users", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        renderCreatedInfo(data);
+        flashCreate("Customer created successfully.");
+        await loadUsers();
+      } catch (error) {
+        flashCreate(error?.message || "Unable to create customer", true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account";
+      }
     });
 
     function rowMarkup(user) {
