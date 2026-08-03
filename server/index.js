@@ -342,6 +342,30 @@ function requireAdminAuth(req, res, next) {
   next();
 }
 
+function normalizeFirebaseAdminError(error, fallbackMessage) {
+  const code = String(error?.code || "");
+  const message = String(error?.message || "");
+  const messageLower = message.toLowerCase();
+
+  if (code === "app/invalid-credential") {
+    return { status: 503, error: "Firebase credentials are invalid on the server." };
+  }
+  if (message.includes("Missing Firebase service account")) {
+    return { status: 503, error: "Firebase service account is missing on the server." };
+  }
+  if (message.includes("Invalid FIREBASE_SERVICE_ACCOUNT_JSON") || message.includes("Invalid Firebase service account JSON")) {
+    return { status: 503, error: "Firebase service account JSON is invalid on the server." };
+  }
+  if (code === "permission-denied" || messageLower.includes("permission") || messageLower.includes("insufficient permission")) {
+    return { status: 403, error: "Firebase permission denied. Check the service account roles." };
+  }
+  if (messageLower.includes("econnreset") || messageLower.includes("eai_again") || messageLower.includes("enotfound")) {
+    return { status: 503, error: "Server cannot reach Firebase services." };
+  }
+
+  return { status: 500, error: fallbackMessage || "Request failed." };
+}
+
 async function ensureUserDoc(uid, email) {
   const db = getFirestore();
   const ref = db.collection("users").doc(String(uid));
@@ -537,7 +561,8 @@ app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
       }
     });
   } catch (e) {
-    res.status(500).json({ error: "Unable to load users." });
+    const normalized = normalizeFirebaseAdminError(e, "Unable to load users.");
+    res.status(normalized.status).json({ error: normalized.error });
   }
 });
 
@@ -589,35 +614,40 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
     const nowIso = new Date().toISOString();
     const accountNumber = generateAccountNumber();
 
-    const db = getFirestore();
-    await db
-      .collection("users")
-      .doc(uid)
-      .set(
-        {
-          email,
-          createdAt: nowIso,
-          updatedAt: nowIso,
-          profile: {
-            firstname,
-            lastname
+    try {
+      const db = getFirestore();
+      await db
+        .collection("users")
+        .doc(uid)
+        .set(
+          {
+            email,
+            createdAt: nowIso,
+            updatedAt: nowIso,
+            profile: {
+              firstname,
+              lastname
+            },
+            security: {
+              accountPinHash: sha256Hex(accountPin),
+              transferPinHash: sha256Hex(transferCode)
+            },
+            account: {
+              accountNumber,
+              status: "ACTIVE",
+              branchCode: "RBSUS001",
+              openingDate: nowIso,
+              lastLogin: nowIso,
+              currency: "USD",
+              balance: startingBalance
+            }
           },
-          security: {
-            accountPinHash: sha256Hex(accountPin),
-            transferPinHash: sha256Hex(transferCode)
-          },
-          account: {
-            accountNumber,
-            status: "ACTIVE",
-            branchCode: "RBSUS001",
-            openingDate: nowIso,
-            lastLogin: nowIso,
-            currency: "USD",
-            balance: startingBalance
-          }
-        },
-        { merge: true }
-      );
+          { merge: true }
+        );
+    } catch (firestoreError) {
+      await auth.deleteUser(uid).catch(() => {});
+      throw firestoreError;
+    }
 
     res.status(200).json({
       ok: true,
@@ -646,7 +676,8 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
       res.status(409).json({ error: "A user with this email already exists." });
       return;
     }
-    res.status(500).json({ error: "Unable to create user." });
+    const normalized = normalizeFirebaseAdminError(e, "Unable to create user.");
+    res.status(normalized.status).json({ error: normalized.error });
   }
 });
 
