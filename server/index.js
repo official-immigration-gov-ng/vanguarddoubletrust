@@ -381,63 +381,12 @@ function requireAdminAuth(req, res, next) {
 }
 
 function normalizeFirebaseAdminError(error, fallbackMessage) {
-  const exposeRaw = String(process.env.EXPOSE_FIREBASE_ERRORS || process.env.DEBUG_FIREBASE_ERRORS || "");
-  const expose = exposeRaw === "1" || exposeRaw.toLowerCase() === "true";
-
-  const code = String(error?.code || "");
-  const message = String(error?.message || "");
-  const messageLower = message.toLowerCase();
-
-  const redact = (value) => {
-    const s = String(value || "");
-    return s
-      .replace(/-----BEGIN[\s\S]*?PRIVATE KEY-----[\s\S]*?-----END[\s\S]*?PRIVATE KEY-----/g, "[REDACTED_PRIVATE_KEY]")
-      .replace(/"private_key"\s*:\s*"[^"]*"/g, "\"private_key\":\"[REDACTED]\"");
+  // TEMPORARY – show real error
+  console.error("REAL FIREBASE ERROR:", error);
+  return {
+    status: 500,
+    error: String(error?.message || error || fallbackMessage || "Unknown error")
   };
-
-  const clip = (value, maxLen) => {
-    const s = String(value || "");
-    if (s.length <= maxLen) return s;
-    return `${s.slice(0, maxLen)}…`;
-  };
-
-  const safeMessage = clip(redact(message), 2000);
-
-  try {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        scope: "firebase",
-        fallbackMessage: String(fallbackMessage || ""),
-        code,
-        name: String(error?.name || ""),
-        message: safeMessage,
-        stack: clip(redact(String(error?.stack || "")), 4000)
-      })
-    );
-  } catch {
-    console.error("firebase_error", { fallbackMessage, code, message: safeMessage });
-  }
-
-  let normalized = { status: 500, error: fallbackMessage || "Request failed." };
-
-  if (code === "app/invalid-credential") {
-    normalized = { status: 503, error: "Firebase credentials are invalid on the server." };
-  } else if (message.includes("Missing Firebase service account")) {
-    normalized = { status: 503, error: "Firebase service account is missing on the server." };
-  } else if (message.includes("Invalid FIREBASE_SERVICE_ACCOUNT_JSON") || message.includes("Invalid Firebase service account JSON")) {
-    normalized = { status: 503, error: "Firebase service account JSON is invalid on the server." };
-  } else if (code === "permission-denied" || messageLower.includes("permission") || messageLower.includes("insufficient permission")) {
-    normalized = { status: 403, error: "Firebase permission denied. Check the service account roles." };
-  } else if (messageLower.includes("econnreset") || messageLower.includes("eai_again") || messageLower.includes("enotfound")) {
-    normalized = { status: 503, error: "Server cannot reach Firebase services." };
-  }
-
-  if (!expose) return normalized;
-
-  const real = safeMessage || fallbackMessage || "Request failed.";
-  const prefix = code ? `[${code}] ` : "";
-  return { status: normalized.status, error: `${prefix}${real}` };
 }
 
 async function ensureUserDoc(uid, email) {
