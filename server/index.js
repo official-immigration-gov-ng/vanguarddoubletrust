@@ -206,6 +206,44 @@ function sha256Hex(value) {
   return crypto.createHash("sha256").update(String(value || ""), "utf8").digest("hex");
 }
 
+function makeTxId() {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    return crypto.randomBytes(16).toString("hex");
+  }
+}
+
+function nowIso() {
+  return new Date().toISOString();
+}
+
+async function writeTransaction({ uid, type, amount, currency, status, note, from, to, reference, createdBy }) {
+  const txId = makeTxId();
+  const payload = {
+    uid: String(uid),
+    type: String(type || "").trim(),
+    amount: Number(amount),
+    currency: String(currency || "USD"),
+    status: String(status || "PENDING"),
+    createdAt: nowIso(),
+    ...(note != null ? { note: String(note) } : {}),
+    ...(from != null ? { from } : {}),
+    ...(to != null ? { to } : {}),
+    ...(reference != null ? { reference: String(reference) } : {}),
+    ...(createdBy != null ? { createdBy: String(createdBy) } : {})
+  };
+
+  const db = getFirestore();
+  const batch = db.batch();
+  const userTxRef = db.collection("users").doc(String(uid)).collection("transactions").doc(txId);
+  const globalRef = db.collection("transactions").doc(txId);
+  batch.set(userTxRef, payload);
+  batch.set(globalRef, payload);
+  await batch.commit();
+  return { id: txId, ...payload };
+}
+
 function isStrongSecret(value) {
   const s = String(value || "");
   return s.length >= 8 && /[A-Z]/.test(s) && /\d/.test(s) && /[^A-Za-z0-9]/.test(s);
@@ -343,27 +381,63 @@ function requireAdminAuth(req, res, next) {
 }
 
 function normalizeFirebaseAdminError(error, fallbackMessage) {
+  const exposeRaw = String(process.env.EXPOSE_FIREBASE_ERRORS || process.env.DEBUG_FIREBASE_ERRORS || "");
+  const expose = exposeRaw === "1" || exposeRaw.toLowerCase() === "true";
+
   const code = String(error?.code || "");
   const message = String(error?.message || "");
   const messageLower = message.toLowerCase();
 
-  if (code === "app/invalid-credential") {
-    return { status: 503, error: "Firebase credentials are invalid on the server." };
-  }
-  if (message.includes("Missing Firebase service account")) {
-    return { status: 503, error: "Firebase service account is missing on the server." };
-  }
-  if (message.includes("Invalid FIREBASE_SERVICE_ACCOUNT_JSON") || message.includes("Invalid Firebase service account JSON")) {
-    return { status: 503, error: "Firebase service account JSON is invalid on the server." };
-  }
-  if (code === "permission-denied" || messageLower.includes("permission") || messageLower.includes("insufficient permission")) {
-    return { status: 403, error: "Firebase permission denied. Check the service account roles." };
-  }
-  if (messageLower.includes("econnreset") || messageLower.includes("eai_again") || messageLower.includes("enotfound")) {
-    return { status: 503, error: "Server cannot reach Firebase services." };
+  const redact = (value) => {
+    const s = String(value || "");
+    return s
+      .replace(/-----BEGIN[\s\S]*?PRIVATE KEY-----[\s\S]*?-----END[\s\S]*?PRIVATE KEY-----/g, "[REDACTED_PRIVATE_KEY]")
+      .replace(/"private_key"\s*:\s*"[^"]*"/g, "\"private_key\":\"[REDACTED]\"");
+  };
+
+  const clip = (value, maxLen) => {
+    const s = String(value || "");
+    if (s.length <= maxLen) return s;
+    return `${s.slice(0, maxLen)}…`;
+  };
+
+  const safeMessage = clip(redact(message), 2000);
+
+  try {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        scope: "firebase",
+        fallbackMessage: String(fallbackMessage || ""),
+        code,
+        name: String(error?.name || ""),
+        message: safeMessage,
+        stack: clip(redact(String(error?.stack || "")), 4000)
+      })
+    );
+  } catch {
+    console.error("firebase_error", { fallbackMessage, code, message: safeMessage });
   }
 
-  return { status: 500, error: fallbackMessage || "Request failed." };
+  let normalized = { status: 500, error: fallbackMessage || "Request failed." };
+
+  if (code === "app/invalid-credential") {
+    normalized = { status: 503, error: "Firebase credentials are invalid on the server." };
+  } else if (message.includes("Missing Firebase service account")) {
+    normalized = { status: 503, error: "Firebase service account is missing on the server." };
+  } else if (message.includes("Invalid FIREBASE_SERVICE_ACCOUNT_JSON") || message.includes("Invalid Firebase service account JSON")) {
+    normalized = { status: 503, error: "Firebase service account JSON is invalid on the server." };
+  } else if (code === "permission-denied" || messageLower.includes("permission") || messageLower.includes("insufficient permission")) {
+    normalized = { status: 403, error: "Firebase permission denied. Check the service account roles." };
+  } else if (messageLower.includes("econnreset") || messageLower.includes("eai_again") || messageLower.includes("enotfound")) {
+    normalized = { status: 503, error: "Server cannot reach Firebase services." };
+  }
+
+  if (!expose) return normalized;
+
+  const real = safeMessage || fallbackMessage || "Request failed.";
+  const prefix = code ? `[${code}] ` : "";
+  return { status: normalized.status, error: `${prefix}${real}` };
 }
 
 async function ensureUserDoc(uid, email) {
@@ -566,6 +640,20 @@ app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
   }
 });
 
+app.get("/api/admin/transactions", requireAdminAuth, async (req, res) => {
+  try {
+    const rawLimit = Number(req.query?.limit || 100);
+    const limit = Number.isFinite(rawLimit) ? Math.min(500, Math.max(1, rawLimit)) : 100;
+    const db = getFirestore();
+    const snap = await db.collection("transactions").orderBy("createdAt", "desc").limit(limit).get();
+    const transactions = snap.docs.map((doc) => ({ id: doc.id, ...(doc.data() || {}) }));
+    res.json({ ok: true, transactions });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to load transactions.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
 app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
   try {
     const firstname = String(req.body?.firstname || "").trim();
@@ -644,6 +732,19 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
           },
           { merge: true }
         );
+
+      if (startingBalance > 0) {
+        await writeTransaction({
+          uid,
+          type: "OPENING_BALANCE",
+          amount: startingBalance,
+          currency: "USD",
+          status: "COMPLETED",
+          note: "Opening balance",
+          reference: `OPEN-${uid}-${Date.now()}`,
+          createdBy: req.admin?.email || null
+        }).catch(() => {});
+      }
     } catch (firestoreError) {
       await auth.deleteUser(uid).catch(() => {});
       throw firestoreError;
@@ -694,6 +795,7 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
   const firstname = req.body?.firstname;
   const lastname = req.body?.lastname;
 
+  let deltaInfo = null;
   if (balance != null && balance !== "") {
     const nextBalance = Number(balance);
     if (!Number.isFinite(nextBalance) || nextBalance < 0) {
@@ -701,6 +803,7 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
       return;
     }
     updates["account.balance"] = nextBalance;
+    deltaInfo = { nextBalance };
   }
 
   if (typeof status === "string" && status.trim()) {
@@ -717,7 +820,30 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
 
   try {
     const db = getFirestore();
+    if (deltaInfo) {
+      const snap = await db.collection("users").doc(uid).get().catch(() => null);
+      const current = Number(snap?.data()?.account?.balance || 0);
+      const currency = snap?.data()?.account?.currency || "USD";
+      deltaInfo.prevBalance = Number.isFinite(current) ? current : 0;
+      deltaInfo.currency = String(currency || "USD");
+    }
     await db.collection("users").doc(uid).set(updates, { merge: true });
+
+    if (deltaInfo && Number.isFinite(deltaInfo.prevBalance) && Number.isFinite(deltaInfo.nextBalance)) {
+      const delta = Number(deltaInfo.nextBalance) - Number(deltaInfo.prevBalance);
+      if (delta !== 0) {
+        await writeTransaction({
+          uid,
+          type: delta > 0 ? "ADMIN_CREDIT" : "ADMIN_DEBIT",
+          amount: Math.abs(delta),
+          currency: deltaInfo.currency || "USD",
+          status: "COMPLETED",
+          note: "Admin balance update",
+          reference: `ADMIN-${uid}-${Date.now()}`,
+          createdBy: req.admin?.email || null
+        }).catch(() => {});
+      }
+    }
     res.json({ ok: true });
   } catch {
     res.status(500).json({ error: "Unable to update user." });
