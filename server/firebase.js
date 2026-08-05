@@ -42,6 +42,7 @@ function getAdminApp() {
   if (admin.apps.length > 0) return admin.app();
 
   const serviceAccount = getServiceAccount();
+
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
   });
