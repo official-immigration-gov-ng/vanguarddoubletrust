@@ -140,16 +140,18 @@
           <input
             class="form-control vt-input"
             inputmode="numeric"
-            pattern="\\d*"
+            pattern="\d{6}"
             maxlength="6"
             id="accountPin"
             type="password"
             placeholder="••••••"
+            autocomplete="off"
+            spellcheck="false"
             required
           />
         </div>
 
-        <button type="submit" class="btn btn-primary vt-btn" id="verifyPinBtn">
+        <button type="submit" class="btn btn-primary vt-btn" id="verifyPinBtn" disabled>
           Verify Identity <i class="fas fa-shield-check ms-2"></i>
         </button>
       </form>

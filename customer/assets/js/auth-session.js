@@ -226,6 +226,27 @@
     const nameEl = document.getElementById("pinVerifyName");
     const initialsEl = document.getElementById("avatarInitials");
     const logoutBtn = document.getElementById("pinVerifyLogout");
+    const submitBtn = document.getElementById("verifyPinBtn");
+
+    if (form) {
+      form.noValidate = true;
+    }
+    if (pinInput) {
+      pinInput.setAttribute("novalidate", "novalidate");
+    }
+
+    function syncPinState() {
+      if (!pinInput) return;
+      const raw = String(pinInput.value || "");
+      const digits = raw.replace(/[^\d]/g, "").slice(0, 6);
+      if (raw !== digits) {
+        pinInput.value = digits;
+      }
+      if (submitBtn) submitBtn.disabled = !/^\d{6}$/.test(digits);
+      try {
+        pinInput.setCustomValidity("");
+      } catch {}
+    }
 
     logoutBtn?.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -242,22 +263,67 @@
       }
     });
 
-    pinInput?.addEventListener("input", () => {
-      if (!pinInput) return;
-      pinInput.value = String(pinInput.value || "").replace(/[^\d]/g, "").slice(0, 6);
+    pinInput?.addEventListener("input", syncPinState);
+    pinInput?.addEventListener("change", syncPinState);
+    pinInput?.addEventListener("paste", syncPinState);
+    pinInput?.addEventListener("invalid", (e) => {
+      e.preventDefault();
+      try {
+        pinInput?.setCustomValidity("");
+      } catch {}
+    });
+    pinInput?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        try {
+          pinInput?.setCustomValidity("");
+        } catch {}
+        form?.requestSubmit();
+      }
+    });
+    syncPinState();
+
+    submitBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      try {
+        pinInput?.setCustomValidity("");
+      } catch {}
+      form?.requestSubmit();
     });
 
     form?.addEventListener("submit", async (e) => {
       e.preventDefault();
+      try {
+        pinInput?.setCustomValidity("");
+      } catch {}
       const pin = String(pinInput?.value || "").trim();
       if (!/^\d{6}$/.test(pin)) {
         toast("warning", "Account PIN must be exactly 6 digits");
+        syncPinState();
         return;
       }
       try {
-        await verifyAccountPin(pin);
-        window.location.href = "/customer/dashboard.php";
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          const originalLabel = submitBtn.innerHTML;
+          submitBtn.innerHTML = 'Verifying <i class="fas fa-circle-notch fa-spin ms-2"></i>';
+          try {
+            await verifyAccountPin(pin);
+          } finally {
+            submitBtn.innerHTML = originalLabel;
+          }
+        } else {
+          await verifyAccountPin(pin);
+        }
+        const url = new URL(window.location.href);
+        const next = String(url.searchParams.get("next") || "").trim();
+        if (next && /^\/[^/].*/.test(next)) {
+          window.location.href = next;
+        } else {
+          window.location.href = "/customer/dashboard.php";
+        }
       } catch (err) {
+        syncPinState();
         modalError("Verification failed", err?.message || "Invalid Account PIN");
       }
     });
@@ -278,6 +344,7 @@
       const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
       if (nameEl) nameEl.textContent = name;
       if (initialsEl) initialsEl.textContent = initialsFromName(name);
+      syncPinState();
     })();
   }
 
