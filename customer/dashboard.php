@@ -695,19 +695,19 @@
         <nav class="vt-nav">
           <a class="active" href="/customer/dashboard.php">
             <span class="ico"><i class="fas fa-grid-2"></i></span>
-            Dashboard
+            <span data-i18n="nav_dashboard">Dashboard</span>
           </a>
           <a href="/customer/myprofile.php">
             <span class="ico"><i class="fas fa-user"></i></span>
-            Account Details
+            <span data-i18n="nav_profile">Account Details</span>
           </a>
           <a href="/customer/statement.php">
             <span class="ico"><i class="fas fa-file-invoice"></i></span>
-            Account Summary
+            <span data-i18n="nav_statement">Account Summary</span>
           </a>
           <a href="/customer/stocks.php">
             <span class="ico"><i class="fas fa-chart-line"></i></span>
-            Stocks &amp; Trading
+            <span data-i18n="nav_stocks">Stocks &amp; Trading</span>
           </a>
         </nav>
 
@@ -715,15 +715,15 @@
         <nav class="vt-nav">
           <a href="#" onclick="return false;">
             <span class="ico"><i class="fas fa-right-left"></i></span>
-            Local Transfer
+            <span data-i18n="actions_transfer">Local Transfer</span>
           </a>
           <a href="/customer/international.php">
             <span class="ico"><i class="fas fa-globe"></i></span>
-            International Transfer
+            <span data-i18n="nav_international">International Transfer</span>
           </a>
           <a href="/customer/transferhistory.php">
             <span class="ico"><i class="fas fa-clock-rotate-left"></i></span>
-            Transfer History
+            <span data-i18n="nav_transferHistory">Transfer History</span>
           </a>
         </nav>
 
@@ -731,19 +731,19 @@
         <nav class="vt-nav">
           <a href="/customer/card.php">
             <span class="ico"><i class="fas fa-credit-card"></i></span>
-            ATM Card
+            <span data-i18n="nav_card">ATM Card</span>
           </a>
           <a href="/customer/pin.php">
             <span class="ico"><i class="fas fa-key"></i></span>
-            Transaction Pin
+            <span data-i18n="nav_pin">Transaction Pin</span>
           </a>
           <a href="/customer/password.php">
             <span class="ico"><i class="fas fa-lock"></i></span>
-            Account Password
+            <span data-i18n="nav_password">Account Password</span>
           </a>
           <a href="#" id="logoutBtn">
             <span class="ico"><i class="fas fa-arrow-right-from-bracket"></i></span>
-            Logout
+            <span data-i18n="nav_logout">Logout</span>
           </a>
         </nav>
       </aside>
@@ -757,7 +757,7 @@
 
             <div class="vt-search">
               <i class="fas fa-search"></i>
-              <input type="text" placeholder="Type credit or debit..." />
+              <input type="text" data-i18n-placeholder="search" placeholder="Type credit or debit..." />
             </div>
           </div>
 
@@ -795,21 +795,21 @@
               </div>
 
               <div class="vt-actions">
-                <div class="label">Quick Actions</div>
+                <div class="label" data-i18n="actions_more">Quick Actions</div>
                 <div class="vt-actions-grid">
-                  <button class="vt-action" type="button"><i class="fas fa-paper-plane"></i> Transfer</button>
-                  <button class="vt-action" type="button"><i class="fas fa-clock-rotate-left"></i> History</button>
-                  <a class="vt-action" href="/customer/statement.php"><i class="fas fa-file-lines"></i> Statement</a>
-                  <a class="vt-action" href="/customer/pin.php"><i class="fas fa-shield-halved"></i> Security</a>
-                  <a class="vt-action" href="/customer/stocks.php"><i class="fas fa-chart-line"></i> Stocks</a>
-                  <a class="vt-action" href="/customer/card.php"><i class="fas fa-credit-card"></i> Card</a>
-                  <button class="vt-action" type="button"><i class="fas fa-user"></i> Account</button>
-                  <button class="vt-action" type="button" id="logoutBtn2"><i class="fas fa-power-off"></i> Logout</button>
+                  <button class="vt-action" type="button"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Transfer</span></button>
+                  <button class="vt-action" type="button"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></button>
+                  <a class="vt-action" href="/customer/statement.php"><i class="fas fa-file-lines"></i> <span data-i18n="nav_statement">Statement</span></a>
+                  <a class="vt-action" href="/customer/pin.php"><i class="fas fa-shield-halved"></i> <span data-i18n="nav_pin">Security</span></a>
+                  <a class="vt-action" href="/customer/stocks.php"><i class="fas fa-chart-line"></i> <span data-i18n="nav_stocks">Stocks</span></a>
+                  <a class="vt-action" href="/customer/card.php"><i class="fas fa-credit-card"></i> <span data-i18n="nav_card">Card</span></a>
+                  <button class="vt-action" type="button"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Account</span></button>
+                  <button class="vt-action" type="button" id="logoutBtn2"><i class="fas fa-power-off"></i> <span data-i18n="nav_logout">Logout</span></button>
                 </div>
               </div>
 
               <div class="vt-chart">
-                <h4>Account Activity</h4>
+                <h4 data-i18n="recent_title">Account Activity</h4>
                 <div class="vt-card pad" style="box-shadow: none">
                   <svg viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Account activity chart">
                     <defs>
@@ -838,8 +838,8 @@
               </div>
 
               <div class="vt-transactions">
-                <h4>Recent Transactions</h4>
-                <div class="vt-empty">No transactions yet</div>
+                <h4 data-i18n="recent_title">Recent Transactions</h4>
+                <div class="vt-empty" data-i18n="recent_empty">No transactions yet</div>
               </div>
             </section>
 
@@ -849,14 +849,14 @@
                 <div class="num">5555 8421 6890 0315</div>
                 <div class="meta">
                   <div>VanguardDoubleTrust</div>
-                  <div>VALID THRU 08/30</div>
+                  <div><span data-i18n="card_exp">VALID THRU</span> 08/30</div>
                 </div>
               </div>
 
               <div class="vt-card pad vt-list">
                 <div class="head">
-                  <strong>Market Watch</strong>
-                  <a href="#" onclick="return false;">View All</a>
+                  <strong data-i18n="mk_watchlist">Market Watch</strong>
+                  <a href="#" onclick="return false;"><span data-i18n="recent_viewAll">View All</span></a>
                 </div>
                 <div class="vt-row">
                   <div class="left">
@@ -934,7 +934,7 @@
         </div>
 
         <div class="vt-footer">
-          <div>&copy; 2026 VanguardDoubleTrust. All rights reserved.</div>
+          <div>&copy; 2026 VanguardDoubleTrust. <span data-i18n="footer_rights">All rights reserved.</span></div>
         </div>
       </main>
     </div>
@@ -948,6 +948,29 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="assets/js/auth-session.js"></script>
+    <script src="assets/js/customer-i18n.js"></script>
+
+    <script>
+      (function () {
+        function bootI18nAndKyc() {
+          if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) return;
+          window.VT.UI.bootstrapCustomerPage({
+            after: function (ctx) {
+              if (window.console) {
+                window.console.log("[VT] Dashboard ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
+              }
+            }
+          }).catch(function (err) {
+            if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);
+          });
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
+        } else {
+          bootI18nAndKyc();
+        }
+      })();
+    </script>
 
     <script>
       (function () {

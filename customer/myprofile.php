@@ -489,19 +489,19 @@
         <nav class="vt-nav">
           <a href="/customer/dashboard.php">
             <span class="ico"><i class="fas fa-grid-2"></i></span>
-            Dashboard
+            <span data-i18n="nav_dashboard">Dashboard</span>
           </a>
           <a class="active" href="/customer/myprofile.php">
             <span class="ico"><i class="fas fa-user"></i></span>
-            Account Details
+            <span data-i18n="nav_profile">Account Details</span>
           </a>
           <a href="/customer/statement.php">
             <span class="ico"><i class="fas fa-file-invoice"></i></span>
-            Account Summary
+            <span data-i18n="nav_statement">Account Summary</span>
           </a>
           <a href="/customer/stocks.php">
             <span class="ico"><i class="fas fa-chart-line"></i></span>
-            Stocks &amp; Trading
+            <span data-i18n="nav_stocks">Stocks &amp; Trading</span>
           </a>
         </nav>
 
@@ -509,15 +509,15 @@
         <nav class="vt-nav">
           <a href="#" onclick="return false;">
             <span class="ico"><i class="fas fa-right-left"></i></span>
-            Local Transfer
+            <span data-i18n="actions_transfer">Local Transfer</span>
           </a>
           <a href="/customer/international.php">
             <span class="ico"><i class="fas fa-globe"></i></span>
-            International Transfer
+            <span data-i18n="nav_international">International Transfer</span>
           </a>
           <a href="/customer/transferhistory.php">
             <span class="ico"><i class="fas fa-clock-rotate-left"></i></span>
-            Transfer History
+            <span data-i18n="nav_transferHistory">Transfer History</span>
           </a>
         </nav>
 
@@ -525,19 +525,19 @@
         <nav class="vt-nav">
           <a href="/customer/card.php">
             <span class="ico"><i class="fas fa-credit-card"></i></span>
-            ATM Card
+            <span data-i18n="nav_card">ATM Card</span>
           </a>
           <a href="/customer/pin.php">
             <span class="ico"><i class="fas fa-key"></i></span>
-            Transaction Pin
+            <span data-i18n="nav_pin">Transaction Pin</span>
           </a>
           <a href="/customer/password.php">
             <span class="ico"><i class="fas fa-lock"></i></span>
-            Account Password
+            <span data-i18n="nav_password">Account Password</span>
           </a>
           <a href="#" id="logoutBtn">
             <span class="ico"><i class="fas fa-arrow-right-from-bracket"></i></span>
-            Logout
+            <span data-i18n="nav_logout">Logout</span>
           </a>
         </nav>
       </aside>
@@ -551,7 +551,7 @@
 
             <div class="vt-search">
               <i class="fas fa-search"></i>
-              <input type="text" placeholder="Type credit or debit..." />
+              <input type="text" data-i18n-placeholder="search" placeholder="Type credit or debit..." />
             </div>
           </div>
 
@@ -668,6 +668,26 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="assets/js/auth-session.js"></script>
+    <script src="assets/js/customer-i18n.js"></script>
+    <script>
+      (function () {
+        function bootI18nAndKyc() {
+          if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) return;
+          window.VT.UI.bootstrapCustomerPage({
+            after: function (ctx) {
+              if (window.console) window.console.log("[VT] Subpage ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
+            }
+          }).catch(function (err) {
+            if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);
+          });
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
+        } else {
+          bootI18nAndKyc();
+        }
+      })();
+    </script>
 
     <script>
       (function () {

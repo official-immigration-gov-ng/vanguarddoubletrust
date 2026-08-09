@@ -423,14 +423,134 @@ async function touchLastLogin(uid) {
 }
 
 app.get("/api/me", requireAuth, async (req, res) => {
+  const sec = req.user?.security || {};
+  const prof = req.user?.profile || {};
+  const kycCompleted =
+    Boolean(sec?.kycCompleted) ||
+    Boolean(sec?.KYCDone) ||
+    Boolean(sec?.kycDone) ||
+    Boolean(prof?.kycCompleted) ||
+    Boolean(prof?.KYCDone) ||
+    Boolean(prof?.kycDone) ||
+    (Boolean(prof?.country) && Boolean(prof?.firstname) && Boolean(prof?.lastname) && Boolean(prof?.preferredLanguage));
   res.json({
     uid: req.user.uid,
     email: req.user.email || null,
     profile: req.user.profile || null,
     account: req.user.account || null,
+    security: {
+      twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
+      kycCompleted,
+      kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycCompletedAt || null,
+      accountPinHashSet: Boolean(sec?.accountPinHash)
+    },
+    preferredLanguage: String(prof?.preferredLanguage || "en"),
     createdAt: req.user.createdAt || null,
     updatedAt: req.user.updatedAt || null,
     pinVerified: isPinVerified(req)
+  });
+});
+
+function cleanString(v, maxLen) {
+  if (typeof v !== "string") return "";
+  const s = v.trim();
+  if (!s) return "";
+  if (maxLen && s.length > maxLen) return s.slice(0, maxLen);
+  return s;
+}
+
+app.post("/api/customer/kyc", requireAuth, async (req, res) => {
+  const b = req.body || {};
+  const firstname = cleanString(b.firstname, 60);
+  const lastname = cleanString(b.lastname, 60);
+  const phone = cleanString(b.phone, 40);
+  const country = cleanString(b.country, 80);
+  const preferredLanguage = cleanString(b.preferredLanguage, 16) || "en";
+  const dateOfBirth = cleanString(b.dateOfBirth || b.dob, 32);
+  const gender = cleanString(b.gender, 32);
+  const address = cleanString(b.address, 240);
+  const city = cleanString(b.city, 100);
+  const state = cleanString(b.state, 100);
+  const zipCode = cleanString(b.zipCode || b.zip || b.postal, 32);
+  const nationality = cleanString(b.nationality, 100);
+  const occupation = cleanString(b.occupation, 120);
+
+  if (!firstname) {
+    res.status(400).json({ error: "First name is required." });
+    return;
+  }
+  if (!lastname) {
+    res.status(400).json({ error: "Last name is required." });
+    return;
+  }
+  if (!country) {
+    res.status(400).json({ error: "Country is required." });
+    return;
+  }
+
+  const allowedLangs = new Set([
+    "en", "es", "fr", "de", "zh", "ar", "pt", "ru",
+    "en-US", "en-GB", "es-ES", "es-MX", "fr-FR", "de-DE", "zh-CN", "zh-TW", "ar-SA", "pt-BR", "pt-PT", "ru-RU"
+  ]);
+  const langCode = allowedLangs.has(preferredLanguage)
+    ? preferredLanguage
+    : allowedLangs.has(preferredLanguage.split("-")[0])
+      ? preferredLanguage.split("-")[0]
+      : "en";
+
+  const uid = req.user.uid;
+  await ensureUserDoc(uid, req.user.email);
+  const nowIso = new Date().toISOString();
+
+  const updates = {
+    updatedAt: nowIso,
+    "security.kycCompleted": true,
+    "security.kycCompletedAt": nowIso,
+    "profile.kycCompletedAt": nowIso
+  };
+
+  updates["profile.firstname"] = firstname;
+  updates["profile.lastname"] = lastname;
+  updates["profile.country"] = country;
+  updates["profile.preferredLanguage"] = langCode;
+  updates["profile.dateOfBirth"] = dateOfBirth;
+  updates["profile.gender"] = gender;
+  updates["profile.address"] = address;
+  updates["profile.city"] = city;
+  updates["profile.state"] = state;
+  updates["profile.zipCode"] = zipCode;
+  updates["profile.nationality"] = nationality;
+  updates["profile.occupation"] = occupation;
+  if (phone) updates["profile.phone"] = phone;
+
+  try {
+    const db = getFirestore();
+    await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to save KYC profile.");
+    res.status(normalized.status).json({ error: normalized.error });
+    return;
+  }
+
+  res.status(200).json({
+    ok: true,
+    preferredLanguage: langCode,
+    profile: {
+      firstname,
+      lastname,
+      country,
+      preferredLanguage: langCode,
+      dateOfBirth,
+      gender,
+      address,
+      city,
+      state,
+      zipCode,
+      nationality,
+      occupation,
+      phone
+    },
+    security: { kycCompleted: true, kycCompletedAt: nowIso }
   });
 });
 
@@ -471,17 +591,26 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     state,
     city,
     dob,
+    dateOfBirth,
     gender,
     acctype,
     brname,
     accountPin,
-    transferPin
+    transferPin,
+    preferredLanguage,
+    address,
+    zipCode,
+    zip,
+    postal,
+    nationality,
+    occupation
   } = req.body || {};
 
   const uid = req.user.uid;
   await ensureUserDoc(uid, req.user.email);
 
   const updates = { updatedAt: new Date().toISOString() };
+  const prof = (req.user?.profile) || {};
 
   if (typeof firstname === "string") updates["profile.firstname"] = firstname.trim();
   if (typeof lastname === "string") updates["profile.lastname"] = lastname.trim();
@@ -489,10 +618,30 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   if (typeof country === "string") updates["profile.country"] = country.trim();
   if (typeof state === "string") updates["profile.state"] = state.trim();
   if (typeof city === "string") updates["profile.city"] = city.trim();
-  if (typeof dob === "string") updates["profile.dob"] = dob.trim();
+  if (typeof dob === "string" && dob.trim()) updates["profile.dob"] = dob.trim();
+  if (typeof dateOfBirth === "string" && dateOfBirth.trim()) updates["profile.dateOfBirth"] = dateOfBirth.trim();
   if (typeof gender === "string") updates["profile.gender"] = gender.trim();
   if (typeof acctype === "string") updates["profile.acctype"] = acctype.trim();
   if (typeof brname === "string") updates["profile.brname"] = brname.trim();
+  if (typeof address === "string") updates["profile.address"] = address.trim();
+  if (typeof zipCode === "string" && zipCode.trim()) updates["profile.zipCode"] = zipCode.trim();
+  else if (typeof zip === "string" && zip.trim()) updates["profile.zipCode"] = zip.trim();
+  else if (typeof postal === "string" && postal.trim()) updates["profile.zipCode"] = postal.trim();
+  if (typeof nationality === "string" && nationality.trim()) updates["profile.nationality"] = nationality.trim();
+  if (typeof occupation === "string" && occupation.trim()) updates["profile.occupation"] = occupation.trim();
+
+  if (typeof preferredLanguage === "string" && preferredLanguage.trim()) {
+    const allowedLangs = new Set([
+      "en", "es", "fr", "de", "zh", "ar", "pt", "ru",
+      "en-US", "en-GB", "es-ES", "es-MX", "fr-FR", "de-DE", "zh-CN", "zh-TW", "ar-SA", "pt-BR", "pt-PT", "ru-RU"
+    ]);
+    let langCode = preferredLanguage.trim();
+    if (!allowedLangs.has(langCode)) {
+      const base = langCode.split("-")[0];
+      langCode = allowedLangs.has(base) ? base : (prof?.preferredLanguage || "en");
+    }
+    updates["profile.preferredLanguage"] = langCode;
+  }
 
   if (typeof accountPin === "string" && accountPin.trim()) {
     const v = accountPin.trim();
