@@ -416,10 +416,93 @@
           transform: translateX(0);
         }
       }
+
+      @media (max-width: 900px) {
+        .vt-top-left,
+        .vt-top-right,
+        .vt-topbar {
+          flex-wrap: wrap;
+        }
+
+        .vt-search {
+          order: 3;
+          width: 100%;
+          margin-top: 8px;
+        }
+
+        .vt-user .meta {
+          max-width: 44vw;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .vt-content,
+        .vt-topbar,
+        .vt-footer {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+
+        .tf-form {
+          grid-template-columns: 1fr;
+        }
+
+        .vt-page-title h1 {
+          font-size: 20px;
+        }
+
+        .tf-hero .bal span {
+          font-size: 22px;
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .vt-burger {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+        }
+
+        .vt-user {
+          padding: 6px 8px;
+          gap: 8px;
+          border-radius: 14px;
+        }
+
+        .vt-user .avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 12px;
+          font-size: 11px;
+        }
+
+        .vt-sidebar {
+          width: min(290px, 86vw);
+        }
+
+        .tf-card {
+          padding: 14px;
+          border-radius: 16px;
+        }
+      }
+
+      .vt-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.42);
+        z-index: 99;
+      }
+
+      body.vt-sidebar-open .vt-overlay {
+        display: block;
+      }
     </style>
   </head>
 
   <body>
+    <div class="vt-overlay" id="sidebarOverlay"></div>
     <div class="vt-shell" id="internationalRoot">
       <aside class="vt-sidebar">
         <div class="vt-brand">
@@ -595,10 +678,31 @@
     <script>
       (function () {
         var toggle = document.getElementById("sidebarToggle");
+        var overlay = document.getElementById("sidebarOverlay");
+        var body = document.body;
+
+        function closeSidebar() {
+          body.classList.remove("vt-sidebar-open");
+        }
+
         if (toggle) {
           toggle.addEventListener("click", function () {
-            document.body.classList.toggle("vt-sidebar-open");
+            body.classList.toggle("vt-sidebar-open");
           });
+        }
+
+        if (overlay) {
+          overlay.addEventListener("click", closeSidebar);
+        }
+
+        if (window.addEventListener) {
+          window.addEventListener(
+            "keydown",
+            function (e) {
+              if (e.key === "Escape") closeSidebar();
+            },
+            false
+          );
         }
       })();
     </script>

@@ -589,6 +589,208 @@ app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
   }
 });
 
+app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
+  const uid = String(req.params?.uid || "").trim();
+  if (!uid) {
+    res.status(400).json({ error: "Missing user id." });
+    return;
+  }
+  try {
+    const db = getFirestore();
+    const auth = getAuth();
+    const userDoc = await db.collection("users").doc(uid).get();
+    if (!userDoc.exists) {
+      res.status(404).json({ error: "Customer not found." });
+      return;
+    }
+    const data = userDoc.data() || {};
+    const profile = data.profile || {};
+    const account = data.account || {};
+    const security = data.security || {};
+
+    let authRecord = null;
+    try {
+      const r = await auth.getUser(uid);
+      authRecord = {
+        uid: r.uid,
+        email: r.email || null,
+        emailVerified: !!r.emailVerified,
+        disabled: !!r.disabled,
+        displayName: r.displayName || null,
+        lastSignInTime: r.metadata?.lastSignInTime || null,
+        creationTime: r.metadata?.creationTime || null,
+        customClaims: r.customClaims || null
+      };
+    } catch {}
+
+    let transactions = [];
+    try {
+      const txSnap = await db
+        .collection("users")
+        .doc(uid)
+        .collection("transactions")
+        .orderBy("createdAt", "desc")
+        .limit(25)
+        .get();
+      transactions = txSnap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
+    } catch {}
+
+    const pinHashSet = Boolean(security?.accountPinHash);
+    const transferPinHashSet = Boolean(security?.transferPinHash);
+
+    res.json({
+      ok: true,
+      user: {
+        uid,
+        email: data.email || null,
+        createdAt: data.createdAt || null,
+        updatedAt: data.updatedAt || null,
+        profile: {
+          firstname: profile.firstname || "",
+          lastname: profile.lastname || "",
+          phone: profile.phone || "",
+          address: profile.address || "",
+          gender: profile.gender || "",
+          dateOfBirth: profile.dateOfBirth || "",
+          occupation: profile.occupation || "",
+          nationality: profile.nationality || "",
+          city: profile.city || "",
+          state: profile.state || "",
+          zipCode: profile.zipCode || "",
+          country: profile.country || ""
+        },
+        account: {
+          accountNumber: account.accountNumber || "",
+          branchCode: account.branchCode || "",
+          openingDate: account.openingDate || null,
+          lastLogin: account.lastLogin || null,
+          currency: account.currency || "USD",
+          balance: Number(account.balance || 0),
+          status: account.status || "ACTIVE",
+          accountType: account.accountType || "SAVINGS",
+          routingNumber: account.routingNumber || "",
+          iban: account.iban || "",
+          swiftBic: account.swiftBic || ""
+        },
+        security: {
+          accountPinHashSet: pinHashSet,
+          transferPinHashSet: transferPinHashSet,
+          twoFactorEnabled: Boolean(security?.twoFactorEnabled || false),
+          lastPinChangeAt: security?.lastPinChangeAt || null,
+          lastPasswordChangeAt: security?.lastPasswordChangeAt || null
+        },
+        auth: authRecord,
+        transactions
+      }
+    });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to load customer details.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
+function generateStrongPassword() {
+  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  const numbers = "23456789";
+  const specials = "!@#$%&*_-+";
+  const pick = (s) => s.charAt(Math.floor(Math.random() * s.length));
+  let out = "";
+  out += pick("ABCDEFGHJKLMNPQRSTUVWXYZ");
+  out += pick(numbers);
+  out += pick(specials);
+  for (let i = 0; i < 9; i++) out += pick(letters + numbers);
+  out += pick(specials);
+  return out;
+}
+
+function generateSixDigits() {
+  const n = Math.floor(Math.random() * 1000000);
+  return String(n).padStart(6, "0");
+}
+
+app.post("/api/admin/users/:uid/regenerate-credentials", requireAdminAuth, async (req, res) => {
+  const uid = String(req.params?.uid || "").trim();
+  if (!uid) {
+    res.status(400).json({ error: "Missing user id." });
+    return;
+  }
+  try {
+    const db = getFirestore();
+    const auth = getAuth();
+
+    const doc = await db.collection("users").doc(uid).get();
+    if (!doc.exists) {
+      res.status(404).json({ error: "Customer not found." });
+      return;
+    }
+    const data = doc.data() || {};
+    const profile = data.profile || {};
+    const account = data.account || {};
+    const email = String(data.email || "").trim();
+    if (!email) {
+      res.status(400).json({ error: "Customer has no email on file." });
+      return;
+    }
+
+    const newPassword = generateStrongPassword();
+    const newPin = generateSixDigits();
+    const newTransferCode = generateSixDigits();
+    const nowIso = new Date().toISOString();
+
+    await auth.updateUser(uid, { password: newPassword });
+
+    await db
+      .collection("users")
+      .doc(uid)
+      .set(
+        {
+          updatedAt: nowIso,
+          security: {
+            accountPinHash: sha256Hex(newPin),
+            transferPinHash: sha256Hex(newTransferCode),
+            lastPinChangeAt: nowIso,
+            lastPasswordChangeAt: nowIso
+          }
+        },
+        { merge: true }
+      );
+
+    try {
+      await auth.revokeRefreshTokens(uid);
+    } catch {}
+
+    res.json({
+      ok: true,
+      credentials: {
+        email,
+        password: newPassword,
+        accountPin: newPin,
+        transferCode: newTransferCode
+      },
+      account: {
+        accountNumber: account.accountNumber || "",
+        currency: account.currency || "USD",
+        balance: Number(account.balance || 0),
+        status: account.status || "ACTIVE"
+      },
+      user: {
+        uid,
+        email,
+        firstname: profile.firstname || "",
+        lastname: profile.lastname || ""
+      }
+    });
+  } catch (e) {
+    const code = String(e?.code || "");
+    if (code === "auth/user-not-found") {
+      res.status(404).json({ error: "Firebase auth record not found." });
+      return;
+    }
+    const normalized = normalizeFirebaseAdminError(e, "Unable to regenerate credentials.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
 app.get("/api/admin/transactions", requireAdminAuth, async (req, res) => {
   try {
     const rawLimit = Number(req.query?.limit || 100);

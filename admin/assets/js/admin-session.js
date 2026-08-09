@@ -1,8 +1,343 @@
 (() => {
-  function money(value) {
+  function money(value, currency) {
     const n = Number(value);
-    if (!Number.isFinite(n)) return "$0.00";
-    return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
+    const cur = String(currency || "USD").toUpperCase() || "USD";
+    if (!Number.isFinite(n)) return `0.00 ${cur}`;
+    try {
+      return n.toLocaleString(undefined, { style: "currency", currency: cur });
+    } catch {
+      return `${n.toFixed(2)} ${cur}`;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function formatDate(v) {
+    if (!v) return "—";
+    try {
+      const d = new Date(v);
+      if (!Number.isFinite(+d)) return String(v);
+      return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+    } catch {
+      return String(v);
+    }
+  }
+
+  function formatShortDate(v) {
+    if (!v) return "—";
+    try {
+      const d = new Date(v);
+      if (!Number.isFinite(+d)) return String(v);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" });
+    } catch {
+      return String(v);
+    }
+  }
+
+  function statusPill(status) {
+    const s = String(status || "ACTIVE").toUpperCase();
+    let cls = "info";
+    if (s === "ACTIVE" || s === "COMPLETED") cls = "ok";
+    else if (s === "PENDING" || s === "PROCESSING") cls = "warn";
+    else if (s === "SUSPENDED" || s === "CLOSED" || s === "FAILED" || s === "BLOCKED") cls = "bad";
+    return `<span class="pill ${cls}">${escapeHtml(s)}</span>`;
+  }
+
+  function setReviewOpen(open) {
+    const modal = document.getElementById("adminReviewModal");
+    if (!modal) return;
+    modal.style.display = open ? "block" : "none";
+    if (!open) {
+      const body = document.getElementById("reviewBody");
+      const title = document.getElementById("reviewTitle");
+      const sub = document.getElementById("reviewSub");
+      if (body) body.innerHTML = `<div class="review-loading">Loading customer account details…</div>`;
+      if (title) title.textContent = "Customer Account Review";
+      if (sub) sub.textContent = "Loading…";
+    }
+  }
+
+  function setReviewBody(html) {
+    const body = document.getElementById("reviewBody");
+    if (!body) return;
+    body.innerHTML = html || "";
+  }
+
+  function setReviewTitle(title, sub) {
+    const el = document.getElementById("reviewTitle");
+    const s = document.getElementById("reviewSub");
+    if (el && title != null) el.textContent = title;
+    if (s && sub != null) s.textContent = sub;
+  }
+
+  function kv(label, value, mono) {
+    return `
+      <div class="kv">
+        <div class="k">${escapeHtml(label)}</div>
+        <div class="v ${mono ? "mono" : ""}">${value == null || value === "" ? "—" : String(value)}</div>
+      </div>
+    `;
+  }
+
+  function buildCredentialsText(user, account, creds, includeCredentials) {
+    const name = `${user?.firstname || ""} ${user?.lastname || ""}`.trim() || "Customer";
+    const lines = [
+      `Customer Name: ${name}`,
+      `Account No: ${account?.accountNumber || ""}`,
+      `Balance: ${money(account?.balance || 0, account?.currency || "USD")}`,
+      `Account Status: ${account?.status || "ACTIVE"}`,
+      `Login Email: ${creds?.email || user?.email || ""}`
+    ];
+    if (includeCredentials) {
+      lines.push(`Login Password: ${creds?.password || ""}`);
+      lines.push(`Account PIN: ${creds?.accountPin || ""}`);
+      lines.push(`Transfer Code: ${creds?.transferCode || ""}`);
+    } else {
+      lines.push("Login Password: <use Regenerate Credentials below>");
+      lines.push("Account PIN: <use Regenerate Credentials below>");
+      lines.push("Transfer Code: <use Regenerate Credentials below>");
+    }
+    lines.push("");
+    return lines.join("\n");
+  }
+
+  let reviewState = {
+    uid: null,
+    user: null,
+    lastCredentials: null
+  };
+
+  async function loadCustomerReview(uid) {
+    if (!uid) return;
+    reviewState = { uid, user: null, lastCredentials: null };
+    setReviewOpen(true);
+    setReviewTitle("Customer Account Review", "Loading…");
+    setReviewBody(`<div class="review-loading">Loading customer account details…</div>`);
+    try {
+      const data = await api(`/api/admin/users/${encodeURIComponent(uid)}`);
+      const u = data?.user || {};
+      reviewState.user = u;
+      renderCustomerReview(u);
+    } catch (e) {
+      setReviewTitle("Customer Account Review", "Load failed");
+      setReviewBody(
+        `<div class="review-empty" style="color:#fecaca">${escapeHtml(
+          e?.message || "Unable to load customer details."
+        )}</div>`
+      );
+    }
+  }
+
+  function renderCustomerReview(u) {
+    const prof = u.profile || {};
+    const acc = u.account || {};
+    const sec = u.security || {};
+    const auth = u.auth || {};
+    const txs = Array.isArray(u.transactions) ? u.transactions : [];
+    const fullName = `${prof.firstname || ""} ${prof.lastname || ""}`.trim() || "Customer";
+    setReviewTitle(
+      `${fullName} — Account Review`,
+      `UID ${u.uid} · Email ${u.email || "—"}`
+    );
+
+    const totalTx = txs.length;
+    const lastSignIn = auth.lastSignInTime || acc.lastLogin || acc.openingDate || u.createdAt;
+
+    const profileHtml = `
+      <div class="review-panel">
+        <h4>Profile / KYC</h4>
+        ${kv("First name", escapeHtml(prof.firstname || ""))}
+        ${kv("Last name", escapeHtml(prof.lastname || ""))}
+        ${kv("Email", escapeHtml(u.email || ""))}
+        ${kv("Phone", escapeHtml(prof.phone || ""))}
+        ${kv("Gender", escapeHtml(prof.gender || ""))}
+        ${kv("Date of birth", escapeHtml(prof.dateOfBirth || ""))}
+        ${kv("Occupation", escapeHtml(prof.occupation || ""))}
+        ${kv("Nationality", escapeHtml(prof.nationality || ""))}
+        ${kv("Address", escapeHtml(prof.address || ""))}
+        ${kv("City", escapeHtml(prof.city || ""))}
+        ${kv("State", escapeHtml(prof.state || ""))}
+        ${kv("ZIP / Postal", escapeHtml(prof.zipCode || ""))}
+        ${kv("Country", escapeHtml(prof.country || ""))}
+      </div>
+    `;
+
+    const accountHtml = `
+      <div class="review-panel">
+        <h4>Account</h4>
+        ${kv("Account No.", `<span class="mono">${escapeHtml(acc.accountNumber || "")}</span>`, true)}
+        ${kv("Branch code", escapeHtml(acc.branchCode || ""))}
+        ${kv("Account type", escapeHtml(acc.accountType || "SAVINGS"))}
+        ${kv("Currency", escapeHtml(acc.currency || "USD"))}
+        ${kv("Balance", money(acc.balance || 0, acc.currency || "USD"))}
+        ${kv("Status", statusPill(acc.status || "ACTIVE"))}
+        ${kv("Opening date", formatDate(acc.openingDate || u.createdAt))}
+        ${kv("Last login (account)", formatDate(acc.lastLogin || null))}
+        ${kv("Updated at", formatDate(u.updatedAt || null))}
+        ${acc.routingNumber ? kv("Routing No.", escapeHtml(acc.routingNumber)) : ""}
+        ${acc.iban ? kv("IBAN", `<span class="mono">${escapeHtml(acc.iban)}</span>`, true) : ""}
+        ${acc.swiftBic ? kv("SWIFT/BIC", escapeHtml(acc.swiftBic)) : ""}
+      </div>
+    `;
+
+    const secHtml = `
+      <div class="review-panel">
+        <h4>Security / Auth</h4>
+        ${kv("Account PIN", sec.accountPinHashSet ? `<span class="pill ok">SET</span>` : `<span class="pill bad">NOT SET</span>`)}
+        ${kv("Transfer code", sec.transferPinHashSet ? `<span class="pill ok">SET</span>` : `<span class="pill bad">NOT SET</span>`)}
+        ${kv("2FA", sec.twoFactorEnabled ? `<span class="pill ok">ON</span>` : `<span class="pill warn">OFF</span>`)}
+        ${kv("Last PIN change", formatDate(sec.lastPinChangeAt || null))}
+        ${kv("Last password change", formatDate(sec.lastPasswordChangeAt || null))}
+        ${kv("Firebase verified", auth.emailVerified ? `<span class="pill ok">YES</span>` : `<span class="pill warn">NO</span>`)}
+        ${kv("Account disabled", auth.disabled ? `<span class="pill bad">YES</span>` : `<span class="pill ok">NO</span>`)}
+        ${kv("Last sign-in (Firebase)", formatDate(lastSignIn || null))}
+        ${kv("Firebase created", formatDate(auth.creationTime || u.createdAt))}
+      </div>
+    `;
+
+    const txRowsHtml = totalTx
+      ? txs
+          .map((t) => {
+            const amt = Number(t.amount || 0);
+            const sign =
+              t.type === "ADMIN_CREDIT" ||
+              t.type === "OPENING_BALANCE" ||
+              /CREDIT|IN|DEPOSIT|RECEIV/i.test(t.type || "")
+                ? 1
+                : -1;
+            const signedAmt = sign * Math.abs(amt);
+            const signPrefix = signedAmt >= 0 ? "+" : "";
+            const amountColor = signedAmt >= 0 ? "#86efac" : "#fecaca";
+            const amountText = signPrefix + money(signedAmt, t.currency || acc.currency || "USD");
+            return [
+              "<tr>",
+              `  <td class="mono">${formatShortDate(t.createdAt)}</td>`,
+              `  <td class="mono">${escapeHtml(t.id || "").slice(0, 10)}…</td>`,
+              `  <td><span class="pill info">${escapeHtml(t.type || "—")}</span></td>`,
+              `  <td>${escapeHtml(t.note || t.reference || "—")}</td>`,
+              `  <td style="text-align:right; font-weight:800; color:${amountColor}">${amountText}</td>`,
+              `  <td>${statusPill(t.status || "PENDING")}</td>`,
+              "</tr>"
+            ].join("");
+          })
+          .join("")
+      : `<tr><td colspan="6" class="review-empty">No transactions yet for this customer.</td></tr>`;
+
+    const txsHtml = `
+      <div class="review-panel review-txs">
+        <h4>Recent Transactions (${totalTx} shown, latest 25)</h4>
+        <div class="txs-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Tx ID</th>
+                <th>Type</th>
+                <th>Note / Reference</th>
+                <th style="text-align:right">Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${txRowsHtml}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    const initialCredsText = buildCredentialsText(
+      { firstname: prof.firstname, lastname: prof.lastname, email: u.email },
+      acc,
+      { email: u.email },
+      false
+    );
+
+    const credsHtml = `
+      <div class="review-panel review-creds">
+        <h4>Account Credentials (manually resend to customer)</h4>
+        <div class="warn">⚠️ Plaintext passwords & PINs are never stored. Use Regenerate Credentials to produce a new fresh set that you can copy and send to the customer. Regenerating invalidates the old password/PIN/transfer code and logs them out.</div>
+        <div class="creds-actions">
+          <button class="btn" id="reviewRegenerateBtn" type="button">Regenerate Credentials</button>
+          <button class="btn-secondary" id="reviewCopyBtn" type="button">Copy to Clipboard</button>
+        </div>
+        <textarea id="reviewCredsOutput" spellcheck="false" readonly>${escapeHtml(initialCredsText)}</textarea>
+      </div>
+    `;
+
+    setReviewBody(
+      `<div class="review-grid">${profileHtml}${accountHtml}${secHtml}${txsHtml}${credsHtml}</div>`
+    );
+
+    const regenBtn = document.getElementById("reviewRegenerateBtn");
+    const copyBtn = document.getElementById("reviewCopyBtn");
+    regenBtn?.addEventListener("click", onRegenerateCreds);
+    copyBtn?.addEventListener("click", onCopyCreds);
+  }
+
+  async function onRegenerateCreds() {
+    const uid = reviewState.uid;
+    const btn = document.getElementById("reviewRegenerateBtn");
+    const out = document.getElementById("reviewCredsOutput");
+    if (!uid) return;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Regenerating…";
+    }
+    try {
+      const data = await api(`/api/admin/users/${encodeURIComponent(uid)}/regenerate-credentials`, {
+        method: "POST"
+      });
+      reviewState.lastCredentials = data || null;
+      const text = buildCredentialsText(data?.user, data?.account, data?.credentials, true);
+      if (out) out.value = text;
+      flash("Credentials regenerated. Copy them now and send to the customer.");
+    } catch (e) {
+      flash(e?.message || "Unable to regenerate credentials.", true);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Regenerate Credentials";
+      }
+    }
+  }
+
+  async function onCopyCreds() {
+    const out = document.getElementById("reviewCredsOutput");
+    const btn = document.getElementById("reviewCopyBtn");
+    const text = String(out?.value || "").trim();
+    if (!text) {
+      flash("Nothing to copy. Regenerate credentials first.", true);
+      return;
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        out?.select();
+        document.execCommand("copy");
+        window.getSelection()?.removeAllRanges();
+      }
+      if (btn) {
+        const old = btn.textContent;
+        btn.textContent = "Copied ✓";
+        btn.disabled = true;
+        setTimeout(() => {
+          btn.textContent = old;
+          btn.disabled = false;
+        }, 1600);
+      }
+      flash("Account details copied to clipboard.");
+    } catch (e) {
+      flash(e?.message || "Unable to copy.", true);
+    }
   }
 
   function randomInt(min, max) {
@@ -213,13 +548,15 @@
       return `
         <tr data-uid="${user.uid}">
           <td>
-            <div class="name">${fullName}</div>
-            <div class="sub">${user.email || "No email"}</div>
-            <div class="sub">UID: ${user.uid}</div>
+            <div class="name"><a class="review-link" data-action="review" data-uid="${user.uid}" href="javascript:void(0)">${escapeHtml(
+              fullName
+            )}</a></div>
+            <div class="sub">${user.email ? escapeHtml(user.email) : "No email"}</div>
+            <div class="sub">UID: ${escapeHtml(user.uid)}</div>
           </td>
           <td>
-            <div>${user.accountNumber || "--"}</div>
-            <div class="sub">${user.currency || "USD"}</div>
+            <div>${user.accountNumber ? escapeHtml(user.accountNumber) : "--"}</div>
+            <div class="sub">${escapeHtml(user.currency || "USD")}</div>
           </td>
           <td>
             <input type="number" step="0.01" min="0" data-field="balance" value="${Number(user.balance || 0)}" />
@@ -230,11 +567,11 @@
               <option value="PENDING" ${user.status === "PENDING" ? "selected" : ""}>PENDING</option>
               <option value="SUSPENDED" ${user.status === "SUSPENDED" ? "selected" : ""}>SUSPENDED</option>
             </select>
-            <div class="sub"><span class="status">${user.status || "ACTIVE"}</span></div>
+            <div class="sub"><span class="status">${escapeHtml(user.status || "ACTIVE")}</span></div>
           </td>
           <td>
-            <input type="text" data-field="firstname" value="${user.firstname || ""}" placeholder="First name" style="margin-bottom:8px" />
-            <input type="text" data-field="lastname" value="${user.lastname || ""}" placeholder="Last name" />
+            <input type="text" data-field="firstname" value="${escapeHtml(user.firstname || "")}" placeholder="First name" style="margin-bottom:8px" />
+            <input type="text" data-field="lastname" value="${escapeHtml(user.lastname || "")}" placeholder="Last name" />
           </td>
           <td>
             <button class="btn" type="button" data-action="save">Save</button>
@@ -279,6 +616,14 @@
     });
 
     tableBody.addEventListener("click", async (event) => {
+      const reviewLink = event.target.closest("[data-action='review']");
+      if (reviewLink) {
+        event.preventDefault();
+        const uid = reviewLink.getAttribute("data-uid") || reviewLink.closest("tr[data-uid]")?.getAttribute("data-uid");
+        if (uid) loadCustomerReview(uid);
+        return;
+      }
+
       const button = event.target.closest("[data-action='save']");
       if (!button) return;
 
@@ -317,6 +662,20 @@
         window.location.href = "/admin/login.html";
       }
     });
+
+    const reviewCloseBtn = document.getElementById("reviewCloseBtn");
+    const reviewModal = document.getElementById("adminReviewModal");
+    reviewCloseBtn?.addEventListener("click", () => setReviewOpen(false));
+    reviewModal?.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "adminReviewModal") setReviewOpen(false);
+    });
+    if (window.addEventListener) {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && reviewModal && reviewModal.style.display === "block") {
+          setReviewOpen(false);
+        }
+      }, false);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
