@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>My Profile - VanguardTrust</title>
+    <title>My Profile - VanguardDoubleTrust</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="Manage your personal information and security." name="description" />
 
-    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_vanguardtrust.svg" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_VanguardDoubleTrust.svg" />
     <link rel="icon" type="image/png" href="/assets/images/brand/favicon_1776155007.png" />
     <link
       href="../css2-1?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -399,7 +399,7 @@
         <div class="vt-brand">
           <div class="logo">VT</div>
           <div class="title">
-            <strong>VanguardTrust</strong>
+            <strong>VanguardDoubleTrust</strong>
             <span>Customer</span>
           </div>
         </div>
@@ -573,7 +573,7 @@
         </div>
 
         <div class="vt-footer">
-          <div>&copy; 2026 VanguardTrust. All rights reserved.</div>
+          <div>&copy; 2026 VanguardDoubleTrust. All rights reserved.</div>
         </div>
       </main>
     </div>

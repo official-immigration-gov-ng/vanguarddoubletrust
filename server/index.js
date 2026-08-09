@@ -128,7 +128,7 @@ app.get("/firebase-config.js", sendFirebaseConfigJs);
 app.get("/customer/firebase-config.js", sendFirebaseConfigJs);
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "vanguardtrust", ts: new Date().toISOString() });
+  res.json({ ok: true, service: "vanguarddoubletrust", ts: new Date().toISOString() });
 });
 
 app.post("/api/sessionLogin", async (req, res) => {

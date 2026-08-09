@@ -4,7 +4,7 @@ function normalizeMongoUri(uri, dbName) {
   if (!uri) return uri;
   const hasDbPath = /mongodb(\+srv)?:\/\/[^/]+\/[^?]+/.test(uri);
   if (hasDbPath) return uri;
-  const safeDb = dbName && String(dbName).trim() ? String(dbName).trim() : "vanguardtrust";
+  const safeDb = dbName && String(dbName).trim() ? String(dbName).trim() : "vanguarddoubletrust";
   const hasQuery = uri.includes("?");
   if (hasQuery) {
     const parts = uri.split("?");

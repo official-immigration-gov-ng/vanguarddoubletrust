@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Account Details - VanguardTrust</title>
+    <title>Account Details - VanguardDoubleTrust</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Account details" name="description">
 
-    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_vanguardtrust.svg">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_VanguardDoubleTrust.svg">
     <link rel="icon" type="image/png" href="/assets/images/brand/favicon_1776155007.png">
     <link href="../css2-1?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="../ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">

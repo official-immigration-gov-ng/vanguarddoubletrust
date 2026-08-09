@@ -1,0 +1,21 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D8B477"/>
+      <stop offset="1" stop-color="#A07F48"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(72,256)">
+    <path d="M0,0 L336,0 L336,224 C336,348 258,412 168,448 C78,412 0,348 0,224 Z"
+          fill="none" stroke="url(#gold)" stroke-width="22" stroke-linejoin="round"/>
+    <path d="M78,72 L168,320 L258,72"
+          fill="none" stroke="#FFFFFF" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M78,72 L168,320 L258,72"
+          fill="none" stroke="url(#gold)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  </g>
+  <g font-family="'Playfair Display', Georgia, 'Times New Roman', serif" font-weight="700" fill="#FFFFFF">
+    <text x="448" y="440" font-size="118" letter-spacing="0.5">Vanguard<tspan fill="url(#gold)">Trust</tspan></text>
+    <line x1="448" y1="472" x2="952" y2="472" stroke="#FFFFFF" stroke-width="3" opacity="0.18"/>
+    <text x="448" y="520" font-family="'Inter', Arial, sans-serif" font-weight="500" font-size="34" letter-spacing="7" fill="#FFFFFF" opacity="0.80">WEALTH  TRUST  STEWARDSHIP</text>
+  </g>
+</svg>

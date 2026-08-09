@@ -341,7 +341,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
       if (nameEl) nameEl.textContent = name;
       if (initialsEl) initialsEl.textContent = initialsFromName(name);
       syncPinState();
@@ -434,7 +434,7 @@
 
       const name = me?.profile?.firstname
         ? `${me.profile.firstname} ${me?.profile?.lastname || ""}`.trim()
-        : me?.email || me?.uid || "VanguardTrust";
+        : me?.email || me?.uid || "VanguardDoubleTrust";
       const liveBalance = balanceFromMe(me);
 
       setText("dashboardUserName", name);
@@ -478,7 +478,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("profileUserName", name);
       setText("profileUserEmail", me?.email || "");
@@ -774,7 +774,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
       const acct = accountNumberFromMe(me);
 
       setText("statementUserName", name);
@@ -1126,7 +1126,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("transferHistoryUserName", name);
       setText("transferHistoryUserEmail", me?.email || "");
@@ -1150,7 +1150,7 @@
     const yy = String((now.getFullYear() + 4) % 100).padStart(2, "0");
     const card = {
       number,
-      holder: name || "VANGUARDTRUST",
+      holder: name || "VanguardDoubleTrust",
       expiry: `${mm}/${yy}`,
       type: "Visa Platinum",
       currency: "USD ($)",
@@ -1236,7 +1236,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("cardUserName", name);
       setText("cardUserEmail", me?.email || "");
@@ -1411,7 +1411,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("pinUserName", name);
       setText("pinUserEmail", me?.email || "");
@@ -1590,7 +1590,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("passwordUserName", name);
       setText("passwordUserEmail", me?.email || "");
@@ -1883,7 +1883,7 @@
 
       const firstname = me?.profile?.firstname || "";
       const lastname = me?.profile?.lastname || "";
-      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardTrust";
+      const name = firstname || lastname ? `${firstname} ${lastname}`.trim() : me?.email || me?.uid || "VanguardDoubleTrust";
 
       setText("stocksUserName", name);
       setText("stocksUserEmail", me?.email || "");

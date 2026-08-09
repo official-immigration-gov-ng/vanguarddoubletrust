@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Verify Identity - VanguardTrust</title>
+    <title>Verify Identity - VanguardDoubleTrust</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="Verify your account pin to proceed." name="description" />
 
-    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_vanguardtrust.svg" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/brand/favicon_VanguardDoubleTrust.svg" />
     <link rel="icon" type="image/png" href="/assets/images/brand/favicon_1776155007.png" />
     <link href="../css2-1?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="../ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
@@ -158,7 +158,7 @@
 
       <div class="vt-footer">
         <a href="#" class="vt-link" id="pinVerifyLogout">Sign Out</a>
-        <div class="mt-3 small text-muted">&copy; 2026 VanguardTrust. All rights reserved.</div>
+        <div class="mt-3 small text-muted">&copy; 2026 VanguardDoubleTrust. All rights reserved.</div>
       </div>
     </div>
 
