@@ -155,12 +155,65 @@
         margin-top: 12px;
       }
 
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      @media (max-width: 1080px) {
+        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
       @media (max-width: 960px) {
         .grid { grid-template-columns: 1fr; }
         .toolbar { flex-direction: column; align-items: stretch; }
+        .topbar { flex-direction: column; align-items: flex-start; }
+        .top-actions { width: 100%; justify-content: flex-start; }
         .shell { padding: 18px; }
-        .card { overflow-x: auto; }
+        .card { overflow-x: hidden; }
         table { min-width: 980px; }
+      }
+
+      @media (max-width: 720px) {
+        .shell { padding: 14px; }
+        .card { padding: 16px; border-radius: 18px; }
+        .btn, .btn-secondary {
+          padding: 11px 14px;
+          font-size: 13px;
+          border-radius: 12px;
+        }
+        .toolbar input {
+          width: 100%;
+          max-width: none;
+        }
+        .brand img { width: 160px; }
+        .metric {
+          font-size: 24px;
+          margin-top: 8px;
+          word-break: break-word;
+        }
+        #adminCreateModal {
+          padding: 10px;
+        }
+        #adminCreateModal .card {
+          margin: 0;
+          padding: 16px;
+          border-radius: 18px;
+        }
+        #adminCreateModal form,
+        #adminCreateModal .card > div[style*="grid-template-columns"] {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .shell { padding: 10px; }
+        .card { padding: 12px; border-radius: 16px; }
+        .brand img { width: 140px; }
+        .top-actions { flex-direction: column; align-items: stretch; }
+        .top-actions a, .top-actions button { width: 100%; text-align: center; }
       }
     </style>
   </head>
@@ -207,21 +260,23 @@
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Account</th>
-              <th>Balance</th>
-              <th>Status</th>
-              <th>Names</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="adminUsersBody">
-            <tr><td colspan="6" class="muted">Loading customer accounts...</td></tr>
-          </tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Account</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th>Names</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersBody">
+              <tr><td colspan="6" class="muted">Loading customer accounts...</td></tr>
+            </tbody>
+          </table>
+        </div>
         <div class="flash" id="adminFlash"></div>
       </section>
 
