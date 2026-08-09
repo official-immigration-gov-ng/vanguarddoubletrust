@@ -432,7 +432,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
     Boolean(prof?.kycCompleted) ||
     Boolean(prof?.KYCDone) ||
     Boolean(prof?.kycDone) ||
-    (Boolean(prof?.country) && Boolean(prof?.firstname) && Boolean(prof?.lastname) && Boolean(prof?.preferredLanguage));
+    (Boolean(prof?.country) && Boolean(prof?.preferredLanguage));
   res.json({
     uid: req.user.uid,
     email: req.user.email || null,
@@ -459,10 +459,15 @@ function cleanString(v, maxLen) {
   return s;
 }
 
+function buildAllowedLanguageSet() {
+  return new Set([
+    "aa","ab","af","ak","am","an","ar","as","av","ay","az","ba","be","bg","bh","bi","bm","bn","bo","br","bs","ca","ce","ch","co","cr","cs","cu","cv","cy","da","de","dv","dz","ee","el","en","eo","es","et","eu","fa","ff","fi","fj","fo","fr","fy","ga","gd","gl","gn","gu","gv","ha","he","hi","ho","hr","ht","hu","hy","hz","ia","id","ie","ig","ii","ik","io","is","it","iu","ja","jv","ka","kg","ki","kj","kk","kl","km","kn","ko","kr","ks","ku","kv","kw","ky","la","lb","lg","li","ln","lo","lt","lu","lv","mg","mh","mi","mk","ml","mn","mr","ms","mt","my","na","nb","nd","ne","ng","nl","nn","no","nr","nv","ny","oc","oj","om","or","os","pa","pi","pl","ps","pt","qu","rm","rn","ro","ru","rw","sa","sc","sd","se","sg","sh","si","sk","sl","sm","sn","so","sq","sr","ss","st","su","sv","sw","ta","te","tg","th","ti","tk","tl","tn","to","tr","ts","tt","tw","ty","ug","uk","ur","uz","ve","vi","vo","wa","wo","xh","yi","yo","za","zh","zu",
+    "en-US","en-GB","en-CA","en-AU","en-NZ","en-IN","en-ZA","en-NG","en-PH","es-ES","es-MX","es-AR","es-CL","es-CO","es-PE","pt-BR","pt-PT","fr-FR","fr-CA","fr-BE","fr-CH","de-DE","de-AT","de-CH","it-IT","it-CH","nl-NL","nl-BE","sv-SE","nb-NO","da-DK","fi-FI","pl-PL","ru-RU","uk-UA","zh-CN","zh-TW","zh-HK","ja-JP","ko-KR","ar-SA","ar-AE","ar-EG","ar-MA","hi-IN","bn-BD","bn-IN","ur-PK","ur-IN","ta-IN","ta-LK","te-IN","ml-IN","mr-IN","gu-IN","pa-IN","th-TH","vi-VN","id-ID","ms-MY","ms-SG","tr-TR","he-IL","fa-IR","ps-AF","ku-IQ","ha-NG","yo-NG","ig-NG","sw-KE","sw-TZ","am-ET","so-SO","tl-PH","hu-HU","cs-CZ","sk-SK","ro-RO","bg-BG","sr-RS","hr-HR","sl-SI","el-GR","lt-LT","lv-LV","et-EE","az-AZ","kk-KZ","uz-UZ","ky-KG","tg-TJ","ka-GE","hy-AM","be-BY","mk-MK","sq-AL","af-ZA","zu-ZA","xh-ZA","st-ZA","tn-ZA","ss-ZA","ve-ZA","nr-ZA"
+  ]);
+}
+
 app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   const b = req.body || {};
-  const firstname = cleanString(b.firstname, 60);
-  const lastname = cleanString(b.lastname, 60);
   const phone = cleanString(b.phone, 40);
   const country = cleanString(b.country, 80);
   const preferredLanguage = cleanString(b.preferredLanguage, 16) || "en";
@@ -475,23 +480,12 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   const nationality = cleanString(b.nationality, 100);
   const occupation = cleanString(b.occupation, 120);
 
-  if (!firstname) {
-    res.status(400).json({ error: "First name is required." });
-    return;
-  }
-  if (!lastname) {
-    res.status(400).json({ error: "Last name is required." });
-    return;
-  }
   if (!country) {
     res.status(400).json({ error: "Country is required." });
     return;
   }
 
-  const allowedLangs = new Set([
-    "en", "es", "fr", "de", "zh", "ar", "pt", "ru",
-    "en-US", "en-GB", "es-ES", "es-MX", "fr-FR", "de-DE", "zh-CN", "zh-TW", "ar-SA", "pt-BR", "pt-PT", "ru-RU"
-  ]);
+  const allowedLangs = buildAllowedLanguageSet();
   const langCode = allowedLangs.has(preferredLanguage)
     ? preferredLanguage
     : allowedLangs.has(preferredLanguage.split("-")[0])
@@ -509,8 +503,6 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     "profile.kycCompletedAt": nowIso
   };
 
-  updates["profile.firstname"] = firstname;
-  updates["profile.lastname"] = lastname;
   updates["profile.country"] = country;
   updates["profile.preferredLanguage"] = langCode;
   updates["profile.dateOfBirth"] = dateOfBirth;
@@ -532,12 +524,13 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     return;
   }
 
+  const profSnapshot = (req.user?.profile) || {};
   res.status(200).json({
     ok: true,
     preferredLanguage: langCode,
     profile: {
-      firstname,
-      lastname,
+      firstname: profSnapshot.firstname || "",
+      lastname: profSnapshot.lastname || "",
       country,
       preferredLanguage: langCode,
       dateOfBirth,
@@ -549,8 +542,7 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
       nationality,
       occupation,
       phone
-    },
-    security: { kycCompleted: true, kycCompletedAt: nowIso }
+    }
   });
 });
 
@@ -631,10 +623,7 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   if (typeof occupation === "string" && occupation.trim()) updates["profile.occupation"] = occupation.trim();
 
   if (typeof preferredLanguage === "string" && preferredLanguage.trim()) {
-    const allowedLangs = new Set([
-      "en", "es", "fr", "de", "zh", "ar", "pt", "ru",
-      "en-US", "en-GB", "es-ES", "es-MX", "fr-FR", "de-DE", "zh-CN", "zh-TW", "ar-SA", "pt-BR", "pt-PT", "ru-RU"
-    ]);
+    const allowedLangs = buildAllowedLanguageSet();
     let langCode = preferredLanguage.trim();
     if (!allowedLangs.has(langCode)) {
       const base = langCode.split("-")[0];
