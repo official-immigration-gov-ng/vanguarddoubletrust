@@ -713,7 +713,7 @@
 
         <div class="vt-section-label">FUND TRANSFER</div>
         <nav class="vt-nav">
-          <a href="#" onclick="return false;">
+          <a href="#" id="sidebarLocalTransferBtn">
             <span class="ico"><i class="fas fa-right-left"></i></span>
             <span data-i18n="actions_transfer">Local Transfer</span>
           </a>
@@ -777,19 +777,19 @@
             <section>
               <div class="vt-card vt-balance pad">
                 <div class="sub">AVAILABLE BALANCE</div>
-                <div class="amount" id="balanceAmount">$4,365,423.00</div>
+                <div class="amount" id="balanceAmount">—</div>
                 <div class="mini">
                   <div>
                     <div class="k">PORTFOLIO VALUE</div>
-                    <div class="v">$0.00</div>
+                    <div class="v" id="portfolioValue">—</div>
                   </div>
                   <div>
                     <div class="k">TOTAL ASSETS</div>
-                    <div class="v">$0.00</div>
+                    <div class="v" id="totalAssets">—</div>
                   </div>
                   <div>
                     <div class="k">SAVING ACCOUNT</div>
-                    <div class="v">$4,365,423.00</div>
+                    <div class="v" id="savingAccount">—</div>
                   </div>
                 </div>
               </div>
@@ -797,21 +797,21 @@
               <div class="vt-actions">
                 <div class="label" data-i18n="actions_more">Quick Actions</div>
                 <div class="vt-actions-grid">
-                  <button class="vt-action" type="button"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Transfer</span></button>
-                  <button class="vt-action" type="button"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></button>
+                  <button class="vt-action" type="button" id="quickTransferBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Transfer</span></button>
+                  <a class="vt-action" href="/customer/transferhistory.php"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></a>
                   <a class="vt-action" href="/customer/statement.php"><i class="fas fa-file-lines"></i> <span data-i18n="nav_statement">Statement</span></a>
                   <a class="vt-action" href="/customer/pin.php"><i class="fas fa-shield-halved"></i> <span data-i18n="nav_pin">Security</span></a>
                   <a class="vt-action" href="/customer/stocks.php"><i class="fas fa-chart-line"></i> <span data-i18n="nav_stocks">Stocks</span></a>
                   <a class="vt-action" href="/customer/card.php"><i class="fas fa-credit-card"></i> <span data-i18n="nav_card">Card</span></a>
-                  <button class="vt-action" type="button"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Account</span></button>
-                  <button class="vt-action" type="button" id="logoutBtn2"><i class="fas fa-power-off"></i> <span data-i18n="nav_logout">Logout</span></button>
+                  <a class="vt-action" href="/customer/myprofile.php"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Account</span></a>
+                  <button class="vt-action" type="button" id="quickLogoutBtn"><i class="fas fa-power-off"></i> <span data-i18n="nav_logout">Logout</span></button>
                 </div>
               </div>
 
               <div class="vt-chart">
                 <h4 data-i18n="recent_title">Account Activity</h4>
-                <div class="vt-card pad" style="box-shadow: none">
-                  <svg viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Account activity chart">
+                <div class="vt-card pad" style="box-shadow: none; position: relative;">
+                  <svg id="activityChartSvg" viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Account activity chart">
                     <defs>
                       <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
                         <stop offset="0" stop-color="#0B0F14" stop-opacity="0.95" />
@@ -822,12 +822,12 @@
                         <stop offset="1" stop-color="#0B0F14" stop-opacity="0.02" />
                       </linearGradient>
                     </defs>
-                    <path
-                      d="M0,170 C80,140 120,160 190,150 C260,140 310,80 380,95 C450,110 490,150 560,135 C630,120 680,60 800,90 L800,220 L0,220 Z"
+                    <path id="activityFillPath"
+                      d="M0,170 C80,170 120,170 190,170 C260,170 310,170 380,170 C450,170 490,170 560,170 C630,170 680,170 800,170 L800,220 L0,220 Z"
                       fill="url(#fillGrad)"
                     ></path>
-                    <path
-                      d="M0,170 C80,140 120,160 190,150 C260,140 310,80 380,95 C450,110 490,150 560,135 C630,120 680,60 800,90"
+                    <path id="activityLinePath"
+                      d="M0,170 C80,170 120,170 190,170 C260,170 310,170 380,170 C450,170 490,170 560,170 C630,170 680,170 800,170"
                       fill="none"
                       stroke="url(#lineGrad)"
                       stroke-width="6"
@@ -839,7 +839,10 @@
 
               <div class="vt-transactions">
                 <h4 data-i18n="recent_title">Recent Transactions</h4>
-                <div class="vt-empty" data-i18n="recent_empty">No transactions yet</div>
+                <div id="txRowsWrap" style="display:flex;flex-direction:column;gap:10px;">
+                  <div class="vt-empty" id="txEmptyState" data-i18n="recent_empty" style="display:none;">No transactions yet</div>
+                  <div id="txList"></div>
+                </div>
               </div>
             </section>
 
@@ -939,6 +942,160 @@
       </main>
     </div>
 
+    <style>
+      .vt-modal-overlay {
+        position: fixed; inset: 0; background: rgba(2, 6, 23, 0.55); z-index: 200;
+        display: none; align-items: center; justify-content: center; padding: 18px;
+      }
+      .vt-modal-overlay.open { display: flex; }
+      .vt-modal {
+        background: #fff; border-radius: 22px; width: min(560px, 100%);
+        box-shadow: 0 30px 80px -30px rgba(2, 6, 23, 0.45);
+        overflow: hidden;
+      }
+      .vt-modal-head {
+        padding: 20px 24px; border-bottom: 1px solid var(--vt-border);
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .vt-modal-head h3 { margin: 0; font-size: 18px; font-weight: 800; }
+      .vt-modal-close {
+        width: 38px; height: 38px; border-radius: 12px;
+        border: 1px solid var(--vt-border); background: #f6f8fc;
+        display: grid; place-items: center; cursor: pointer; color: var(--vt-text);
+      }
+      .vt-modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+      .vt-field { display: flex; flex-direction: column; gap: 6px; }
+      .vt-field label { font-size: 12px; font-weight: 700; color: var(--vt-muted); letter-spacing: 0.02em; }
+      .vt-field input, .vt-field textarea {
+        width: 100%; padding: 12px 14px; border-radius: 14px;
+        border: 1px solid var(--vt-border); background: #fff; color: var(--vt-text);
+        font-size: 14px; font-weight: 600; outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        font-family: inherit;
+      }
+      .vt-field input:focus, .vt-field textarea:focus {
+        border-color: rgba(0, 51, 153, 0.45);
+        box-shadow: 0 0 0 4px rgba(0, 51, 153, 0.08);
+      }
+      .vt-recipient-preview {
+        display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+        border-radius: 14px; background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.22); color: #047857;
+        font-weight: 700; font-size: 13px; display: none;
+      }
+      .vt-recipient-preview.show { display: flex; }
+      .vt-recipient-preview.error {
+        background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.22); color: #b91c1c;
+      }
+      .vt-recipient-preview .pill {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: rgba(16, 185, 129, 0.18); color: #047857;
+        display: grid; place-items: center; font-weight: 800;
+      }
+      .vt-recipient-preview.error .pill {
+        background: rgba(239, 68, 68, 0.18); color: #b91c1c;
+      }
+      .vt-modal-foot {
+        padding: 16px 24px 24px; display: flex; gap: 10px; justify-content: flex-end;
+      }
+      .vt-btn {
+        padding: 12px 18px; border-radius: 14px; border: none; cursor: pointer;
+        font-weight: 800; font-size: 13px; font-family: inherit;
+      }
+      .vt-btn.secondary { background: #f1f5f9; color: var(--vt-text); }
+      .vt-btn.primary {
+        background: linear-gradient(135deg, var(--vt-primary), var(--vt-primary-2));
+        color: #fff;
+      }
+      .vt-btn.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+      .vt-txrow {
+        display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+        border-radius: 16px; background: #fff; border: 1px solid var(--vt-border);
+      }
+      .vt-txrow .ico {
+        width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center;
+        flex: 0 0 auto; font-size: 15px;
+      }
+      .vt-txrow .ico.in { background: rgba(16, 185, 129, 0.12); color: #047857; }
+      .vt-txrow .ico.out { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
+      .vt-txrow .ico.other { background: rgba(59, 130, 246, 0.12); color: #1d4ed8; }
+      .vt-txrow .body { flex: 1; min-width: 0; }
+      .vt-txrow .body .title { font-weight: 800; font-size: 14px; color: var(--vt-text); }
+      .vt-txrow .body .sub { font-size: 12px; color: var(--vt-muted); font-weight: 600; margin-top: 2px; }
+      .vt-txrow .amount { text-align: right; font-weight: 800; font-size: 15px; }
+      .vt-txrow .amount.in { color: #047857; }
+      .vt-txrow .amount.out { color: #b91c1c; }
+      .vt-txrow .status {
+        display: inline-block; padding: 3px 10px; border-radius: 999px;
+        font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em; margin-top: 4px;
+      }
+      .vt-txrow .status.COMPLETED { background: rgba(16, 185, 129, 0.14); color: #047857; }
+      .vt-txrow .status.PENDING { background: rgba(245, 158, 11, 0.14); color: #92400e; }
+      .vt-txrow .status.PROCESSING { background: rgba(59, 130, 246, 0.14); color: #1d4ed8; }
+      .vt-txrow .status.FAILED, .vt-txrow .status.SUSPENDED, .vt-txrow .status.REJECTED {
+        background: rgba(239, 68, 68, 0.14); color: #b91c1c;
+      }
+      .vt-modal-msg {
+        padding: 10px 12px; border-radius: 12px; font-weight: 700; font-size: 12.5px; display: none;
+      }
+      .vt-modal-msg.show { display: block; }
+      .vt-modal-msg.error { background: rgba(239, 68, 68, 0.08); color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.18); }
+      .vt-modal-msg.success { background: rgba(16, 185, 129, 0.08); color: #047857; border: 1px solid rgba(16, 185, 129, 0.18); }
+    </style>
+
+    <div class="vt-modal-overlay" id="transferModalOverlay" aria-hidden="true">
+      <div class="vt-modal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
+        <div class="vt-modal-head">
+          <h3 id="transferModalTitle" data-i18n="actions_transfer">Local Transfer</h3>
+          <button class="vt-modal-close" id="transferModalClose" type="button" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="vt-modal-body">
+          <div class="vt-modal-msg error" id="transferModalError"></div>
+          <div class="vt-modal-msg success" id="transferModalSuccess"></div>
+
+          <div class="vt-field">
+            <label data-i18n="kyc_language">Find Recipient By</label>
+            <div style="display:flex; gap:10px;">
+              <select id="transferLookupType" style="flex:0 0 auto; padding:12px 12px; border-radius:14px; border:1px solid var(--vt-border); font-weight:700; font-family:inherit; color:var(--vt-text);">
+                <option value="accountNumber">Account Number</option>
+                <option value="email">Email</option>
+              </select>
+              <input type="text" id="transferLookupValue" placeholder="Enter account number or email" style="flex:1;" />
+            </div>
+          </div>
+
+          <div class="vt-recipient-preview" id="transferRecipientPreview">
+            <div class="pill" id="transferRecipientPill">?</div>
+            <div style="flex:1; min-width:0;">
+              <div id="transferRecipientName" style="font-weight:800;"></div>
+              <div id="transferRecipientMeta" style="font-size:11.5px; opacity:0.75; margin-top:2px;"></div>
+            </div>
+          </div>
+
+          <div class="vt-field">
+            <label>Amount (USD)</label>
+            <input type="number" id="transferAmountInput" step="0.01" min="0" placeholder="0.00" />
+          </div>
+
+          <div class="vt-field">
+            <label>Memo / Reference (optional)</label>
+            <input type="text" id="transferMemoInput" placeholder="What's this transfer for?" maxlength="140" />
+          </div>
+
+          <div class="vt-field">
+            <label data-i18n="nav_pin">Transfer Code</label>
+            <input type="password" id="transferCodeInput" placeholder="Your 6-digit transfer code" autocomplete="off" />
+          </div>
+        </div>
+        <div class="vt-modal-foot">
+          <button class="vt-btn secondary" id="transferCancelBtn" type="button">Cancel</button>
+          <button class="vt-btn primary" id="transferSubmitBtn" type="button" disabled>Review &amp; Send</button>
+        </div>
+      </div>
+    </div>
+
     <script src="assets/libs/jquery/jquery.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
@@ -952,72 +1109,612 @@
 
     <script>
       (function () {
+        function toast(msg, kind) {
+          var VT = window.VT || {};
+          if (VT && VT.UI && typeof VT.UI.toast === "function") {
+            try { VT.UI.toast(msg, kind || "error"); return; } catch (_) {}
+          }
+          var div = document.createElement("div");
+          div.textContent = String(msg || "");
+          div.style.position = "fixed";
+          div.style.bottom = "24px";
+          div.style.left = "50%";
+          div.style.transform = "translateX(-50%)";
+          div.style.zIndex = "9999";
+          div.style.padding = "12px 18px";
+          div.style.borderRadius = "14px";
+          div.style.fontWeight = "700";
+          div.style.fontSize = "13px";
+          div.style.boxShadow = "0 20px 60px -20px rgba(0,0,0,0.35)";
+          if (String(kind || "").toLowerCase() === "ok" || String(kind || "").toLowerCase() === "success") {
+            div.style.background = "#047857";
+            div.style.color = "#ffffff";
+          } else {
+            div.style.background = "#b91c1c";
+            div.style.color = "#ffffff";
+          }
+          document.body.appendChild(div);
+          setTimeout(function () { try { div.remove(); } catch (_) {} }, 3200);
+        }
+
+        function fetchJson(url, options) {
+          return fetch(url, Object.assign({ credentials: "same-origin", headers: { "Accept": "application/json" } }, options || {}))
+            .then(function (r) {
+              var ct = r.headers.get("content-type") || "";
+              if (/json/i.test(ct)) {
+                return r.text().then(function (t) {
+                  try { return { ok: r.ok, status: r.status, json: JSON.parse(t), text: t }; }
+                  catch (_) { return { ok: r.ok, status: r.status, json: {}, text: t }; }
+                });
+              }
+              return r.text().then(function (t) { return { ok: r.ok, status: r.status, json: {}, text: t }; });
+            })
+            .then(function (r) {
+              if (!r.ok) {
+                var msg = (r.json && (r.json.error || r.json.message)) ? String(r.json.error || r.json.message) : ("Request failed (" + r.status + ")");
+                var err = new Error(msg);
+                err.status = r.status;
+                err.response = r;
+                throw err;
+              }
+              return r.json;
+            });
+        }
+
+        function fmtCurrency(v, currency) {
+          var n = Number(v);
+          if (!Number.isFinite(n)) n = 0;
+          var c = String(currency || "USD").toUpperCase() || "USD";
+          try { return n.toLocaleString("en-US", { style: "currency", currency: c, minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+          catch (_) { return c + " " + n.toFixed(2); }
+        }
+
+        function fmtDate(iso) {
+          if (!iso) return "--";
+          try {
+            var d = new Date(iso);
+            if (isNaN(d.getTime())) return String(iso);
+            var now = new Date();
+            var ms = now.getTime() - d.getTime();
+            var mins = Math.floor(ms / 60000);
+            if (mins < 1) return "Just now";
+            if (mins < 60) return mins + " min ago";
+            var hrs = Math.floor(mins / 60);
+            if (hrs < 24) return hrs + " hr" + (hrs === 1 ? "" : "s") + " ago";
+            var days = Math.floor(hrs / 24);
+            if (days < 7) return days + " day" + (days === 1 ? "" : "s") + " ago";
+            return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+          } catch (_) { return String(iso); }
+        }
+
+        function initSidebar() {
+          var toggle = document.getElementById("sidebarToggle");
+          var overlay = document.getElementById("sidebarOverlay");
+          var sidebar = document.querySelector(".vt-sidebar");
+          var body = document.body;
+          function isMobile() {
+            try { return window.matchMedia("(max-width: 992px)").matches; } catch (_) { return true; }
+          }
+          function closeSidebar() { body.classList.remove("vt-sidebar-open"); }
+          function openSidebar() { body.classList.add("vt-sidebar-open"); }
+          if (toggle) {
+            toggle.addEventListener("click", function (e) {
+              e.preventDefault();
+              if (body.classList.contains("vt-sidebar-open")) closeSidebar(); else openSidebar();
+            });
+          }
+          if (overlay) overlay.addEventListener("click", closeSidebar);
+          document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSidebar(); }, false);
+          document.addEventListener("click", function (e) {
+            if (!isMobile()) return;
+            if (!body.classList.contains("vt-sidebar-open")) return;
+            var target = e.target;
+            if (!target) return;
+            if (sidebar && sidebar.contains(target)) return;
+            if (toggle && toggle.contains(target)) return;
+            if (overlay && overlay.contains(target)) return;
+            closeSidebar();
+          }, true);
+        }
+
+        function initLogout() {
+          var logoutBtns = [document.getElementById("logoutBtn"), document.getElementById("logoutBtn2"), document.getElementById("quickLogoutBtn")].filter(Boolean);
+          logoutBtns.forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+              e.preventDefault();
+              var VT = window.VT || {};
+              if (VT.I18N && VT.I18N.t) {
+                var msg = VT.I18N.t("logout_confirm");
+                if (msg && !window.confirm(String(msg))) return;
+              } else if (!window.confirm("Are you sure you want to sign out?")) return;
+              fetchJson("/api/customer/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })
+                .catch(function () {})
+                .then(function () {
+                  window.location.href = "/customer/login.php.html";
+                });
+            });
+          });
+        }
+
+        function applyUserInfoToDashboard(me) {
+          var prof = (me && me.profile) ? me.profile : {};
+          var first = String(prof.firstname || "").trim();
+          var last = String(prof.lastname || "").trim();
+          var email = String(me && me.email ? me.email : "");
+          var fullName = (first + " " + last).trim() || email || "Customer";
+          var nameEl = document.getElementById("dashboardUserName");
+          var emailEl = document.getElementById("dashboardUserEmail");
+          if (nameEl) nameEl.textContent = fullName;
+          if (emailEl) emailEl.textContent = email;
+          var profilePic = String(me && me.profilePic ? me.profilePic : "") || String(prof.profilePic || prof.photoURL || prof.photo || prof.avatar || "");
+          var avatarEl = document.getElementById("avatarInitials");
+          if (avatarEl) {
+            if (profilePic) {
+              var img = document.createElement("img");
+              img.src = profilePic;
+              img.alt = fullName;
+              img.style.width = "100%";
+              img.style.height = "100%";
+              img.style.objectFit = "cover";
+              img.style.borderRadius = "50%";
+              img.style.background = "#ffffff";
+              while (avatarEl.firstChild) avatarEl.removeChild(avatarEl.firstChild);
+              avatarEl.appendChild(img);
+              avatarEl.style.padding = "0";
+              avatarEl.style.background = "transparent";
+              avatarEl.style.color = "transparent";
+            } else {
+              var initials = "";
+              if (first) initials += first.charAt(0).toUpperCase();
+              if (last) initials += last.charAt(0).toUpperCase();
+              if (!initials) initials = "VT";
+              avatarEl.textContent = initials;
+              avatarEl.style.background = "";
+              avatarEl.style.color = "";
+              avatarEl.style.padding = "";
+              while (avatarEl.firstChild && avatarEl.firstChild.tagName === "IMG") avatarEl.removeChild(avatarEl.firstChild);
+            }
+          }
+          var account = (me && me.account) ? me.account : {};
+          var currency = String(account.currency || prof.currency || "USD").toUpperCase() || "USD";
+          var balance = Number(account.balance || 0);
+          var balEl = document.getElementById("balanceAmount");
+          if (balEl) balEl.textContent = fmtCurrency(balance, currency);
+          var pvEl = document.getElementById("portfolioValue");
+          if (pvEl) pvEl.textContent = fmtCurrency(Number(account.portfolioValue || balance * 0.2), currency);
+          var taEl = document.getElementById("totalAssets");
+          if (taEl) taEl.textContent = fmtCurrency(Number(account.totalAssets || balance * 1.05), currency);
+          var svEl = document.getElementById("savingAccount");
+          if (svEl) svEl.textContent = fmtCurrency(Number(account.savingsBalance || balance * 0.35), currency);
+          var maskedEl = document.getElementById("maskedAccount");
+          var accNo = String(account.accountNumber || "");
+          if (maskedEl) {
+            if (accNo && accNo.length >= 4) {
+              maskedEl.textContent = "**** **** **** " + accNo.slice(-4);
+            } else if (accNo) {
+              maskedEl.textContent = accNo;
+            }
+          }
+          return { profile: prof, account: account, currency: currency, balance: balance };
+        }
+
+        function buildTxRow(tx, currency) {
+          var type = String(tx.type || tx.kind || "OTHER").toUpperCase();
+          var amount = Number(tx.amount || 0);
+          var isIn = false, isOut = false;
+          if (/IN$|CREDIT|DEPOSIT|RECEIVE|REFUND/.test(type)) isIn = true;
+          else if (/OUT$|DEBIT|TRANSFER|WITHDRAW|PAY|SEND|BILL|PURCHASE|FEE/.test(type)) isOut = true;
+          var signedAmount = isIn ? Math.abs(amount) : (isOut ? -Math.abs(amount) : amount);
+          var title = String(tx.note || tx.description || tx.title || type);
+          var toName = (tx.to && (tx.to.name || tx.to.accountNumber)) ? String(tx.to.name || tx.to.accountNumber) : "";
+          var fromName = (tx.from && (tx.from.name || tx.from.accountNumber)) ? String(tx.from.name || tx.from.accountNumber) : "";
+          if (!title || title === type) {
+            if (isIn && fromName) title = "Received from " + fromName;
+            else if (isOut && toName) title = "Sent to " + toName;
+            else title = type.replace(/_/g, " ").replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+          }
+          var sub = "Ref: " + (tx.reference || tx.id || "--") + " · " + fmtDate(tx.createdAt || tx.date);
+          var icoClass = isIn ? "in" : (isOut ? "out" : "other");
+          var icon = isIn ? "fas fa-arrow-down" : (isOut ? "fas fa-arrow-up" : "fas fa-credit-card");
+          var amountClass = signedAmount >= 0 ? "in" : "out";
+          var amountText = (signedAmount >= 0 ? "+" : "-") + fmtCurrency(Math.abs(signedAmount), currency);
+          var status = String(tx.status || "PENDING").toUpperCase();
+          var row = document.createElement("div");
+          row.className = "vt-txrow";
+          row.innerHTML =
+            '<div class="ico ' + icoClass + '"><i class="' + icon + '"></i></div>' +
+            '<div class="body"><div class="title"></div><div class="sub"></div>' +
+            '<div class="status ' + status + '"></div></div>' +
+            '<div class="amount ' + amountClass + '"></div>';
+          row.querySelector(".title").textContent = title;
+          row.querySelector(".sub").textContent = sub;
+          row.querySelector(".amount").textContent = amountText;
+          row.querySelector(".status").textContent = status.charAt(0) + status.slice(1).toLowerCase();
+          return row;
+        }
+
+        function renderTransactions(transactions, currency) {
+          var list = document.getElementById("txList");
+          var empty = document.getElementById("txEmptyState");
+          if (!list) return;
+          while (list.firstChild) list.removeChild(list.firstChild);
+          var arr = Array.isArray(transactions) ? transactions.slice(0, 10) : [];
+          if (arr.length === 0) {
+            if (empty) empty.style.display = "";
+            return;
+          }
+          if (empty) empty.style.display = "none";
+          arr.forEach(function (tx) {
+            try { list.appendChild(buildTxRow(tx, currency)); } catch (_) {}
+          });
+        }
+
+        function renderActivityChart(transactions, currency, currentBalance) {
+          var linePath = document.getElementById("activityLinePath");
+          var fillPath = document.getElementById("activityFillPath");
+          var svg = document.getElementById("activityChartSvg");
+          if (!linePath || !fillPath || !svg) return;
+          var W = 800, H = 220;
+          var padX = 24, padY = 30;
+          var points = [];
+          var balances = [];
+          var now = new Date();
+          var todayMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+          var ONE_DAY = 86400000;
+          var DAYS = 14;
+          var dailyNet = {};
+          for (var i = 0; i < DAYS; i++) {
+            var d = new Date(todayMs - (DAYS - 1 - i) * ONE_DAY);
+            var key = d.toISOString().slice(0, 10);
+            dailyNet[key] = 0;
+          }
+          (transactions || []).forEach(function (tx) {
+            var iso = tx.createdAt || tx.date;
+            if (!iso) return;
+            var d;
+            try { d = new Date(iso); } catch (_) { return; }
+            if (isNaN(d.getTime())) return;
+            var key = d.toISOString().slice(0, 10);
+            if (!(key in dailyNet)) return;
+            var amt = Number(tx.amount || 0);
+            var type = String(tx.type || tx.kind || "").toUpperCase();
+            if (/OUT$|DEBIT|WITHDRAW|PAY|SEND|BILL|PURCHASE|FEE/.test(type)) dailyNet[key] -= Math.abs(amt);
+            else if (/IN$|CREDIT|DEPOSIT|RECEIVE|REFUND/.test(type)) dailyNet[key] += Math.abs(amt);
+          });
+          var sortedKeys = Object.keys(dailyNet).sort();
+          var bal = Number(currentBalance || 0);
+          for (var k = sortedKeys.length - 1; k >= 0; k--) {
+            balances.push(bal);
+            bal -= Number(dailyNet[sortedKeys[k]] || 0);
+          }
+          balances.reverse();
+          var minBal = Math.min.apply(null, balances.concat([0]));
+          var maxBal = Math.max.apply(null, balances.concat([Number(currentBalance || 0) * 1.05]));
+          if (maxBal - minBal < 0.01) { minBal = 0; maxBal = Math.max(1, Number(currentBalance || 100)); }
+          var usableW = W - padX * 2;
+          var usableH = H - padY * 2;
+          points = sortedKeys.map(function (key, idx) {
+            var ratio = sortedKeys.length <= 1 ? 0.5 : (idx / (sortedKeys.length - 1));
+            var x = padX + ratio * usableW;
+            var v = balances[idx];
+            var yRatio = (maxBal - v) / (maxBal - minBal);
+            if (!Number.isFinite(yRatio)) yRatio = 1;
+            yRatio = Math.max(0, Math.min(1, yRatio));
+            var y = padY + yRatio * usableH;
+            return [x, y];
+          });
+          if (points.length === 0) {
+            points = [[padX, H - padY], [W - padX, H - padY]];
+          } else if (points.length === 1) {
+            points = [[padX, points[0][1]], [W - padX, points[0][1]]];
+          }
+          function smoothPath(pts) {
+            if (pts.length < 2) return "M" + pts[0][0] + "," + pts[0][1];
+            var d = "M" + pts[0][0].toFixed(2) + "," + pts[0][1].toFixed(2);
+            for (var i = 1; i < pts.length; i++) {
+              var p0 = pts[i - 1];
+              var p1 = pts[i];
+              var cpx1 = p0[0] + (p1[0] - p0[0]) * 0.45;
+              var cpx2 = p1[0] - (p1[0] - p0[0]) * 0.45;
+              d += " C" + cpx1.toFixed(2) + "," + p0[1].toFixed(2) + " " + cpx2.toFixed(2) + "," + p1[1].toFixed(2) + " " + p1[0].toFixed(2) + "," + p1[1].toFixed(2);
+            }
+            return d;
+          }
+          var lineD = smoothPath(points);
+          var first = points[0], last = points[points.length - 1];
+          var fillD = lineD + " L" + last[0].toFixed(2) + "," + (H).toFixed(2) + " L" + first[0].toFixed(2) + "," + (H).toFixed(2) + " Z";
+          linePath.setAttribute("d", lineD);
+          fillPath.setAttribute("d", fillD);
+        }
+
+        function fetchAndRenderTx(ctx) {
+          var currency = ctx && ctx.currency ? ctx.currency : "USD";
+          var balance = ctx && Number.isFinite(ctx.balance) ? ctx.balance : 0;
+          return fetchJson("/api/customer/transactions?limit=60", { method: "GET" })
+            .then(function (data) {
+              var txs = data && Array.isArray(data.transactions) ? data.transactions : [];
+              if (data && Number.isFinite(Number(data.balance))) balance = Number(data.balance);
+              renderTransactions(txs, currency);
+              renderActivityChart(txs, currency, balance);
+              return txs;
+            })
+            .catch(function (err) {
+              console.warn("[VT] Unable to load transactions:", err && err.message ? err.message : err);
+              renderTransactions([], currency);
+              renderActivityChart([], currency, balance);
+              return [];
+            });
+        }
+
+        var transferState = { recipient: null, debounceTimer: null };
+
+        function resetTransferModal() {
+          transferState.recipient = null;
+          var errEl = document.getElementById("transferModalError");
+          var okEl = document.getElementById("transferModalSuccess");
+          if (errEl) { errEl.classList.remove("show"); errEl.textContent = ""; }
+          if (okEl) { okEl.classList.remove("show"); okEl.textContent = ""; }
+          var look = document.getElementById("transferLookupValue");
+          var amt = document.getElementById("transferAmountInput");
+          var memo = document.getElementById("transferMemoInput");
+          var code = document.getElementById("transferCodeInput");
+          if (look) look.value = "";
+          if (amt) amt.value = "";
+          if (memo) memo.value = "";
+          if (code) code.value = "";
+          var prev = document.getElementById("transferRecipientPreview");
+          if (prev) prev.classList.remove("show", "error");
+          var pill = document.getElementById("transferRecipientPill");
+          if (pill) pill.textContent = "?";
+          var rname = document.getElementById("transferRecipientName");
+          var rmeta = document.getElementById("transferRecipientMeta");
+          if (rname) rname.textContent = "";
+          if (rmeta) rmeta.textContent = "";
+          var submitBtn = document.getElementById("transferSubmitBtn");
+          if (submitBtn) submitBtn.disabled = true;
+        }
+
+        function openTransferModal() {
+          resetTransferModal();
+          var o = document.getElementById("transferModalOverlay");
+          if (o) {
+            o.classList.add("open");
+            o.setAttribute("aria-hidden", "false");
+          }
+        }
+        function closeTransferModal() {
+          var o = document.getElementById("transferModalOverlay");
+          if (o) {
+            o.classList.remove("open");
+            o.setAttribute("aria-hidden", "true");
+          }
+        }
+
+        function setTransferMsg(kind, text) {
+          var err = document.getElementById("transferModalError");
+          var ok = document.getElementById("transferModalSuccess");
+          if (err) { err.classList.remove("show"); err.textContent = ""; }
+          if (ok) { ok.classList.remove("show"); ok.textContent = ""; }
+          var target = kind === "error" ? err : ok;
+          if (target) { target.textContent = String(text || ""); target.classList.add("show"); }
+        }
+
+        function updateRecipientPreview() {
+          var prev = document.getElementById("transferRecipientPreview");
+          var pill = document.getElementById("transferRecipientPill");
+          var name = document.getElementById("transferRecipientName");
+          var meta = document.getElementById("transferRecipientMeta");
+          var submit = document.getElementById("transferSubmitBtn");
+          if (!prev) return;
+          if (!transferState.recipient || !transferState.recipient.ok) {
+            prev.classList.remove("show", "error");
+            if (submit) submit.disabled = true;
+            return;
+          }
+          if (transferState.recipient.ok === true && transferState.recipient.data) {
+            prev.classList.remove("error");
+            prev.classList.add("show");
+            var r = transferState.recipient.data;
+            var fn = String(r.fullName || r.name || "");
+            var initials = "";
+            if (fn) {
+              var parts = fn.split(/\s+/).filter(Boolean).slice(0, 2);
+              parts.forEach(function (p) { initials += p.charAt(0).toUpperCase(); });
+            }
+            if (!initials) initials = "?";
+            if (pill) pill.textContent = initials;
+            if (name) name.textContent = fn || r.email || r.accountNumber || "Recipient";
+            var line = [];
+            if (r.accountNumber) line.push("Acct " + r.accountNumber);
+            if (r.email) line.push(r.email);
+            if (r.currency) line.push(r.currency);
+            if (meta) meta.textContent = line.join(" · ");
+            if (submit) {
+              var amt = document.getElementById("transferAmountInput");
+              var code = document.getElementById("transferCodeInput");
+              var amtValid = amt && Number(amt.value) > 0;
+              var codeValid = code && code.value.trim().length >= 6;
+              submit.disabled = !(amtValid && codeValid);
+            }
+          } else if (transferState.recipient.ok === false) {
+            prev.classList.add("show", "error");
+            if (pill) pill.textContent = "!";
+            if (name) name.textContent = "Recipient not found";
+            if (meta) meta.textContent = String(transferState.recipient.message || "Please check the account number or email.");
+            if (submit) submit.disabled = true;
+          }
+        }
+
+        function performRecipientLookup() {
+          var typeSel = document.getElementById("transferLookupType");
+          var valInput = document.getElementById("transferLookupValue");
+          var prev = document.getElementById("transferRecipientPreview");
+          var type = typeSel ? String(typeSel.value || "accountNumber") : "accountNumber";
+          var value = valInput ? String(valInput.value || "").trim() : "";
+          if (!value) { transferState.recipient = null; updateRecipientPreview(); return; }
+          if (prev) { prev.classList.remove("show", "error"); }
+          transferState.recipient = null;
+          var params = new URLSearchParams();
+          if (type === "accountNumber") params.set("accountNumber", value);
+          else params.set("email", value);
+          fetchJson("/api/customer/lookup-account?" + params.toString(), { method: "GET" })
+            .then(function (data) {
+              if (data && data.ok && data.recipient) {
+                transferState.recipient = { ok: true, data: data.recipient };
+              } else {
+                transferState.recipient = { ok: false, message: (data && data.error) ? String(data.error) : "Recipient not found." };
+              }
+              updateRecipientPreview();
+            })
+            .catch(function (err) {
+              transferState.recipient = { ok: false, message: err && err.message ? String(err.message) : "Unable to look up account." };
+              updateRecipientPreview();
+            });
+        }
+
+        function refreshTransferSubmitEnabled() {
+          var submit = document.getElementById("transferSubmitBtn");
+          if (!submit) return;
+          var amt = document.getElementById("transferAmountInput");
+          var code = document.getElementById("transferCodeInput");
+          var amtValid = !!(amt && Number(amt.value) > 0);
+          var codeValid = !!(code && code.value.trim().length >= 6);
+          var recipientValid = !!(transferState.recipient && transferState.recipient.ok);
+          submit.disabled = !(amtValid && codeValid && recipientValid);
+        }
+
+        function submitTransfer(ctx) {
+          var submitBtn = document.getElementById("transferSubmitBtn");
+          if (submitBtn) submitBtn.disabled = true;
+          var typeSel = document.getElementById("transferLookupType");
+          var valInput = document.getElementById("transferLookupValue");
+          var amtInput = document.getElementById("transferAmountInput");
+          var memoInput = document.getElementById("transferMemoInput");
+          var codeInput = document.getElementById("transferCodeInput");
+          setTransferMsg("error", "");
+          setTransferMsg("success", "");
+          var type = typeSel ? String(typeSel.value || "accountNumber") : "accountNumber";
+          var value = valInput ? String(valInput.value || "").trim() : "";
+          var amount = Number(amtInput ? amtInput.value : 0);
+          var memo = memoInput ? String(memoInput.value || "").trim() : "";
+          var code = codeInput ? String(codeInput.value || "").trim() : "";
+          if (!transferState.recipient || !transferState.recipient.ok) {
+            setTransferMsg("error", "Please select a valid recipient first.");
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+          }
+          if (!(amount > 0)) {
+            setTransferMsg("error", "Amount must be greater than 0.");
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+          }
+          if (code.length < 6) {
+            setTransferMsg("error", "Please enter your transfer code.");
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+          }
+          var bodyObj = { amount: amount, memo: memo, transferCode: code, currency: (ctx && ctx.currency) ? ctx.currency : "USD" };
+          if (type === "accountNumber") bodyObj.toAccountNumber = value;
+          else bodyObj.toEmail = value;
+          var originalText = submitBtn ? submitBtn.textContent : "Send";
+          if (submitBtn) submitBtn.textContent = "Sending…";
+          fetchJson("/api/customer/transfer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyObj)
+          })
+            .then(function (data) {
+              if (data && data.ok) {
+                setTransferMsg("success", "Transfer sent successfully. Reference " + (data.reference || "--"));
+                toast("Transfer completed successfully!", "success");
+                var bal = document.getElementById("balanceAmount");
+                if (bal && data && Number.isFinite(Number(data.newBalance))) {
+                  var c = (ctx && ctx.currency) ? ctx.currency : "USD";
+                  bal.textContent = fmtCurrency(Number(data.newBalance), c);
+                }
+                setTimeout(function () { closeTransferModal(); resetTransferModal(); fetchAndRenderTx(ctx); }, 1300);
+              } else {
+                throw new Error((data && data.error) ? String(data.error) : "Transfer failed.");
+              }
+            })
+            .catch(function (err) {
+              setTransferMsg("error", err && err.message ? String(err.message) : "Transfer failed.");
+              toast(err && err.message ? String(err.message) : "Transfer failed.", "error");
+            })
+            .then(function () {
+              if (submitBtn) submitBtn.textContent = originalText || "Review & Send";
+              refreshTransferSubmitEnabled();
+            });
+        }
+
+        function initTransferModal(ctx) {
+          var sidebarBtn = document.getElementById("sidebarLocalTransferBtn");
+          var quickBtn = document.getElementById("quickTransferBtn");
+          var closeBtn = document.getElementById("transferModalClose");
+          var cancelBtn = document.getElementById("transferCancelBtn");
+          var overlay = document.getElementById("transferModalOverlay");
+          var submitBtn = document.getElementById("transferSubmitBtn");
+          var lookup = document.getElementById("transferLookupValue");
+          var lookupType = document.getElementById("transferLookupType");
+          var amt = document.getElementById("transferAmountInput");
+          var code = document.getElementById("transferCodeInput");
+          [sidebarBtn, quickBtn].forEach(function (b) {
+            if (b) b.addEventListener("click", function (e) { e.preventDefault(); openTransferModal(); });
+          });
+          if (closeBtn) closeBtn.addEventListener("click", closeTransferModal);
+          if (cancelBtn) cancelBtn.addEventListener("click", closeTransferModal);
+          if (overlay) {
+            overlay.addEventListener("click", function (e) {
+              if (e.target === overlay) closeTransferModal();
+            });
+          }
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") closeTransferModal();
+          });
+          function scheduleLookup() {
+            if (transferState.debounceTimer) clearTimeout(transferState.debounceTimer);
+            transferState.debounceTimer = setTimeout(performRecipientLookup, 350);
+          }
+          if (lookup) lookup.addEventListener("input", scheduleLookup);
+          if (lookup) lookup.addEventListener("blur", performRecipientLookup);
+          if (lookupType) lookupType.addEventListener("change", performRecipientLookup);
+          if (amt) amt.addEventListener("input", refreshTransferSubmitEnabled);
+          if (code) code.addEventListener("input", refreshTransferSubmitEnabled);
+          if (submitBtn) {
+            submitBtn.addEventListener("click", function () { submitTransfer(ctx || {}); });
+          }
+        }
+
         function bootI18nAndKyc() {
-          if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) return;
+          if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) {
+            setTimeout(bootI18nAndKyc, 80);
+            return;
+          }
           window.VT.UI.bootstrapCustomerPage({
             after: function (ctx) {
               if (window.console) {
                 window.console.log("[VT] Dashboard ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
               }
+              var me = (ctx && ctx.me) ? ctx.me : null;
+              var info = me ? applyUserInfoToDashboard(me) : { currency: "USD", balance: 0 };
+              initTransferModal(info);
+              fetchAndRenderTx(info);
             }
           }).catch(function (err) {
             if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);
           });
         }
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
-        } else {
-          bootI18nAndKyc();
-        }
-      })();
-    </script>
 
-    <script>
-      (function () {
-        var toggle = document.getElementById("sidebarToggle");
-        var overlay = document.getElementById("sidebarOverlay");
-        var body = document.body;
-
-        function closeSidebar() {
-          body.classList.remove("vt-sidebar-open");
+        function start() {
+          initSidebar();
+          initLogout();
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
+          } else {
+            bootI18nAndKyc();
+          }
         }
-
-        function openSidebar() {
-          body.classList.add("vt-sidebar-open");
-        }
-
-        if (toggle) {
-          toggle.addEventListener("click", function () {
-            if (body.classList.contains("vt-sidebar-open")) {
-              closeSidebar();
-            } else {
-              openSidebar();
-            }
-          });
-        }
-
-        if (overlay) {
-          overlay.addEventListener("click", closeSidebar);
-        }
-
-        if (window.addEventListener) {
-          window.addEventListener(
-            "keydown",
-            function (e) {
-              if (e.key === "Escape") closeSidebar();
-            },
-            false
-          );
-        }
-
-        var logoutBtn2 = document.getElementById("logoutBtn2");
-        var logoutBtn = document.getElementById("logoutBtn");
-        if (logoutBtn2 && logoutBtn) {
-          logoutBtn2.addEventListener("click", function (e) {
-            e.preventDefault();
-            logoutBtn.click();
-          });
-        }
+        start();
       })();
     </script>
   </body>

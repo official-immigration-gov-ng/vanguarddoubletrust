@@ -470,3 +470,79 @@ function accordion(e) {
 for (i = 0; i < list.length; i++) {
 	list[i].addEventListener('click', accordion);
 }
+
+// Mobile-only: close offcanvas nav when clicking outside (phone screens only)
+(function mobileOffcanvasCloseOutside() {
+	if (typeof document === "undefined") return;
+	const offcanvasEl = document.getElementById("offcanvasExample");
+	if (!offcanvasEl || typeof bootstrap === "undefined") return;
+
+	const MOBILE_MAX_WIDTH = 991;
+
+	function isMobileViewport() {
+		return typeof window !== "undefined" && window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`).matches;
+	}
+
+	let outsideHandler = null;
+	let escHandler = null;
+
+	function cleanupHandlers() {
+		if (outsideHandler) {
+			document.removeEventListener("click", outsideHandler, true);
+			outsideHandler = null;
+		}
+		if (escHandler) {
+			document.removeEventListener("keydown", escHandler, true);
+			escHandler = null;
+		}
+	}
+
+	function installHandlers() {
+		cleanupHandlers();
+		if (!isMobileViewport()) return;
+
+		outsideHandler = function (e) {
+			const bsInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+			if (!bsInstance) return;
+			const isOpen = offcanvasEl.classList.contains("show");
+			if (!isOpen) return;
+
+			if (offcanvasEl.contains(e.target)) return;
+
+			const toggler = document.querySelector('[data-bs-toggle="offcanvas"][href="#offcanvasExample"], [data-bs-toggle="offcanvas"][data-bs-target="#offcanvasExample"]');
+			if (toggler && toggler.contains(e.target)) return;
+
+			bsInstance.hide();
+		};
+		document.addEventListener("click", outsideHandler, true);
+
+		escHandler = function (e) {
+			if (e.key !== "Escape") return;
+			const bsInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+			const isOpen = offcanvasEl.classList.contains("show");
+			if (bsInstance && isOpen) bsInstance.hide();
+		};
+		document.addEventListener("keydown", escHandler, true);
+	}
+
+	offcanvasEl.addEventListener("shown.bs.offcanvas", installHandlers);
+	offcanvasEl.addEventListener("hidden.bs.offcanvas", cleanupHandlers);
+
+	if (typeof window !== "undefined") {
+		let resizeTid = null;
+		window.addEventListener("resize", function () {
+			clearTimeout(resizeTid);
+			resizeTid = setTimeout(function () {
+				const bsInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+				const isOpen = offcanvasEl.classList.contains("show");
+				if (bsInstance && isOpen) {
+					if (!isMobileViewport()) {
+						bsInstance.hide();
+					} else {
+						installHandlers();
+					}
+				}
+			}, 120);
+		});
+	}
+})();

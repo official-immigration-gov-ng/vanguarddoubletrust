@@ -570,6 +570,27 @@
             <p>Manage your personal information and security.</p>
           </div>
 
+          <section class="vt-panel" style="margin-top:14px;">
+            <div class="vt-panel-head">
+              <span class="bar"></span>
+              <span data-i18n="pic_section_title">Profile Picture</span>
+            </div>
+            <div class="vt-panel-body">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                <div id="profileAvatarBox" style="width:148px;height:148px;border-radius:50%;overflow:hidden;border:3px solid rgba(11,15,20,0.1);background:#f1f5f9;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -18px rgba(2,6,23,0.4);">
+                  <i class="fas fa-user" style="font-size:56px;color:#94a3b8;"></i>
+                </div>
+                <div style="text-align:center;">
+                  <button type="button" class="btn btn-dark" id="profilePicUploadBtn" style="border-radius:14px;padding:10px 18px;font-weight:800;font-size:13px;">
+                    <i class="fas fa-camera" style="margin-right:6px;"></i>
+                    <span data-i18n="pic_upload_action">Upload Photo</span>
+                  </button>
+                  <div style="margin-top:8px;color:#64748b;font-size:11px;font-weight:700;" data-i18n="pic_hint">JPG, PNG, or WebP. Max 8 MB.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section class="vt-panel">
             <div class="vt-panel-head">
               <span class="bar"></span>
@@ -671,16 +692,166 @@
     <script src="assets/js/customer-i18n.js"></script>
     <script>
       (function () {
+        function getProfilePicUrl(me) {
+          if (!me) return "";
+          if (me.profilePic) return String(me.profilePic).trim();
+          const p = me.profile || {};
+          return String(p.profilePic || p.photoURL || p.photo || p.avatar || "").trim();
+        }
+
+        function getUserInitials(me) {
+          if (!me) return "VT";
+          const p = me.profile || {};
+          const first = String(p.firstname || p.firstName || "").trim().charAt(0);
+          const last = String(p.lastname || p.lastName || "").trim().charAt(0);
+          const name = String(me.name || me.displayName || "").trim();
+          let fromName = "";
+          if (name) {
+            const parts = name.split(/\s+/).filter(Boolean);
+            if (parts.length) fromName = (parts[0].charAt(0) + (parts[parts.length - 1] || "").charAt(0)).toUpperCase();
+          }
+          const parts = (first + last).toUpperCase();
+          const out = parts || fromName || "VT";
+          return out.slice(0, 2);
+        }
+
+        function getFullName(me) {
+          if (!me) return "--";
+          const p = me.profile || {};
+          const f = String(p.firstname || p.firstName || "").trim();
+          const l = String(p.lastname || p.lastName || "").trim();
+          const n = String(me.name || me.displayName || "").trim();
+          if (f || l) return ((f + " " + l).trim() || n || "--");
+          return n || "--";
+        }
+
+        function getUserEmail(me) {
+          if (!me) return "--";
+          const p = me.profile || {};
+          return String(me.email || p.email || "").trim() || "--";
+        }
+
+        function formatDate(v) {
+          if (!v) return "--";
+          try {
+            const d = (v instanceof Date) ? v : new Date(v);
+            if (!isFinite(d.getTime())) return "--";
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${y}-${m}-${day}`;
+          } catch (_) {
+            return "--";
+          }
+        }
+
+        function renderAvatars(picUrl, me) {
+          const box = document.getElementById("profileAvatarBox");
+          const topAvatar = document.getElementById("avatarInitials");
+          if (box) {
+            if (picUrl) {
+              box.innerHTML = `<img src="${picUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
+            } else {
+              box.innerHTML = `<i class="fas fa-user" style="font-size:56px;color:#94a3b8;"></i>`;
+            }
+          }
+          if (topAvatar) {
+            if (picUrl) {
+              topAvatar.innerHTML = `<img src="${picUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;" />`;
+            } else {
+              topAvatar.textContent = getUserInitials(me);
+            }
+          }
+        }
+
+        function updateUploadButtonLabel(hasPic) {
+          const btn = document.getElementById("profilePicUploadBtn");
+          if (!btn || !window.VT || !window.VT.I18N) return;
+          const span = btn.querySelector("span[data-i18n]");
+          const key = hasPic ? "pic_change_action" : "pic_upload_action";
+          if (span) {
+            span.setAttribute("data-i18n", key);
+            const lang = latestLanguage || "en";
+            const val = window.VT.I18N.t ? window.VT.I18N.t(lang, key) : (hasPic ? "Change Photo" : "Upload Photo");
+            span.textContent = val || (hasPic ? "Change Photo" : "Upload Photo");
+          }
+        }
+
+        function populateProfileFields(me) {
+          const el = (id, text) => {
+            const n = document.getElementById(id);
+            if (n) n.textContent = text == null ? "--" : String(text);
+          };
+          el("accountHolder", getFullName(me));
+          el("emailAddress", getUserEmail(me));
+          el("profileUserName", getFullName(me));
+          el("profileUserEmail", getUserEmail(me));
+          const p = (me && me.profile) || {};
+          const lang = latestLanguage || "en";
+          const genderRaw = String(p.gender || "").trim();
+          const genderVal = genderRaw
+            ? (window.VT && window.VT.I18N && window.VT.I18N.t
+                ? window.VT.I18N.t(lang, "kyc_gender_" + genderRaw.toLowerCase()) || (genderRaw.charAt(0).toUpperCase() + genderRaw.slice(1))
+                : (genderRaw.charAt(0).toUpperCase() + genderRaw.slice(1)))
+            : "--";
+          el("phoneNumber", String(p.phone || p.phoneNumber || "").trim() || "--");
+          el("accountOpening", formatDate(p.createdAt || me.createdAt || p.accountOpening || ""));
+          el("branchCode", String(p.branchCode || "RBBS0001").trim() || "RBBS0001");
+          el("lastLogin", formatDate(me.lastLogin || p.lastLogin || ""));
+          el("gender", genderVal);
+          el("accountNumber", String(p.accountNumber || me.accountNumber || "").trim() || "--");
+        }
+
+        let latestMe = null;
+        let latestLanguage = "en";
+
+        function openPicGateFromProfile() {
+          if (!window.VT || !window.VT.UI || typeof window.VT.UI.showPicGate !== "function") {
+            if (window.console) window.console.error("[VT] showPicGate not available");
+            return;
+          }
+          window.VT.UI.showPicGate({
+            me: latestMe || {},
+            onComplete: function (res) {
+              const r = res || {};
+              if (latestMe) {
+                latestMe = Object.assign({}, latestMe, { profilePic: r.profilePic || (latestMe && latestMe.profilePic) || "" });
+                if (!latestMe.profile) latestMe.profile = {};
+                latestMe.profile = Object.assign({}, latestMe.profile, {
+                  profilePic: r.profilePic || (latestMe.profile && latestMe.profile.profilePic) || ""
+                });
+                if (r.publicId) latestMe.profile.profilePicPublicId = r.publicId;
+              }
+              const picUrl = getProfilePicUrl(latestMe);
+              renderAvatars(picUrl, latestMe);
+              updateUploadButtonLabel(!!picUrl);
+            },
+            onSkip: function () {}
+          });
+        }
+
         function bootI18nAndKyc() {
           if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) return;
+          const btn = document.getElementById("profilePicUploadBtn");
+          if (btn) {
+            btn.addEventListener("click", function () { openPicGateFromProfile(); });
+          }
           window.VT.UI.bootstrapCustomerPage({
             after: function (ctx) {
-              if (window.console) window.console.log("[VT] Subpage ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
+              const c = ctx || {};
+              latestMe = c.me || null;
+              latestLanguage = c.language || "en";
+              const picUrl = getProfilePicUrl(latestMe);
+              populateProfileFields(latestMe);
+              renderAvatars(picUrl, latestMe);
+              updateUploadButtonLabel(!!picUrl);
+              if (window.console) window.console.log("[VT] Subpage ready: language=" + latestLanguage + ", kyc=" + (c.kycCompleted) + ", pic=" + !!picUrl);
             }
           }).catch(function (err) {
             if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);
           });
         }
+
         if (document.readyState === "loading") {
           document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
         } else {

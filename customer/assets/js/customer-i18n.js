@@ -163,7 +163,24 @@
       error_unauthorized: "Your session ended. Please sign in again.",
       logout_confirm: "Are you sure you want to sign out?",
       footer_rights: "All rights reserved.",
-      common_required: "Required"
+      common_required: "Required",
+      pic_title: "Add Your Profile Picture",
+      pic_subtitle: "Upload a clear photo so we can recognize your account. This step is optional.",
+      pic_upload_label: "Choose a Photo",
+      pic_hint: "JPG, PNG, or WebP. Max 8 MB.",
+      pic_skip: "Skip for now",
+      pic_save: "Save Profile Picture",
+      pic_uploading: "Uploading…",
+      pic_saving: "Saving…",
+      pic_success: "Profile picture saved!",
+      pic_remove: "Remove picture",
+      pic_removed: "Profile picture removed.",
+      pic_error_size: "File too large. Max 8 MB.",
+      pic_error_format: "Invalid format. Use JPG, PNG, or WebP.",
+      pic_error_generic: "Unable to upload. Please try another picture.",
+      pic_section_title: "Profile Picture",
+      pic_upload_action: "Upload Photo",
+      pic_change_action: "Change Photo"
     },
     es: {
       _name: "Español",
@@ -322,7 +339,24 @@
       error_unauthorized: "Tu sesión terminó. Por favor inicia sesión de nuevo.",
       logout_confirm: "¿Seguro que deseas cerrar sesión?",
       footer_rights: "Todos los derechos reservados.",
-      common_required: "Obligatorio"
+      common_required: "Obligatorio",
+      pic_title: "Añade tu foto de perfil",
+      pic_subtitle: "Sube una foto clara para reconocer tu cuenta. Este paso es opcional.",
+      pic_upload_label: "Elegir una foto",
+      pic_hint: "JPG, PNG o WebP. Máx. 8 MB.",
+      pic_skip: "Omitir por ahora",
+      pic_save: "Guardar foto",
+      pic_uploading: "Subiendo…",
+      pic_saving: "Guardando…",
+      pic_success: "¡Foto de perfil guardada!",
+      pic_remove: "Eliminar foto",
+      pic_removed: "Foto de perfil eliminada.",
+      pic_error_size: "Archivo muy grande. Máx. 8 MB.",
+      pic_error_format: "Formato no válido. Usa JPG, PNG o WebP.",
+      pic_error_generic: "No se pudo subir. Intenta con otra foto.",
+      pic_section_title: "Foto de perfil",
+      pic_upload_action: "Subir foto",
+      pic_change_action: "Cambiar foto"
     },
     fr: {
       _name: "Français",
@@ -481,7 +515,24 @@
       error_unauthorized: "Votre session a expiré. Veuillez vous reconnecter.",
       logout_confirm: "Êtes-vous sûr de vouloir vous déconnecter ?",
       footer_rights: "Tous droits réservés.",
-      common_required: "Requis"
+      common_required: "Requis",
+      pic_title: "Ajouter votre photo de profil",
+      pic_subtitle: "Téléchargez une photo claire pour que nous puissions reconnaître votre compte. Cette étape est facultative.",
+      pic_upload_label: "Choisir une photo",
+      pic_hint: "JPG, PNG ou WebP. Max 8 Mo.",
+      pic_skip: "Ignorer pour l'instant",
+      pic_save: "Enregistrer la photo de profil",
+      pic_uploading: "Téléversement en cours…",
+      pic_saving: "Enregistrement…",
+      pic_success: "Photo de profil enregistrée !",
+      pic_remove: "Supprimer la photo",
+      pic_removed: "Photo de profil supprimée.",
+      pic_error_size: "Fichier trop volumineux. Max 8 Mo.",
+      pic_error_format: "Format non valide. Utilisez JPG, PNG ou WebP.",
+      pic_error_generic: "Impossible de téléverser. Veuillez essayer une autre photo.",
+      pic_section_title: "Photo de profil",
+      pic_upload_action: "Téléverser une photo",
+      pic_change_action: "Changer la photo"
     },
     de: {
       _name: "Deutsch",
@@ -640,7 +691,24 @@
       error_unauthorized: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
       logout_confirm: "Sind Sie sicher, dass Sie sich abmelden möchten?",
       footer_rights: "Alle Rechte vorbehalten.",
-      common_required: "Pflichtfeld"
+      common_required: "Pflichtfeld",
+      pic_title: "Profilbild hinzufügen",
+      pic_subtitle: "Laden Sie ein klares Foto hoch, damit wir Ihr Konto erkennen können. Dieser Schritt ist optional.",
+      pic_upload_label: "Foto auswählen",
+      pic_hint: "JPG, PNG oder WebP. Max. 8 MB.",
+      pic_skip: "Vorerst überspringen",
+      pic_save: "Profilbild speichern",
+      pic_uploading: "Wird hochgeladen…",
+      pic_saving: "Wird gespeichert…",
+      pic_success: "Profilbild gespeichert!",
+      pic_remove: "Bild entfernen",
+      pic_removed: "Profilbild entfernt.",
+      pic_error_size: "Datei zu groß. Max. 8 MB.",
+      pic_error_format: "Ungültiges Format. JPG, PNG oder WebP verwenden.",
+      pic_error_generic: "Hochladen fehlgeschlagen. Versuchen Sie es mit einem anderen Foto.",
+      pic_section_title: "Profilbild",
+      pic_upload_action: "Foto hochladen",
+      pic_change_action: "Foto ändern"
     },
     pt: {
       _name: "Português",
@@ -799,7 +867,24 @@
       error_unauthorized: "Sua sessão expirou. Por favor, faça login novamente.",
       logout_confirm: "Tem certeza que deseja sair?",
       footer_rights: "Todos os direitos reservados.",
-      common_required: "Obrigatório"
+      common_required: "Obrigatório",
+      pic_title: "Adicione sua foto de perfil",
+      pic_subtitle: "Envie uma foto clara para que possamos reconhecer sua conta. Esta etapa é opcional.",
+      pic_upload_label: "Escolher uma foto",
+      pic_hint: "JPG, PNG ou WebP. Máx. 8 MB.",
+      pic_skip: "Pular por enquanto",
+      pic_save: "Salvar foto de perfil",
+      pic_uploading: "Enviando…",
+      pic_saving: "Salvando…",
+      pic_success: "Foto de perfil salva!",
+      pic_remove: "Remover foto",
+      pic_removed: "Foto de perfil removida.",
+      pic_error_size: "Arquivo muito grande. Máx. 8 MB.",
+      pic_error_format: "Formato inválido. Use JPG, PNG ou WebP.",
+      pic_error_generic: "Não foi possível enviar. Tente outra foto.",
+      pic_section_title: "Foto de perfil",
+      pic_upload_action: "Enviar foto",
+      pic_change_action: "Alterar foto"
     },
     ru: {
       _name: "Русский",
@@ -958,7 +1043,24 @@
       error_unauthorized: "Сессия истекла. Пожалуйста, войдите снова.",
       logout_confirm: "Вы уверены, что хотите выйти?",
       footer_rights: "Все права защищены.",
-      common_required: "Обязательно"
+      common_required: "Обязательно",
+      pic_title: "Добавьте фото профиля",
+      pic_subtitle: "Загрузите чёткое фото, чтобы мы могли распознать ваш счёт. Этот шаг необязателен.",
+      pic_upload_label: "Выбрать фото",
+      pic_hint: "JPG, PNG или WebP. Макс. 8 МБ.",
+      pic_skip: "Пропустить сейчас",
+      pic_save: "Сохранить фото профиля",
+      pic_uploading: "Загрузка…",
+      pic_saving: "Сохранение…",
+      pic_success: "Фото профиля сохранено!",
+      pic_remove: "Удалить фото",
+      pic_removed: "Фото профиля удалено.",
+      pic_error_size: "Файл слишком большой. Макс. 8 МБ.",
+      pic_error_format: "Недопустимый формат. Используйте JPG, PNG или WebP.",
+      pic_error_generic: "Не удалось загрузить. Попробуйте другое фото.",
+      pic_section_title: "Фото профиля",
+      pic_upload_action: "Загрузить фото",
+      pic_change_action: "Изменить фото"
     },
     zh: {
       _name: "中文",
@@ -1117,7 +1219,24 @@
       error_unauthorized: "登录已过期，请重新登录。",
       logout_confirm: "确认退出登录？",
       footer_rights: "版权所有。",
-      common_required: "必填"
+      common_required: "必填",
+      pic_title: "添加您的个人资料图片",
+      pic_subtitle: "上传一张清晰的照片，以便我们识别您的账户。此步骤为可选。",
+      pic_upload_label: "选择照片",
+      pic_hint: "JPG、PNG 或 WebP 格式。最大 8 MB。",
+      pic_skip: "稍后再说",
+      pic_save: "保存个人资料图片",
+      pic_uploading: "上传中…",
+      pic_saving: "保存中…",
+      pic_success: "个人资料图片已保存！",
+      pic_remove: "移除图片",
+      pic_removed: "个人资料图片已移除。",
+      pic_error_size: "文件过大。最大 8 MB。",
+      pic_error_format: "格式无效。请使用 JPG、PNG 或 WebP。",
+      pic_error_generic: "无法上传。请尝试其他照片。",
+      pic_section_title: "个人资料图片",
+      pic_upload_action: "上传照片",
+      pic_change_action: "更换照片"
     },
     ar: {
       _name: "العربية",
@@ -1276,7 +1395,24 @@
       error_unauthorized: "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
       logout_confirm: "هل أنت متأكد من تسجيل الخروج؟",
       footer_rights: "جميع الحقوق محفوظة.",
-      common_required: "مطلوب"
+      common_required: "مطلوب",
+      pic_title: "أضف صورة ملفك الشخصي",
+      pic_subtitle: "قم بتحميل صورة واضحة حتى نتمكن من التعرف على حسابك. هذه الخطوة اختيارية.",
+      pic_upload_label: "اختر صورة",
+      pic_hint: "JPG أو PNG أو WebP. الحد الأقصى 8 ميجابايت.",
+      pic_skip: "تخطي الآن",
+      pic_save: "حفظ صورة الملف الشخصي",
+      pic_uploading: "جارٍ التحميل…",
+      pic_saving: "جارٍ الحفظ…",
+      pic_success: "تم حفظ صورة الملف الشخصي!",
+      pic_remove: "إزالة الصورة",
+      pic_removed: "تمت إزالة صورة الملف الشخصي.",
+      pic_error_size: "الملف كبير جدًا. الحد الأقصى 8 ميجابايت.",
+      pic_error_format: "تنسيق غير صالح. استخدم JPG أو PNG أو WebP.",
+      pic_error_generic: "تعذر التحميل. يرجى تجربة صورة أخرى.",
+      pic_section_title: "صورة الملف الشخصي",
+      pic_upload_action: "تحميل صورة",
+      pic_change_action: "تغيير الصورة"
     },
     it: {
       _name: "Italiano",
@@ -3653,6 +3789,444 @@
     document.head.appendChild(el);
   }
 
+  function ensurePicGateCss() {
+    if (typeof document === "undefined") return;
+    if (document.getElementById("vtPicGateCss")) return;
+    const el = document.createElement("style");
+    el.id = "vtPicGateCss";
+    el.textContent = `
+      #vtPicGate {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        background: radial-gradient(circle at top, rgba(212,175,55,0.14), transparent 30%),
+          linear-gradient(180deg, #070b10, #0b0f14);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #vtPicGate .p-shell { max-width: 640px; margin: 0 auto; padding: 24px; }
+      #vtPicGate .p-brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+      #vtPicGate .p-brand img { height: 36px; max-width: 220px; }
+      #vtPicGate .p-head {
+        background: rgba(15,23,42,0.7);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 18px 18px 16px;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      #vtPicGate .p-head h1 { margin: 0 0 6px; font-size: 22px; color: #f8fafc; }
+      #vtPicGate .p-head p { margin: 0; color: #94a3b8; font-size: 13px; }
+      #vtPicGate .p-card {
+        background: rgba(15,23,42,0.7);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 22px 18px;
+      }
+      #vtPicGate .p-preview-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      #vtPicGate .p-avatar {
+        width: 168px;
+        height: 168px;
+        border-radius: 50%;
+        border: 3px solid rgba(212,175,55,0.5);
+        background: rgba(255,255,255,0.04);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+      }
+      #vtPicGate .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
+      #vtPicGate .p-avatar i, #vtPicGate .p-avatar svg { font-size: 56px; width: 56px; height: 56px; }
+      #vtPicGate .p-file-row {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      #vtPicGate .p-file-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, #d4af37, #f5d87a);
+        color: #0b0f14;
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 16px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+      }
+      #vtPicGate .p-file-btn input[type="file"] { display: none; }
+      #vtPicGate .p-hint {
+        text-align: center;
+        color: #64748b;
+        font-size: 12px;
+      }
+      #vtPicGate .p-filename {
+        text-align: center;
+        color: #cbd5e1;
+        font-size: 12px;
+        word-break: break-all;
+      }
+      #vtPicGate .p-progress {
+        width: 100%;
+        height: 8px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 999px;
+        overflow: hidden;
+        display: none;
+      }
+      #vtPicGate .p-progress.visible { display: block; }
+      #vtPicGate .p-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #d4af37, #f5d87a);
+        transition: width 0.2s ease;
+      }
+      #vtPicGate .p-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+      }
+      #vtPicGate .p-btn {
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 16px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 14px;
+        flex: 1 1 140px;
+      }
+      #vtPicGate .p-btn.primary {
+        background: linear-gradient(135deg, #d4af37, #f5d87a);
+        color: #0b0f14;
+      }
+      #vtPicGate .p-btn.primary:disabled { opacity: 0.7; cursor: progress; }
+      #vtPicGate .p-btn.secondary {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #f8fafc;
+      }
+      #vtPicGate .p-foot { margin-top: 18px; text-align: center; color: #94a3b8; font-size: 12px; }
+      #vtPicGate .p-err {
+        width: 100%;
+        font-size: 12px;
+        color: #fecaca;
+        text-align: center;
+        margin-top: 4px;
+      }
+      @media (max-width: 880px) {
+        #vtPicGate .p-shell { padding: 14px; }
+        #vtPicGate .p-head h1 { font-size: 19px; }
+        #vtPicGate .p-avatar { width: 140px; height: 140px; }
+      }
+    `;
+    document.head.appendChild(el);
+  }
+
+  async function cloudinaryUploadFile({ file, cloudName, uploadPreset, folder, onProgress }) {
+    if (!file || !cloudName || !uploadPreset) {
+      throw new Error("Missing Cloudinary upload configuration.");
+    }
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", String(uploadPreset));
+    if (folder) fd.append("folder", String(folder));
+
+    const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/auto/upload`;
+
+    return new Promise((resolve, reject) => {
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+
+        xhr.upload.onprogress = function (evt) {
+          if (evt.lengthComputable && typeof onProgress === "function") {
+            const pct = Math.min(100, Math.max(0, Math.round((evt.loaded / evt.total) * 100)));
+            try { onProgress(pct); } catch (_) {}
+          }
+        };
+
+        xhr.onerror = function () { reject(new Error("Network error during upload.")); };
+        xhr.onabort = function () { reject(new Error("Upload aborted.")); };
+        xhr.onload = function () {
+          let data = null;
+          try { data = JSON.parse(xhr.responseText || "{}"); } catch (_) { data = {}; }
+          if (xhr.status >= 200 && xhr.status < 300 && data && data.secure_url) {
+            resolve({
+              secure_url: String(data.secure_url),
+              public_id: String(data.public_id || ""),
+              width: Number(data.width || 0),
+              height: Number(data.height || 0),
+              format: String(data.format || ""),
+              bytes: Number(data.bytes || 0)
+            });
+          } else {
+            const msg = String((data && (data.error?.message || data.message)) || xhr.statusText || "Upload failed.");
+            reject(new Error(msg));
+          }
+        };
+
+        xhr.send(fd);
+      } catch (e) {
+        reject(e && e.message ? e : new Error("Upload failed."));
+      }
+    });
+  }
+
+  function buildPicGate({ me, onComplete, onSkip }) {
+    ensurePicGateCss();
+    ensureKycGateCss();
+    if (typeof document === "undefined") return null;
+    const existing = document.getElementById("vtPicGate");
+    if (existing) existing.remove();
+
+    const gate = document.createElement("div");
+    gate.id = "vtPicGate";
+    document.body.appendChild(gate);
+    document.body.style.overflow = "hidden";
+
+    const profile = (me && me.profile) || {};
+    const currentLang = (me && me.preferredLanguage) || "en";
+    const dict = DICT[currentLang] ? DICT[currentLang] : DICT.en;
+    const currentPic = String((me && me.profilePic) || profile.profilePic || profile.photoURL || profile.photo || profile.avatar || "").trim();
+
+    let pendingFile = null;
+    let previewObjectUrl = null;
+    let uploadConfig = null;
+    let destroyed = false;
+
+    gate.innerHTML = `
+      <div class="p-shell">
+        <div class="p-brand">
+          <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" />
+          <div style="color:#94a3b8; font-size:12px" data-i18n="pic_section_title">${dict.pic_section_title || "Profile Picture"}</div>
+        </div>
+        <div class="p-head">
+          <h1 data-i18n="pic_title">${dict.pic_title || "Add Your Profile Picture"}</h1>
+          <p data-i18n="pic_subtitle">${dict.pic_subtitle || "Upload a clear photo so we can recognize your account. This step is optional."}</p>
+        </div>
+        <div class="p-card">
+          <div class="p-preview-wrap">
+            <div class="p-avatar" id="pAvatar">
+              ${currentPic ? `<img src="${escapeHtml(currentPic)}" alt="preview" />` : `<i class="ti ti-user"></i>`}
+            </div>
+            <div class="p-file-row">
+              <label class="p-file-btn" id="pChooseLabel">
+                <i class="ti ti-upload"></i>
+                <span data-i18n="pic_upload_label" id="pChooseText">${dict.pic_upload_label || "Choose a Photo"}</span>
+                <input type="file" id="pFileInput" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" />
+              </label>
+              <div class="p-progress" id="pProgress"><div class="p-progress-fill" id="pProgressFill"></div></div>
+              <div class="p-filename" id="pFilename"></div>
+              <div class="p-hint" data-i18n="pic_hint">${dict.pic_hint || "JPG, PNG, or WebP. Max 8 MB."}</div>
+              <div class="p-err" id="pErr"></div>
+            </div>
+          </div>
+          <div class="p-actions">
+            <button type="button" class="p-btn secondary" id="pSkipBtn" data-i18n="pic_skip">${dict.pic_skip || "Skip for now"}</button>
+            <button type="button" class="p-btn primary" id="pSaveBtn" data-i18n="pic_save" disabled>${dict.pic_save || "Save Profile Picture"}</button>
+          </div>
+        </div>
+        <div class="p-foot" data-i18n="footer_rights">© ${new Date().getFullYear()} VanguardDoubleTrust. ${dict.footer_rights}</div>
+      </div>
+    `;
+
+    const fileInput = gate.querySelector("#pFileInput");
+    const avatarEl = gate.querySelector("#pAvatar");
+    const chooseTextEl = gate.querySelector("#pChooseText");
+    const filenameEl = gate.querySelector("#pFilename");
+    const errEl = gate.querySelector("#pErr");
+    const progressEl = gate.querySelector("#pProgress");
+    const progressFillEl = gate.querySelector("#pProgressFill");
+    const saveBtn = gate.querySelector("#pSaveBtn");
+    const skipBtn = gate.querySelector("#pSkipBtn");
+    const chooseLabel = gate.querySelector("#pChooseLabel");
+
+    function setError(msg) {
+      if (!errEl) return;
+      errEl.textContent = msg ? String(msg) : "";
+    }
+
+    function setProgress(pct) {
+      if (!progressEl || !progressFillEl) return;
+      if (typeof pct === "number") {
+        progressEl.classList.add("visible");
+        progressFillEl.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+      } else {
+        progressEl.classList.remove("visible");
+        progressFillEl.style.width = "0%";
+      }
+    }
+
+    function clearPreview() {
+      if (previewObjectUrl) {
+        try { URL.revokeObjectURL(previewObjectUrl); } catch (_) {}
+        previewObjectUrl = null;
+      }
+      if (avatarEl) {
+        avatarEl.innerHTML = currentPic
+          ? `<img src="${escapeHtml(currentPic)}" alt="preview" />`
+          : `<i class="ti ti-user"></i>`;
+      }
+      if (filenameEl) filenameEl.textContent = "";
+      pendingFile = null;
+      if (saveBtn) saveBtn.disabled = true;
+      setProgress(null);
+    }
+
+    function applyPreview(file) {
+      if (!file || !avatarEl) return;
+      if (previewObjectUrl) { try { URL.revokeObjectURL(previewObjectUrl); } catch (_) {} previewObjectUrl = null; }
+      try {
+        previewObjectUrl = URL.createObjectURL(file);
+        avatarEl.innerHTML = `<img src="${previewObjectUrl}" alt="preview" />`;
+      } catch (_) {
+        avatarEl.innerHTML = `<i class="ti ti-user"></i>`;
+      }
+    }
+
+    function validateFile(file) {
+      if (!file) return "No file selected.";
+      const name = String(file.name || "").toLowerCase();
+      const maxBytes = uploadConfig && Number(uploadConfig.maxBytes) ? Number(uploadConfig.maxBytes) : (8 * 1024 * 1024);
+      if (file.size > maxBytes) return dict.pic_error_size || "File too large. Max 8 MB.";
+      const allowedExts = ["jpg", "jpeg", "png", "webp", "gif", "avif"];
+      const ext = name.includes(".") ? name.split(".").pop() : "";
+      if (ext && !allowedExts.includes(ext)) return dict.pic_error_format || "Invalid format. Use JPG, PNG, or WebP.";
+      if (file.type) {
+        const t = String(file.type).toLowerCase();
+        if (!/^image\/(jpeg|png|webp|gif|avif|jpg)$/i.test(t) && !allowedExts.includes(ext)) {
+          return dict.pic_error_format || "Invalid format. Use JPG, PNG, or WebP.";
+        }
+      }
+      return "";
+    }
+
+    async function loadConfig() {
+      try {
+        const cfg = await fetchJson("/api/upload/config", { method: "GET" });
+        uploadConfig = cfg || {};
+      } catch (_) {
+        uploadConfig = { enabled: false };
+      }
+    }
+
+    loadConfig();
+
+    chooseLabel && chooseLabel.addEventListener("click", function () {
+      setError("");
+    });
+
+    fileInput && fileInput.addEventListener("change", function () {
+      setError("");
+      const files = fileInput.files;
+      const f = files && files[0] ? files[0] : null;
+      if (!f) return;
+      const err = validateFile(f);
+      if (err) {
+        setError(err);
+        clearPreview();
+        fileInput.value = "";
+        return;
+      }
+      pendingFile = f;
+      applyPreview(f);
+      if (filenameEl) filenameEl.textContent = String(f.name || "");
+      if (saveBtn) saveBtn.disabled = false;
+    });
+
+    skipBtn && skipBtn.addEventListener("click", function () {
+      closeGate();
+      if (typeof onSkip === "function") { try { onSkip(); } catch (_) {} }
+    });
+
+    saveBtn && saveBtn.addEventListener("click", async function () {
+      setError("");
+      if (!pendingFile) {
+        setError(dict.pic_error_generic || "Please choose a photo first.");
+        return;
+      }
+      if (!uploadConfig || !uploadConfig.enabled || !uploadConfig.cloudName || !uploadConfig.uploadPreset) {
+        setError(dict.pic_error_generic || "Upload is currently unavailable. Please try again later.");
+        return;
+      }
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = dict.pic_uploading || "Uploading…";
+      }
+      setProgress(0);
+      let result = null;
+      try {
+        result = await cloudinaryUploadFile({
+          file: pendingFile,
+          cloudName: uploadConfig.cloudName,
+          uploadPreset: uploadConfig.uploadPreset,
+          folder: uploadConfig.folder || "",
+          onProgress: function (pct) { setProgress(pct); }
+        });
+      } catch (e) {
+        setProgress(null);
+        setError(String(e?.message || dict.pic_error_generic || "Unable to upload."));
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = dict.pic_save || "Save Profile Picture";
+        }
+        return;
+      }
+
+      if (saveBtn) saveBtn.textContent = dict.pic_saving || "Saving…";
+      try {
+        const saved = await fetchJson("/api/customer/profile-pic", {
+          method: "POST",
+          body: JSON.stringify({
+            secure_url: result.secure_url,
+            public_id: result.public_id,
+            width: result.width,
+            height: result.height,
+            format: result.format,
+            bytes: result.bytes
+          })
+        });
+        const finalPic = String((saved && saved.profilePic) || result.secure_url || "");
+        toastMessage(dict.pic_success || "Profile picture saved!", "ok");
+        closeGate();
+        if (typeof onComplete === "function") {
+          try { onComplete({ profilePic: finalPic, publicId: (saved && saved.profilePicPublicId) || result.public_id || "" }); } catch (_) {}
+        }
+      } catch (e) {
+        setProgress(null);
+        setError(String(e?.message || dict.pic_error_generic || "Unable to save."));
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = dict.pic_save || "Save Profile Picture";
+        }
+      }
+    });
+
+    function closeGate() {
+      if (destroyed) return;
+      destroyed = true;
+      clearPreview();
+      try { gate.remove(); } catch (_) {}
+      try { document.body.style.overflow = ""; } catch (_) {}
+    }
+
+    applyLanguageToDocument(currentLang, gate);
+    return { gate, close: closeGate };
+  }
+
   function countryOptions() {
     return [
       { code: "US", name: "United States" },
@@ -3944,25 +4518,69 @@
     }
     const lang = (me && me.preferredLanguage) || "en";
     applyLanguageToDocument(lang, document);
+
+    const hasProfilePic = !!(
+      (me && me.profilePic) ||
+      (me && me.profile && (me.profile.profilePic || me.profile.photoURL || me.profile.photo || me.profile.avatar))
+    );
+
+    function maybeRunAfter(finalMe, finalLanguage, extras) {
+      if (options && typeof options.after === "function") {
+        try {
+          options.after(Object.assign(
+            { me: finalMe, language: finalLanguage, kycCompleted: true },
+            extras || {}
+          ));
+        } catch (_) {}
+      }
+    }
+
+    function runPicGateIfNeeded(inputMe, language, resolve) {
+      const picSet = !!(
+        (inputMe && inputMe.profilePic) ||
+        (inputMe && inputMe.profile && (inputMe.profile.profilePic || inputMe.profile.photoURL || inputMe.profile.photo || inputMe.profile.avatar))
+      );
+      const skipPic = options && options.skipProfilePic === true;
+      if (picSet || skipPic) {
+        maybeRunAfter(inputMe, language, { profilePicPrompted: false });
+        resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: false });
+        return;
+      }
+      buildPicGate({
+        me: inputMe || {},
+        onComplete: ({ profilePic, publicId }) => {
+          const merged = Object.assign({}, inputMe || {}, { profilePic: profilePic || "" });
+          if (merged.profile) {
+            merged.profile = Object.assign({}, merged.profile, { profilePic: profilePic || "" });
+            if (publicId) merged.profile.profilePicPublicId = publicId;
+          }
+          maybeRunAfter(merged, language, { profilePicPrompted: true });
+          resolve({ me: merged, language, kycCompleted: true, profilePicPrompted: true });
+        },
+        onSkip: () => {
+          maybeRunAfter(inputMe, language, { profilePicPrompted: true });
+          resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: true });
+        }
+      });
+    }
+
     const kycNeeded = !!(me && me.security && me.security.kycCompleted === false) ||
       !!((me && (!me.security || me.security.kycCompleted !== true)) && !(
         (me.profile && me.profile.country) && (me.profile && me.profile.preferredLanguage)
       ));
+
     if (options && options.alwaysShowKyc !== true && !kycNeeded) {
-      if (options && typeof options.after === "function") {
-        try { options.after({ me, language: lang, kycCompleted: true }); } catch (_) {}
-      }
-      return { me, language: lang, kycCompleted: true };
+      return new Promise((resolve) => {
+        runPicGateIfNeeded(me || {}, lang, resolve);
+      });
     }
+
     return new Promise((resolve) => {
       buildKycGate({
         me: me || {},
         onComplete: ({ data, language }) => {
           const mergedMe = Object.assign({}, me || {}, data || {});
-          if (options && typeof options.after === "function") {
-            try { options.after({ me: mergedMe, language, kycCompleted: true }); } catch (_) {}
-          }
-          resolve({ me: mergedMe, language, kycCompleted: true });
+          runPicGateIfNeeded(mergedMe, language, resolve);
         }
       });
     });
@@ -3985,9 +4603,13 @@
       api,
       me: () => fetchJson("/api/me")
     },
+    Upload: {
+      cloudinaryUploadFile
+    },
     UI: {
       toast: toastMessage,
       showKycGate: buildKycGate,
+      showPicGate: buildPicGate,
       bootstrapCustomerPage
     }
   };

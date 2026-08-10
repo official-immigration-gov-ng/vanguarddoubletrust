@@ -6,11 +6,37 @@ const express = require("express");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const cloudinary = require("cloudinary").v2;
 
 const { getAuth, getFirestore } = require("./firebase");
 const { getCookieName, getCookieOptions, getSessionExpiresInMs, requireAuth } = require("./auth");
 
 dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
+
+(function initCloudinary() {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME || "";
+  const apiKey = process.env.CLOUDINARY_API_KEY || "";
+  const apiSecret = process.env.CLOUDINARY_API_SECRET || "";
+  const cloudinaryUrl = process.env.CLOUDINARY_URL || "";
+  try {
+    if (cloudinaryUrl) {
+      cloudinary.config(cloudinaryUrl);
+    } else if (cloudName) {
+      cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret, secure: true });
+    }
+  } catch (e) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[Cloudinary] Init skipped:", e && e.message ? String(e.message) : e);
+    }
+  }
+})();
+
+const CLOUDINARY_CLOUD_NAME = String(cloudinary.config().cloud_name || process.env.CLOUDINARY_CLOUD_NAME || "");
+const CLOUDINARY_UPLOAD_PRESET = String(process.env.CLOUDINARY_UPLOAD_PRESET || "vanguarddoubletrust_profile_unsigned");
+const CLOUDINARY_PROFILE_FOLDER = String(process.env.CLOUDINARY_PROFILE_FOLDER || "vanguarddoubletrust/profiles");
+const CLOUDINARY_URL_PATTERN = CLOUDINARY_CLOUD_NAME
+  ? new RegExp(`^https://res\\.cloudinary\\.com/${encodeURIComponent(CLOUDINARY_CLOUD_NAME)}/`, "i")
+  : /^https:\/\/res\.cloudinary\.com\//i;
 
 const app = express();
 
@@ -445,9 +471,81 @@ app.get("/api/me", requireAuth, async (req, res) => {
       accountPinHashSet: Boolean(sec?.accountPinHash)
     },
     preferredLanguage: String(prof?.preferredLanguage || "en"),
+    profilePic: String(prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar || ""),
     createdAt: req.user.createdAt || null,
     updatedAt: req.user.updatedAt || null,
     pinVerified: isPinVerified(req)
+  });
+});
+
+app.get("/api/upload/config", (req, res) => {
+  res.json({
+    ok: true,
+    provider: "cloudinary",
+    cloudName: CLOUDINARY_CLOUD_NAME || "",
+    uploadPreset: CLOUDINARY_UPLOAD_PRESET || "",
+    folder: CLOUDINARY_PROFILE_FOLDER || "",
+    enabled: Boolean(CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET),
+    maxBytes: 8 * 1024 * 1024,
+    allowedFormats: ["jpg", "jpeg", "png", "webp", "gif", "avif"]
+  });
+});
+
+function isSafeCloudinaryUrl(secureUrl) {
+  if (typeof secureUrl !== "string" || !secureUrl) return false;
+  const trimmed = secureUrl.trim();
+  if (!trimmed) return false;
+  if (trimmed.length > 8192) return false;
+  if (!CLOUDINARY_URL_PATTERN.test(trimmed)) return false;
+  try {
+    const u = new URL(trimmed);
+    return u.protocol === "https:";
+  } catch (e) {
+    return false;
+  }
+}
+
+app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
+  const b = req.body || {};
+  const secureUrl = typeof b?.secure_url === "string" ? String(b.secure_url).trim() : "";
+  const publicId = cleanString(b?.public_id || b?.publicId, 260);
+  const width = Number.isFinite(Number(b?.width)) ? Math.max(0, Math.min(20000, Number(b.width))) : 0;
+  const height = Number.isFinite(Number(b?.height)) ? Math.max(0, Math.min(20000, Number(b.height))) : 0;
+  const format = cleanString(b?.format, 16);
+  const bytes = Number.isFinite(Number(b?.bytes)) ? Math.max(0, Math.min(128 * 1024 * 1024, Number(b.bytes))) : 0;
+
+  if (!secureUrl || !isSafeCloudinaryUrl(secureUrl)) {
+    res.status(400).json({ error: "Invalid profile picture URL." });
+    return;
+  }
+
+  const uid = req.user.uid;
+  await ensureUserDoc(uid, req.user.email);
+  const nowIso = new Date().toISOString();
+
+  const updates = {
+    updatedAt: nowIso,
+    "profile.profilePic": secureUrl
+  };
+  if (publicId) updates["profile.profilePicPublicId"] = publicId;
+  if (width) updates["profile.profilePicWidth"] = width;
+  if (height) updates["profile.profilePicHeight"] = height;
+  if (format) updates["profile.profilePicFormat"] = format;
+  if (bytes) updates["profile.profilePicBytes"] = bytes;
+
+  try {
+    const db = getFirestore();
+    await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to save profile picture.");
+    res.status(normalized.status).json({ error: normalized.error });
+    return;
+  }
+
+  res.status(200).json({
+    ok: true,
+    profilePic: secureUrl,
+    profilePicPublicId: publicId || null
   });
 });
 
@@ -595,7 +693,12 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     zip,
     postal,
     nationality,
-    occupation
+    occupation,
+    profilePic,
+    profile_pic,
+    photoUrl,
+    photoURL,
+    avatar
   } = req.body || {};
 
   const uid = req.user.uid;
@@ -621,6 +724,29 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   else if (typeof postal === "string" && postal.trim()) updates["profile.zipCode"] = postal.trim();
   if (typeof nationality === "string" && nationality.trim()) updates["profile.nationality"] = nationality.trim();
   if (typeof occupation === "string" && occupation.trim()) updates["profile.occupation"] = occupation.trim();
+
+  const rawPic =
+    (typeof profilePic === "string" ? profilePic : "") ||
+    (typeof profile_pic === "string" ? profile_pic : "") ||
+    (typeof photoUrl === "string" ? photoUrl : "") ||
+    (typeof photoURL === "string" ? photoURL : "") ||
+    (typeof avatar === "string" ? avatar : "");
+  if (rawPic !== "" ||
+      typeof profilePic !== "undefined" ||
+      typeof profile_pic !== "undefined" ||
+      typeof photoUrl !== "undefined" ||
+      typeof photoURL !== "undefined" ||
+      typeof avatar !== "undefined") {
+    const safe = rawPic.trim();
+    if (safe === "") {
+      updates["profile.profilePic"] = "";
+    } else if (isSafeCloudinaryUrl(safe)) {
+      updates["profile.profilePic"] = safe;
+    } else {
+      res.status(400).json({ error: "Invalid profile picture URL. Please upload via Cloudinary first." });
+      return;
+    }
+  }
 
   if (typeof preferredLanguage === "string" && preferredLanguage.trim()) {
     const allowedLangs = buildAllowedLanguageSet();
@@ -654,6 +780,219 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   await db.collection("users").doc(String(uid)).set(updates, { merge: true });
 
   res.json({ ok: true });
+});
+
+app.get("/api/customer/transactions", requireAuth, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const rawLimit = Number(req.query?.limit || 20);
+    const limit = Number.isFinite(rawLimit) ? Math.min(200, Math.max(1, rawLimit)) : 20;
+    const db = getFirestore();
+    const snap = await db.collection("users").doc(String(uid)).collection("transactions")
+      .orderBy("createdAt", "desc")
+      .limit(limit)
+      .get()
+      .catch(() => null);
+    const transactions = (snap && snap.docs ? snap.docs : []).map((doc) => ({ id: doc.id, ...(doc.data() || {}) }));
+    let runningBalance = null;
+    try {
+      const userSnap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+      if (userSnap && userSnap.exists) {
+        const userData = userSnap.data() || {};
+        runningBalance = Number(userData?.account?.balance || 0);
+      }
+    } catch (_) {}
+    res.json({ ok: true, transactions, balance: runningBalance });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to load transactions.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
+app.get("/api/customer/lookup-account", requireAuth, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const accountNumber = String(req.query?.accountNumber || "").trim();
+    const email = String(req.query?.email || "").trim().toLowerCase();
+    if (!accountNumber && !email) {
+      res.status(400).json({ error: "accountNumber or email query parameter is required." });
+      return;
+    }
+    const db = getFirestore();
+    let targetDoc = null;
+    if (accountNumber) {
+      const byAccount = await db.collection("users").where("account.accountNumber", "==", accountNumber).limit(1).get().catch(() => null);
+      if (byAccount && byAccount.docs && byAccount.docs.length) targetDoc = byAccount.docs[0];
+    }
+    if (!targetDoc && email) {
+      const byEmail = await db.collection("users").doc(email).get().catch(() => null);
+      if (byEmail && byEmail.exists) targetDoc = byEmail;
+    }
+    if (!targetDoc || !targetDoc.exists) {
+      res.status(404).json({ error: "Recipient account not found." });
+      return;
+    }
+    const td = targetDoc.data() || {};
+    if (String(targetDoc.id) === String(uid)) {
+      res.status(400).json({ error: "You cannot transfer to your own account." });
+      return;
+    }
+    const p = td.profile || {};
+    const a = td.account || {};
+    const fullName = `${String(p.firstname || "").trim()} ${String(p.lastname || "").trim()}`.trim() || String(td.email || "").trim();
+    res.json({
+      ok: true,
+      recipient: {
+        uid: targetDoc.id,
+        email: td.email || "",
+        fullName,
+        accountNumber: a.accountNumber || "",
+        currency: a.currency || "USD",
+        status: a.status || ""
+      }
+    });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to look up account.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
+app.post("/api/customer/transfer", requireAuth, async (req, res) => {
+  const b = req.body || {};
+  const uid = req.user.uid;
+  const toAccountNumber = String(b.toAccountNumber || b.to || "").trim();
+  const toEmail = String(b.toEmail || "").trim().toLowerCase();
+  const amountRaw = b.amount;
+  const amount = Number(amountRaw);
+  const currency = String(b.currency || "USD").trim().toUpperCase() || "USD";
+  const memo = String(b.memo || b.note || b.reference || "").trim();
+  const transferCode = String(b.transferCode || b.transferPin || "").trim();
+
+  if (!toAccountNumber && !toEmail) {
+    res.status(400).json({ error: "Recipient accountNumber or email is required." });
+    return;
+  }
+  if (!Number.isFinite(amount) || amount <= 0) {
+    res.status(400).json({ error: "Amount must be a positive number." });
+    return;
+  }
+  if (!isTransferCodeValid(transferCode)) {
+    res.status(400).json({ error: "Transfer code is required and must be 6 digits or 8+ chars with uppercase, number, and special character." });
+    return;
+  }
+  const db = getFirestore();
+  const senderSnap = await db.collection("users").doc(String(uid)).get();
+  if (!senderSnap.exists) {
+    res.status(404).json({ error: "Your account was not found." });
+    return;
+  }
+  const senderDoc = senderSnap.data() || {};
+  const senderStoredHash = senderDoc?.security?.transferPinHash || senderDoc?.security?.transferCodeHash || null;
+  if (!senderStoredHash) {
+    res.status(400).json({ error: "Transfer code is not configured for your account. Please contact support." });
+    return;
+  }
+  if (String(sha256Hex(transferCode)) !== String(senderStoredHash)) {
+    res.status(401).json({ error: "Invalid transfer code." });
+    return;
+  }
+  const senderAccount = senderDoc?.account || {};
+  const senderStatus = String(senderAccount?.status || "").toUpperCase();
+  if (senderStatus && senderStatus !== "ACTIVE") {
+    res.status(400).json({ error: `Your account status is ${senderStatus}. Transfers are not available.` });
+    return;
+  }
+  const currentBalance = Number(senderAccount?.balance || 0);
+  if (currentBalance < amount) {
+    res.status(400).json({ error: `Insufficient balance. Available: ${senderAccount?.currency || "USD"} ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.` });
+    return;
+  }
+  let recipientRef = null;
+  if (toAccountNumber) {
+    const byAccount = await db.collection("users").where("account.accountNumber", "==", toAccountNumber).limit(1).get().catch(() => null);
+    if (byAccount && byAccount.docs && byAccount.docs.length) recipientRef = byAccount.docs[0];
+  }
+  if (!recipientRef && toEmail) {
+    const byEmail = await db.collection("users").where("email", "==", toEmail).limit(1).get().catch(() => null);
+    if (byEmail && byEmail.docs && byEmail.docs.length) recipientRef = byEmail.docs[0];
+  }
+  if (!recipientRef || !recipientRef.exists) {
+    res.status(404).json({ error: "Recipient account not found." });
+    return;
+  }
+  const recipientUid = recipientRef.id;
+  if (recipientUid === String(uid)) {
+    res.status(400).json({ error: "You cannot transfer to your own account." });
+    return;
+  }
+  const recipientDoc = recipientRef.data() || {};
+  const recipientAccount = recipientDoc?.account || {};
+  const recipientStatus = String(recipientAccount?.status || "").toUpperCase();
+  if (recipientStatus && recipientStatus !== "ACTIVE") {
+    res.status(400).json({ error: "Recipient account is not active." });
+    return;
+  }
+  const recipientCurrency = String(recipientAccount?.currency || senderAccount?.currency || "USD").toUpperCase() || "USD";
+  if (recipientCurrency !== currency) {
+    res.status(400).json({ error: `Recipient uses a different currency (${recipientCurrency}). Please use International Transfer for cross-currency payments.` });
+    return;
+  }
+  const reference = `TX-${makeTxId()}`;
+  const nowIsoStamp = nowIso();
+  const senderName = `${String(senderDoc?.profile?.firstname || "").trim()} ${String(senderDoc?.profile?.lastname || "").trim()}`.trim() || String(senderDoc?.email || "");
+  const recipientName = `${String(recipientDoc?.profile?.firstname || "").trim()} ${String(recipientDoc?.profile?.lastname || "").trim()}`.trim() || String(recipientDoc?.email || "");
+  const senderAccountNumber = senderAccount?.accountNumber || "";
+  const recipientAccountNumber = recipientAccount?.accountNumber || "";
+  const batch = db.batch();
+  const senderRef = db.collection("users").doc(String(uid));
+  const recRef = db.collection("users").doc(String(recipientUid));
+  batch.set(senderRef, {
+    updatedAt: nowIsoStamp,
+    account: { balance: Number((currentBalance - amount).toFixed(2)) }
+  }, { merge: true });
+  const recBalance = Number(recipientAccount?.balance || 0);
+  batch.set(recRef, {
+    updatedAt: nowIsoStamp,
+    account: { balance: Number((recBalance + amount).toFixed(2)) }
+  }, { merge: true });
+  await batch.commit();
+  const debitTx = await writeTransaction({
+    uid: String(uid),
+    type: "TRANSFER_OUT",
+    amount: Number(Number(amount).toFixed(2)),
+    currency,
+    status: "COMPLETED",
+    note: memo || `Transfer to ${recipientName || recipientAccountNumber}`,
+    from: { uid: String(uid), accountNumber: senderAccountNumber, name: senderName, email: senderDoc?.email || "" },
+    to: { uid: recipientUid, accountNumber: recipientAccountNumber, name: recipientName, email: recipientDoc?.email || "" },
+    reference
+  }).catch(() => null);
+  const creditTx = await writeTransaction({
+    uid: recipientUid,
+    type: "TRANSFER_IN",
+    amount: Number(Number(amount).toFixed(2)),
+    currency,
+    status: "COMPLETED",
+    note: memo || `Transfer from ${senderName || senderAccountNumber}`,
+    from: { uid: String(uid), accountNumber: senderAccountNumber, name: senderName, email: senderDoc?.email || "" },
+    to: { uid: recipientUid, accountNumber: recipientAccountNumber, name: recipientName, email: recipientDoc?.email || "" },
+    reference
+  }).catch(() => null);
+  res.status(200).json({
+    ok: true,
+    reference,
+    amount: Number(Number(amount).toFixed(2)),
+    currency,
+    newBalance: Number((currentBalance - amount).toFixed(2)),
+    debitTransaction: debitTx || null,
+    creditTransactionId: creditTx && creditTx.id ? creditTx.id : null,
+    recipient: {
+      uid: recipientUid,
+      accountNumber: recipientAccountNumber,
+      name: recipientName,
+      email: recipientDoc?.email || ""
+    }
+  });
 });
 
 app.post("/api/admin/login", async (req, res) => {
