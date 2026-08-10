@@ -380,14 +380,30 @@
           position: fixed;
           left: 0;
           top: 0;
+          height: 100vh;
+          width: min(304px, 84vw);
           transform: translateX(-105%);
-          transition: transform 0.18s ease;
+          transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
           z-index: 100;
+          padding: 14px 12px 22px;
+          overflow-x: hidden;
+          overflow-y: auto;
           box-shadow: 0 28px 60px -28px rgba(2, 6, 23, 0.55);
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
         }
 
         body.vt-sidebar-open .vt-sidebar {
           transform: translateX(0);
+        }
+
+        body.vt-sidebar-open {
+          overflow: hidden;
+          touch-action: none;
+        }
+
+        .vt-main {
+          width: 100%;
         }
       }
 
@@ -396,6 +412,10 @@
         .vt-top-right,
         .vt-topbar {
           flex-wrap: wrap;
+        }
+
+        .vt-topbar {
+          height: auto;
         }
 
         .vt-search {
@@ -417,12 +437,61 @@
           padding-right: 14px;
         }
 
+        .vt-topbar {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          gap: 10px;
+        }
+
         .vt-kv-grid {
           grid-template-columns: 1fr;
         }
 
         .vt-page-title h1 {
           font-size: 20px;
+        }
+
+        .vt-user .meta span {
+          display: none;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .vt-topbar {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .vt-top-left {
+          gap: 8px;
+        }
+
+        .vt-top-right {
+          gap: 8px;
+        }
+
+        .vt-search {
+          padding: 9px 12px;
+          gap: 8px;
+        }
+
+        .vt-search input {
+          font-size: 12.5px;
+        }
+
+        .vt-user {
+          padding: 6px 8px;
+          gap: 8px;
+          border-radius: 14px;
+        }
+
+        .vt-user .meta {
+          max-width: 46vw;
+        }
+
+        .vt-user .avatar {
+          width: 34px;
+          height: 34px;
         }
       }
 
@@ -431,12 +500,17 @@
           width: 40px;
           height: 40px;
           border-radius: 12px;
+          flex: 0 0 auto;
         }
 
         .vt-user {
-          padding: 6px 8px;
-          gap: 8px;
+          padding: 6px 8px 6px 6px;
+          gap: 6px;
           border-radius: 14px;
+        }
+
+        .vt-user .meta {
+          max-width: 36vw;
         }
 
         .vt-user .avatar {
