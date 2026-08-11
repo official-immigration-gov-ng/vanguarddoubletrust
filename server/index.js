@@ -427,7 +427,8 @@ async function ensureUserDoc(uid, email) {
       email: email || null,
       createdAt: nowIso,
       updatedAt: nowIso,
-      profile: {},
+      profile: { preferredLanguage: "en" },
+      security: {},
       account: {
         accountNumber: generateAccountNumber(),
         status: "ACTIVE",
@@ -449,8 +450,36 @@ async function touchLastLogin(uid) {
 }
 
 app.get("/api/me", requireAuth, async (req, res) => {
-  const sec = req.user?.security || {};
-  const prof = req.user?.profile || {};
+  const uid = String(req.user?.uid || "");
+  let freshUser = req.user || {};
+  if (uid) {
+    try {
+      const db = getFirestore();
+      const snap = await db.collection("users").doc(uid).get();
+      if (snap && snap.exists) {
+        const dbData = snap.data() || {};
+        const accountObj = typeof dbData.account === "object" && dbData.account ? dbData.account : {};
+        const profileObj = typeof dbData.profile === "object" && dbData.profile ? dbData.profile : {};
+        const securityObj = typeof dbData.security === "object" && dbData.security ? dbData.security : {};
+        freshUser = Object.assign({}, req.user || {}, {
+          uid: uid,
+          email: (req.user && req.user.email) || (profileObj && profileObj.email) || null,
+          account: accountObj,
+          profile: profileObj,
+          security: securityObj,
+          createdAt: dbData.createdAt || (req.user && req.user.createdAt) || null,
+          updatedAt: dbData.updatedAt || (req.user && req.user.updatedAt) || null
+        });
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[VT] /api/me firestore refresh failed:", e && e.message ? String(e.message) : e);
+      }
+    }
+  }
+
+  const sec = freshUser?.security || {};
+  const prof = freshUser?.profile || {};
   const kycCompleted =
     Boolean(sec?.kycCompleted) ||
     Boolean(sec?.KYCDone) ||
@@ -459,21 +488,31 @@ app.get("/api/me", requireAuth, async (req, res) => {
     Boolean(prof?.KYCDone) ||
     Boolean(prof?.kycDone) ||
     (Boolean(prof?.country) && Boolean(prof?.preferredLanguage));
+
+  const finalLang = String(prof?.preferredLanguage || prof?.language || sec?.preferredLanguage || "en");
+  const finalProfile = Object.assign({}, prof || {}, {
+    preferredLanguage: prof?.preferredLanguage || finalLang,
+    kycCompleted: kycCompleted || Boolean(prof?.kycCompleted)
+  });
+  const finalSecurity = Object.assign({}, sec || {}, {
+    twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
+    kycCompleted,
+    kycDone: Boolean(kycCompleted || sec?.kycDone),
+    KYCDone: Boolean(kycCompleted || sec?.KYCDone),
+    kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycCompletedAt || null,
+    accountPinHashSet: Boolean(sec?.accountPinHash)
+  });
+
   res.json({
-    uid: req.user.uid,
-    email: req.user.email || null,
-    profile: req.user.profile || null,
-    account: req.user.account || null,
-    security: {
-      twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
-      kycCompleted,
-      kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycCompletedAt || null,
-      accountPinHashSet: Boolean(sec?.accountPinHash)
-    },
-    preferredLanguage: String(prof?.preferredLanguage || "en"),
-    profilePic: String(prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar || ""),
-    createdAt: req.user.createdAt || null,
-    updatedAt: req.user.updatedAt || null,
+    uid: freshUser.uid,
+    email: freshUser.email || null,
+    profile: finalProfile,
+    account: freshUser.account || null,
+    security: finalSecurity,
+    preferredLanguage: finalLang,
+    profilePic: String(finalProfile?.profilePic || finalProfile?.photoURL || finalProfile?.photo || finalProfile?.avatar || prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar || ""),
+    createdAt: freshUser.createdAt || null,
+    updatedAt: freshUser.updatedAt || null,
     pinVerified: isPinVerified(req)
   });
 });
@@ -597,7 +636,12 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   const updates = {
     updatedAt: nowIso,
     "security.kycCompleted": true,
+    "security.KYCDone": true,
+    "security.kycDone": true,
     "security.kycCompletedAt": nowIso,
+    "profile.kycCompleted": true,
+    "profile.KYCDone": true,
+    "profile.kycDone": true,
     "profile.kycCompletedAt": nowIso
   };
 
@@ -623,9 +667,11 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   }
 
   const profSnapshot = (req.user?.profile) || {};
+  const secSnapshot = (req.user?.security) || {};
   res.status(200).json({
     ok: true,
     preferredLanguage: langCode,
+    profilePic: String(profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar || ""),
     profile: {
       firstname: profSnapshot.firstname || "",
       lastname: profSnapshot.lastname || "",
@@ -639,7 +685,13 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
       zipCode,
       nationality,
       occupation,
-      phone
+      phone,
+      profilePic: String(profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar || "")
+    },
+    security: {
+      kycCompleted: true,
+      kycCompletedAt: nowIso,
+      twoFactorEnabled: Boolean(secSnapshot.twoFactorEnabled || false)
     }
   });
 });

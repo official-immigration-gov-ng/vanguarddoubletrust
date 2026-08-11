@@ -654,11 +654,17 @@
                 <div id="profileAvatarBox" style="width:148px;height:148px;border-radius:50%;overflow:hidden;border:3px solid rgba(11,15,20,0.1);background:#f1f5f9;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -18px rgba(2,6,23,0.4);">
                   <i class="fas fa-user" style="font-size:56px;color:#94a3b8;"></i>
                 </div>
-                <div style="text-align:center;">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
                   <button type="button" class="btn btn-dark" id="profilePicUploadBtn" style="border-radius:14px;padding:10px 18px;font-weight:800;font-size:13px;">
                     <i class="fas fa-camera" style="margin-right:6px;"></i>
                     <span data-i18n="pic_upload_action">Upload Photo</span>
                   </button>
+                  <button type="button" class="btn btn-outline-secondary" id="profilePicRemoveBtn" style="border-radius:14px;padding:10px 18px;font-weight:800;font-size:13px;display:none;">
+                    <i class="fas fa-trash" style="margin-right:6px;"></i>
+                    <span data-i18n="pic_remove">Remove picture</span>
+                  </button>
+                </div>
+                <div style="margin-top:-8px;text-align:center;">
                   <div style="margin-top:8px;color:#64748b;font-size:11px;font-weight:700;" data-i18n="pic_hint">JPG, PNG, or WebP. Max 8 MB.</div>
                 </div>
               </div>
@@ -822,6 +828,7 @@
         function renderAvatars(picUrl, me) {
           const box = document.getElementById("profileAvatarBox");
           const topAvatar = document.getElementById("avatarInitials");
+          const removeBtn = document.getElementById("profilePicRemoveBtn");
           if (box) {
             if (picUrl) {
               box.innerHTML = `<img src="${picUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
@@ -834,6 +841,43 @@
               topAvatar.innerHTML = `<img src="${picUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;" />`;
             } else {
               topAvatar.textContent = getUserInitials(me);
+            }
+          }
+          if (removeBtn) {
+            if (picUrl) removeBtn.style.display = "";
+            else removeBtn.style.display = "none";
+          }
+        }
+
+        async function removeProfilePicture() {
+          if (!latestMe) return;
+          const hasConf = window.VT && VT.I18N && VT.I18N.t
+            ? window.confirm(String(VT.I18N.t(latestLanguage || "en", "pic_remove") || "Remove picture?"))
+            : window.confirm("Remove profile picture?");
+          if (!hasConf) return;
+          try {
+            const toSend = { profilePic: "" };
+            const saved = await (window.VT && window.VT.API && typeof window.VT.API.fetchJson === "function"
+              ? window.VT.API.fetchJson("/api/profile", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(toSend) })
+              : fetch("/api/profile", { method: "PUT", headers: { "Content-Type": "application/json", "Accept": "application/json" }, credentials: "same-origin", body: JSON.stringify(toSend) }).then(function(r){ return r.json(); }));
+            if (latestMe) {
+              latestMe = Object.assign({}, latestMe, { profilePic: "" });
+              if (!latestMe.profile) latestMe.profile = {};
+              latestMe.profile = Object.assign({}, latestMe.profile, { profilePic: "" });
+              delete latestMe.profile.profilePicPublicId;
+            }
+            renderAvatars("", latestMe);
+            updateUploadButtonLabel(false);
+            if (window.VT && window.VT.UI && typeof window.VT.UI.toast === "function") {
+              const msg = window.VT.I18N && VT.I18N.t ? String(window.VT.I18N.t(latestLanguage || "en", "pic_removed") || "Profile picture removed.") : "Profile picture removed.";
+              window.VT.UI.toast(msg, "ok");
+            }
+          } catch (err) {
+            const msg = err && err.message ? String(err.message) : "Unable to remove picture.";
+            if (window.VT && window.VT.UI && typeof window.VT.UI.toast === "function") {
+              window.VT.UI.toast(msg, "error");
+            } else {
+              window.alert(msg);
             }
           }
         }
@@ -910,6 +954,16 @@
           if (btn) {
             btn.addEventListener("click", function () { openPicGateFromProfile(); });
           }
+          const removeBtn = document.getElementById("profilePicRemoveBtn");
+          if (removeBtn) {
+            removeBtn.addEventListener("click", function () { removeProfilePicture(); });
+          }
+          try {
+            if (window.VT.UI.setupMobileSidebarOutsideClick) {
+              const closeSidebar = function () { try { document.body.classList.remove("vt-sidebar-open"); } catch (_) {} };
+              try { window.VT.UI.setupMobileSidebarOutsideClick({ closeFn: closeSidebar }); } catch (_) {}
+            }
+          } catch (_) {}
           window.VT.UI.bootstrapCustomerPage({
             after: function (ctx) {
               const c = ctx || {};

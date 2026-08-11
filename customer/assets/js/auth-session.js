@@ -100,6 +100,51 @@
     }
   }
 
+  var VT_KYC_CACHE_KEY_AUTH = "vt_kyc_state_v1";
+  var VT_KYC_CACHE_TTL_MS_AUTH = 2 * 60 * 1000;
+
+  function readVtKycCacheAuth() {
+    try {
+      if (typeof window === "undefined" || !window.sessionStorage) return null;
+      var raw = window.sessionStorage.getItem(VT_KYC_CACHE_KEY_AUTH);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return null;
+      var savedAt = Number(parsed.savedAt || 0);
+      if (!savedAt || Date.now() - savedAt > VT_KYC_CACHE_TTL_MS_AUTH) return null;
+      return parsed;
+    } catch (_) { return null; }
+  }
+
+  function applyVtKycCacheToMeAuth(me) {
+    if (!me || typeof me !== "object") return me;
+    var cached = readVtKycCacheAuth();
+    if (!cached) return me;
+    var merged = Object.assign({}, me);
+    if (cached.kycCompleted) {
+      merged.security = Object.assign({}, merged.security || {});
+      merged.security.kycCompleted = true;
+      merged.security.KYCDone = true;
+      merged.security.kycDone = true;
+      merged.profile = Object.assign({}, merged.profile || {});
+      merged.profile.kycCompleted = true;
+      merged.profile.KYCDone = true;
+      merged.profile.kycDone = true;
+      if (cached.country) merged.profile.country = cached.country;
+      if (cached.preferredLanguage) {
+        merged.profile.preferredLanguage = cached.preferredLanguage;
+        if (!merged.preferredLanguage) merged.preferredLanguage = cached.preferredLanguage;
+      }
+    }
+    if (cached.profilePic) {
+      merged.profilePic = merged.profilePic || cached.profilePic;
+      merged.profile = Object.assign({}, merged.profile || {});
+      merged.profile.profilePic = merged.profile.profilePic || cached.profilePic;
+      if (cached.profilePicPublicId) merged.profile.profilePicPublicId = cached.profilePicPublicId;
+    }
+    return merged;
+  }
+
   async function getMe() {
     const res = await fetch(apiUrl("/api/me"), { credentials: "include" });
     if (!res.ok) return null;
@@ -127,7 +172,8 @@
       );
     }
     try {
-      return await res.json();
+      const raw = await res.json();
+      return applyVtKycCacheToMeAuth(raw || null);
     } catch {
       return null;
     }

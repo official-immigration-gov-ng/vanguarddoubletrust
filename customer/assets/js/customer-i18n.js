@@ -3789,6 +3789,99 @@
     document.head.appendChild(el);
   }
 
+  function getInitialsFromProfile(userProfile, fallbackEmail) {
+    const prof = (userProfile && typeof userProfile === "object" ? userProfile : {}) || {};
+    const topLevel = userProfile || {};
+    const first = String(prof.firstname || topLevel.firstname || "").trim();
+    const last = String(prof.lastname || topLevel.lastname || "").trim();
+    if (first || last) {
+      let out = "";
+      if (first) out += first.charAt(0).toUpperCase();
+      if (last) out += last.charAt(0).toUpperCase();
+      if (out) return out;
+    }
+    const email = String(fallbackEmail || prof.email || topLevel.email || "").trim();
+    if (email) return email.charAt(0).toUpperCase();
+    return "VT";
+  }
+
+  function applyAvatarImages(rootEl, userProfileOrMe) {
+    if (typeof document === "undefined") return;
+    const root = (rootEl && typeof rootEl.querySelectorAll === "function")
+      ? rootEl
+      : document;
+    const profile = (userProfileOrMe && typeof userProfileOrMe === "object") ? userProfileOrMe : {};
+    const nestedProfile = (profile.profile && typeof profile.profile === "object") ? profile.profile : {};
+    const profilePic = String(
+      profile.profilePic ||
+      nestedProfile.profilePic ||
+      nestedProfile.photoURL ||
+      nestedProfile.photo ||
+      nestedProfile.avatar ||
+      profile.photoURL ||
+      profile.photo ||
+      profile.avatar ||
+      ""
+    ).trim();
+    const email = String(profile.email || nestedProfile.email || "").trim();
+    const initials = profilePic ? "" : getInitialsFromProfile(profile, email);
+
+    const avatarSelectors = [
+      "#avatarInitials",
+      "#profileAvatar",
+      ".vt-user .avatar",
+      ".user-avatar",
+      ".avatar"
+    ];
+    let processed = 0;
+    avatarSelectors.forEach(function(sel){
+      try {
+        const nodes = root.querySelectorAll(sel);
+        if (!nodes || !nodes.length) return;
+        nodes.forEach(function(el){
+          if (!el || el.dataset && el.dataset.vtAvatarHandled === String(!!profilePic ? "pic" : "initials")) return;
+          try { el.dataset.vtAvatarHandled = profilePic ? "pic" : "initials"; } catch (_) {}
+          if (profilePic) {
+            let img = el.querySelector && el.querySelector("img.vt-avatar-image");
+            if (!img) {
+              img = document.createElement("img");
+              img.className = "vt-avatar-image";
+              img.setAttribute("alt", (initials + " avatar") || "avatar");
+              img.setAttribute("loading", "lazy");
+              img.addEventListener("error", function(){
+                try { img.remove(); } catch (_) {}
+                try { el.textContent = initials || "VT"; } catch (_) {}
+                try { el.style.color = ""; el.style.background = ""; el.style.padding = ""; } catch (_) {}
+              });
+            }
+            img.src = profilePic;
+            img.style.cssText = "display:block;width:100%!important;height:100%!important;object-fit:cover;border-radius:50%;background:#fff;pointer-events:none;";
+            while (el.firstChild) el.removeChild(el.firstChild);
+            el.appendChild(img);
+            try {
+              el.style.backgroundImage = "none";
+              el.style.background = "transparent";
+              el.style.color = "transparent";
+            } catch (_) {}
+          } else {
+            const toRemove = el.querySelectorAll ? el.querySelectorAll("img.vt-avatar-image") : [];
+            for (let i = 0; i < toRemove.length; i++) {
+              try { toRemove[i].remove(); } catch (_) {}
+            }
+            try { el.textContent = initials || "VT"; } catch (_) {}
+            try {
+              el.style.background = "";
+              el.style.color = "";
+              el.style.backgroundImage = "";
+            } catch (_) {}
+          }
+          processed++;
+        });
+      } catch (_) {}
+    });
+    return processed;
+  }
+
   function ensurePicGateCss() {
     if (typeof document === "undefined") return;
     if (document.getElementById("vtPicGateCss")) return;
@@ -4504,8 +4597,70 @@
     return gate;
   }
 
+  let _vtBootstrapRan = false;
+  let _vtKycGateOpened = false;
+  let _vtPicGateOpened = false;
+
+  var VT_KYC_CACHE_KEY = "vt_kyc_state_v1";
+  var VT_KYC_CACHE_TTL_MS = 2 * 60 * 1000;
+
+  function readVtKycCache() {
+    try {
+      if (typeof window === "undefined" || !window.sessionStorage) return null;
+      var raw = window.sessionStorage.getItem(VT_KYC_CACHE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return null;
+      var savedAt = Number(parsed.savedAt || 0);
+      if (!savedAt || Date.now() - savedAt > VT_KYC_CACHE_TTL_MS) return null;
+      return parsed;
+    } catch (_) { return null; }
+  }
+
+  function writeVtKycCache(patch) {
+    try {
+      if (typeof window === "undefined" || !window.sessionStorage) return;
+      var existing = readVtKycCache() || {};
+      var next = Object.assign({}, existing || {}, patch || {}, { savedAt: Date.now() });
+      window.sessionStorage.setItem(VT_KYC_CACHE_KEY, JSON.stringify(next));
+    } catch (_) {}
+  }
+
+  function applyKycCacheToMe(me) {
+    if (!me || typeof me !== "object") return me;
+    var cached = readVtKycCache();
+    if (!cached) return me;
+    var merged = Object.assign({}, me);
+    if (cached.kycCompleted) {
+      merged.security = Object.assign({}, merged.security || {});
+      merged.security.kycCompleted = true;
+      merged.security.KYCDone = true;
+      merged.security.kycDone = true;
+      merged.profile = Object.assign({}, merged.profile || {});
+      merged.profile.kycCompleted = true;
+      merged.profile.KYCDone = true;
+      merged.profile.kycDone = true;
+      if (cached.country) merged.profile.country = cached.country;
+      if (cached.preferredLanguage) {
+        merged.profile.preferredLanguage = cached.preferredLanguage;
+        if (!merged.preferredLanguage) merged.preferredLanguage = cached.preferredLanguage;
+      }
+    }
+    if (cached.profilePic) {
+      merged.profilePic = merged.profilePic || cached.profilePic;
+      merged.profile = Object.assign({}, merged.profile || {});
+      merged.profile.profilePic = merged.profile.profilePic || cached.profilePic;
+      if (cached.profilePicPublicId) merged.profile.profilePicPublicId = cached.profilePicPublicId;
+    }
+    return merged;
+  }
+
   async function bootstrapCustomerPage(options) {
     if (typeof document === "undefined") return null;
+    if (_vtBootstrapRan) {
+      return new Promise(function(resolve){ resolve({ me: null, language: "en", kycCompleted: true, profilePicPrompted: false, duplicateBootstrapPrevented: true }); });
+    }
+    _vtBootstrapRan = true;
     let me = null;
     try {
       me = await api("/api/me");
@@ -4514,10 +4669,13 @@
       if (/unauthorized|sign in|session ended/i.test(str) || /401|403/.test(str)) {
         window.location.href = "/customer/login.php.html";
       }
+      _vtBootstrapRan = false;
       throw err;
     }
+    me = applyKycCacheToMe(me || null);
     const lang = (me && me.preferredLanguage) || "en";
     applyLanguageToDocument(lang, document);
+    try { applyAvatarImages(document, me || {}); } catch (_) {}
 
     const hasProfilePic = !!(
       (me && me.profilePic) ||
@@ -4536,6 +4694,11 @@
     }
 
     function runPicGateIfNeeded(inputMe, language, resolve) {
+      if (_vtPicGateOpened) {
+        maybeRunAfter(inputMe, language, { profilePicPrompted: true });
+        resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: true, picGateSkippedDedup: true });
+        return;
+      }
       const picSet = !!(
         (inputMe && inputMe.profilePic) ||
         (inputMe && inputMe.profile && (inputMe.profile.profilePic || inputMe.profile.photoURL || inputMe.profile.photo || inputMe.profile.avatar))
@@ -4546,28 +4709,36 @@
         resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: false });
         return;
       }
+      _vtPicGateOpened = true;
       buildPicGate({
         me: inputMe || {},
-        onComplete: ({ profilePic, publicId }) => {
+        onComplete: function(result){
+          const profilePic = (result && result.profilePic) ? String(result.profilePic) : "";
+          const publicId = (result && result.publicId) ? String(result.publicId) : "";
           const merged = Object.assign({}, inputMe || {}, { profilePic: profilePic || "" });
           if (merged.profile) {
             merged.profile = Object.assign({}, merged.profile, { profilePic: profilePic || "" });
             if (publicId) merged.profile.profilePicPublicId = publicId;
           }
+          writeVtKycCache({ profilePic: profilePic || "", profilePicPublicId: publicId || "" });
+          try { applyAvatarImages(document, merged || {}); } catch (_) {}
           maybeRunAfter(merged, language, { profilePicPrompted: true });
           resolve({ me: merged, language, kycCompleted: true, profilePicPrompted: true });
         },
-        onSkip: () => {
+        onSkip: function(){
+          writeVtKycCache({});
+          try { applyAvatarImages(document, inputMe || {}); } catch (_) {}
           maybeRunAfter(inputMe, language, { profilePicPrompted: true });
           resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: true });
         }
       });
     }
 
-    const kycNeeded = !!(me && me.security && me.security.kycCompleted === false) ||
-      !!((me && (!me.security || me.security.kycCompleted !== true)) && !(
-        (me.profile && me.profile.country) && (me.profile && me.profile.preferredLanguage)
-      ));
+    const cachedState = readVtKycCache() || null;
+    const cachedKycDone = !!(cachedState && cachedState.kycCompleted === true);
+    const serverSaysKycDone = !!(me && me.security && me.security.kycCompleted === true) || cachedKycDone;
+    const profileFieldsDone = !!((me && me.profile) && (me.profile.country) && (me.profile.preferredLanguage));
+    const kycNeeded = !(serverSaysKycDone || profileFieldsDone);
 
     if (options && options.alwaysShowKyc !== true && !kycNeeded) {
       return new Promise((resolve) => {
@@ -4575,15 +4746,84 @@
       });
     }
 
+    if (_vtKycGateOpened) {
+      return new Promise((resolve) => {
+        runPicGateIfNeeded(me || {}, lang, resolve);
+      });
+    }
+    _vtKycGateOpened = true;
+
     return new Promise((resolve) => {
       buildKycGate({
         me: me || {},
-        onComplete: ({ data, language }) => {
-          const mergedMe = Object.assign({}, me || {}, data || {});
+        onComplete: function(result){
+          const data = (result && result.data) ? result.data : {};
+          const language = (result && result.language) || lang || "en";
+          const mergedSecurity = Object.assign({}, (me && me.security) || {}, (data && data.security) || {});
+          mergedSecurity.kycCompleted = true;
+          const mergedProfile = Object.assign({}, (me && me.profile) || {}, (data && data.profile) || {});
+          mergedProfile.country = String(mergedProfile.country || data.profile?.country || me?.profile?.country || "");
+          mergedProfile.preferredLanguage = String(data.profile?.preferredLanguage || mergedProfile.preferredLanguage || language);
+          const mergedMe = Object.assign({}, me || {}, data || {}, {
+            preferredLanguage: language,
+            profilePic: String(data.profilePic || mergedProfile.profilePic || me?.profilePic || ""),
+            profile: mergedProfile,
+            security: mergedSecurity
+          });
+          writeVtKycCache({
+            kycCompleted: true,
+            country: mergedProfile.country,
+            preferredLanguage: mergedProfile.preferredLanguage
+          });
+          try { applyAvatarImages(document, mergedMe || {}); } catch (_) {}
           runPicGateIfNeeded(mergedMe, language, resolve);
         }
       });
     });
+  }
+
+  function safeShowKycGate(opts) {
+    const options = opts || {};
+    const cached = readVtKycCache();
+    const mergedMe = applyKycCacheToMe(options.me || {});
+    const sDone = !!(mergedMe && mergedMe.security && mergedMe.security.kycCompleted === true);
+    const pDone = !!((mergedMe && mergedMe.profile) && (mergedMe.profile.country) && (mergedMe.profile.preferredLanguage));
+    const cDone = !!(cached && cached.kycCompleted);
+    if (sDone || pDone || cDone) {
+      if (typeof options.onComplete === "function") {
+        try {
+          options.onComplete({
+            data: {
+              profile: Object.assign({}, mergedMe.profile || {}, (cached && cached.country) ? { country: cached.country } : {}, (cached && cached.preferredLanguage) ? { preferredLanguage: cached.preferredLanguage } : {}),
+              security: Object.assign({}, mergedMe.security || {}, { kycCompleted: true })
+            },
+            language: (cached && cached.preferredLanguage) || (mergedMe && mergedMe.preferredLanguage) || "en"
+          });
+        } catch (_) {}
+      }
+      return null;
+    }
+    return buildKycGate(Object.assign({}, options, { me: mergedMe }));
+  }
+
+  function safeShowPicGate(opts) {
+    const options = opts || {};
+    const cached = readVtKycCache();
+    const mergedMe = applyKycCacheToMe(options.me || {});
+    const hasPic = !!(
+      (mergedMe && mergedMe.profilePic) ||
+      (mergedMe && mergedMe.profile && (mergedMe.profile.profilePic || mergedMe.profile.photoURL || mergedMe.profile.photo || mergedMe.profile.avatar)) ||
+      (cached && cached.profilePic)
+    );
+    if (hasPic) {
+      const profilePic = (mergedMe && mergedMe.profilePic) || (cached && cached.profilePic) || "";
+      const publicId = (mergedMe && mergedMe.profile && mergedMe.profile.profilePicPublicId) || (cached && cached.profilePicPublicId) || "";
+      if (typeof options.onComplete === "function") {
+        try { options.onComplete({ profilePic, publicId }); } catch (_) {}
+      }
+      return null;
+    }
+    return buildPicGate(Object.assign({}, options, { me: mergedMe }));
   }
 
   const exports = {
@@ -4606,11 +4846,43 @@
     Upload: {
       cloudinaryUploadFile
     },
+    Cache: {
+      readKyc: readVtKycCache,
+      writeKyc: writeVtKycCache,
+      applyKycToMe: applyKycCacheToMe
+    },
     UI: {
       toast: toastMessage,
-      showKycGate: buildKycGate,
-      showPicGate: buildPicGate,
-      bootstrapCustomerPage
+      showKycGate: safeShowKycGate,
+      showPicGate: safeShowPicGate,
+      bootstrapCustomerPage,
+      applyAvatarImages,
+      getInitialsFromProfile,
+      setupMobileSidebarOutsideClick: function setupMobileSidebarOutsideClick(opts) {
+        if (typeof document === "undefined" || typeof window === "undefined") return function(){};
+        try {
+          const sidebarSelector = (opts && opts.sidebarSelector) || ".vt-sidebar";
+          const toggleSelector = (opts && opts.toggleSelector) || "#sidebarToggle";
+          const overlaySelector = (opts && opts.overlaySelector) || "#sidebarOverlay";
+          const closeFn = (opts && typeof opts.closeFn === "function") ? opts.closeFn : function closeSidebarDefault(){ try { document.body.classList.remove("vt-sidebar-open"); } catch (_) {} };
+          const isMobileFn = (opts && typeof opts.isMobileFn === "function") ? opts.isMobileFn : function defaultIsMobile(){ try { return window.matchMedia("(max-width: 992px)").matches; } catch (_) { return true; } };
+          const body = typeof document !== "undefined" ? document.body : null;
+          function handler(e) {
+            if (!isMobileFn()) return;
+            if (!body || !body.classList.contains("vt-sidebar-open")) return;
+            const tgt = e.target;
+            if (!tgt || typeof tgt.closest !== "function") return;
+            if (tgt.closest(sidebarSelector)) return;
+            if (tgt.closest(toggleSelector)) return;
+            if (tgt.closest(overlaySelector)) return;
+            try { closeFn(); } catch (_) {}
+          }
+          try { document.addEventListener("click", handler, true); } catch (_) {}
+          return function cleanupMobileSidebarOutsideClick(){ try { document.removeEventListener("click", handler, true); } catch (_) {} };
+        } catch (_) {
+          return function(){};
+        }
+      }
     }
   };
 
