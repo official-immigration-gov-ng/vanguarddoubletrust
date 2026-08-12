@@ -861,10 +861,44 @@
               ? window.VT.API.fetchJson("/api/profile", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(toSend) })
               : fetch("/api/profile", { method: "PUT", headers: { "Content-Type": "application/json", "Accept": "application/json" }, credentials: "same-origin", body: JSON.stringify(toSend) }).then(function(r){ return r.json(); }));
             if (latestMe) {
-              latestMe = Object.assign({}, latestMe, { profilePic: "" });
+              latestMe = Object.assign({}, latestMe, { profilePic: "", photoURL: "", photo: "", avatar: "" });
               if (!latestMe.profile) latestMe.profile = {};
-              latestMe.profile = Object.assign({}, latestMe.profile, { profilePic: "" });
+              latestMe.profile = Object.assign({}, latestMe.profile, { profilePic: "", photoURL: "", photo: "", avatar: "" });
               delete latestMe.profile.profilePicPublicId;
+              delete latestMe.profile.photoURLPublicId;
+              delete latestMe.profile.photoPublicId;
+              delete latestMe.profile.avatarPublicId;
+              if (!latestMe.security) latestMe.security = {};
+              latestMe.security = Object.assign({}, latestMe.security, { profilePic: "", photoURL: "", photo: "", avatar: "" });
+              delete latestMe.security.profilePicPublicId;
+              delete latestMe.security.photoURLPublicId;
+              delete latestMe.security.photoPublicId;
+              delete latestMe.security.avatarPublicId;
+            }
+            if (window.VT && window.VT.Cache && typeof window.VT.Cache.writeKyc === "function") {
+              try { window.VT.Cache.writeKyc({ profilePic: "", photoURL: "", photo: "", avatar: "", profilePicPublicId: "", photoURLPublicId: "", photoPublicId: "", avatarPublicId: "" }); } catch (_) {}
+            } else if (window.sessionStorage) {
+              try {
+                var key = "vt_kyc_state_v1";
+                var raw = window.sessionStorage.getItem(key);
+                if (raw) {
+                  var p = JSON.parse(raw);
+                  if (p && typeof p === "object") {
+                    ["profilePic","photoURL","photo","avatar","profilePicPublicId","photoURLPublicId","photoPublicId","avatarPublicId"].forEach(function(k){ delete p[k]; });
+                    p.savedAt = Date.now();
+                    window.sessionStorage.setItem(key, JSON.stringify(p));
+                  }
+                }
+                var permKey = "vt_kyc_perm_v1";
+                var raw2 = window.localStorage ? window.localStorage.getItem(permKey) : null;
+                if (raw2) {
+                  var p2 = JSON.parse(raw2);
+                  if (p2 && typeof p2 === "object") {
+                    ["profilePic","photoURL","photo","avatar","profilePicPublicId","photoURLPublicId","photoPublicId","avatarPublicId"].forEach(function(k){ delete p2[k]; });
+                    window.localStorage.setItem(permKey, JSON.stringify(p2));
+                  }
+                }
+              } catch (_) {}
             }
             renderAvatars("", latestMe);
             updateUploadButtonLabel(false);
@@ -932,13 +966,40 @@
             me: latestMe || {},
             onComplete: function (res) {
               const r = res || {};
+              const finalPic = String(r.profilePic || r.photoURL || r.photo || r.avatar || "").trim();
+              const finalPub = String(r.publicId || r.profilePicPublicId || r.photoURLPublicId || r.photoPublicId || r.avatarPublicId || "").trim();
+              const kycDone = !!(r.kycCompleted === true || r.kycDone === true || r.KYCDone === true);
               if (latestMe) {
-                latestMe = Object.assign({}, latestMe, { profilePic: r.profilePic || (latestMe && latestMe.profilePic) || "" });
+                latestMe = Object.assign({}, latestMe, { profilePic: finalPic || (latestMe && latestMe.profilePic) || "" });
+                if (finalPic) {
+                  latestMe.photoURL = latestMe.photoURL || finalPic;
+                  latestMe.photo = latestMe.photo || latestMe.photoURL || finalPic;
+                  latestMe.avatar = latestMe.avatar || latestMe.photo || latestMe.photoURL || finalPic;
+                }
                 if (!latestMe.profile) latestMe.profile = {};
                 latestMe.profile = Object.assign({}, latestMe.profile, {
-                  profilePic: r.profilePic || (latestMe.profile && latestMe.profile.profilePic) || ""
+                  profilePic: finalPic || (latestMe.profile && latestMe.profile.profilePic) || ""
                 });
-                if (r.publicId) latestMe.profile.profilePicPublicId = r.publicId;
+                if (finalPic) {
+                  latestMe.profile.photoURL = latestMe.profile.photoURL || latestMe.profile.profilePic || finalPic;
+                  latestMe.profile.photo = latestMe.profile.photo || latestMe.profile.photoURL || latestMe.profile.profilePic || finalPic;
+                  latestMe.profile.avatar = latestMe.profile.avatar || latestMe.profile.photo || latestMe.profile.photoURL || latestMe.profile.profilePic || finalPic;
+                }
+                if (finalPub) {
+                  latestMe.profile.profilePicPublicId = finalPub;
+                  latestMe.profile.photoURLPublicId = latestMe.profile.photoURLPublicId || finalPub;
+                  latestMe.profile.photoPublicId = latestMe.profile.photoPublicId || finalPub;
+                  latestMe.profile.avatarPublicId = latestMe.profile.avatarPublicId || finalPub;
+                }
+                if (kycDone) {
+                  if (!latestMe.security) latestMe.security = {};
+                  latestMe.security.kycCompleted = true;
+                  latestMe.security.KYCDone = true;
+                  latestMe.security.kycDone = true;
+                  latestMe.profile.kycCompleted = true;
+                  latestMe.profile.KYCDone = true;
+                  latestMe.profile.kycDone = true;
+                }
               }
               const picUrl = getProfilePicUrl(latestMe);
               renderAvatars(picUrl, latestMe);

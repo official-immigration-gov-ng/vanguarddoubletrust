@@ -492,17 +492,30 @@ app.get("/api/me", requireAuth, async (req, res) => {
   const finalLang = String(prof?.preferredLanguage || prof?.language || sec?.preferredLanguage || "en");
   const finalProfile = Object.assign({}, prof || {}, {
     preferredLanguage: prof?.preferredLanguage || finalLang,
-    kycCompleted: kycCompleted || Boolean(prof?.kycCompleted)
+    kycCompleted: kycCompleted || Boolean(prof?.kycCompleted),
+    kycDone: Boolean(kycCompleted || prof?.kycDone || sec?.kycDone),
+    KYCDone: Boolean(kycCompleted || prof?.KYCDone || sec?.KYCDone),
+    kycCompletedAt: prof?.kycCompletedAt || prof?.KYCDoneAt || prof?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || sec?.kycDoneAt || null,
+    kycDoneAt: prof?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || sec?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || null,
+    KYCDoneAt: prof?.KYCDoneAt || prof?.kycCompletedAt || prof?.kycDoneAt || sec?.KYCDoneAt || sec?.kycCompletedAt || sec?.kycDoneAt || null
   });
   const finalSecurity = Object.assign({}, sec || {}, {
     twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
     kycCompleted,
-    kycDone: Boolean(kycCompleted || sec?.kycDone),
-    KYCDone: Boolean(kycCompleted || sec?.KYCDone),
-    kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycCompletedAt || null,
+    kycDone: Boolean(kycCompleted || sec?.kycDone || prof?.kycDone),
+    KYCDone: Boolean(kycCompleted || sec?.KYCDone || prof?.KYCDone),
+    kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || sec?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || prof?.kycDoneAt || null,
+    kycDoneAt: sec?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || null,
+    KYCDoneAt: sec?.KYCDoneAt || sec?.kycCompletedAt || sec?.kycDoneAt || prof?.KYCDoneAt || prof?.kycCompletedAt || prof?.kycDoneAt || null,
     accountPinHashSet: Boolean(sec?.accountPinHash)
   });
 
+  const finalPicUrl = String(
+    finalProfile?.profilePic || finalProfile?.photoURL || finalProfile?.photo || finalProfile?.avatar ||
+    finalSecurity?.profilePic || finalSecurity?.photoURL || finalSecurity?.photo || finalSecurity?.avatar ||
+    prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar ||
+    sec?.profilePic || sec?.photoURL || sec?.photo || sec?.avatar || ""
+  );
   res.json({
     uid: freshUser.uid,
     email: freshUser.email || null,
@@ -510,7 +523,10 @@ app.get("/api/me", requireAuth, async (req, res) => {
     account: freshUser.account || null,
     security: finalSecurity,
     preferredLanguage: finalLang,
-    profilePic: String(finalProfile?.profilePic || finalProfile?.photoURL || finalProfile?.photo || finalProfile?.avatar || prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar || ""),
+    profilePic: finalPicUrl,
+    photoURL: finalPicUrl,
+    photo: finalPicUrl,
+    avatar: finalPicUrl,
     createdAt: freshUser.createdAt || null,
     updatedAt: freshUser.updatedAt || null,
     pinVerified: isPinVerified(req)
@@ -564,28 +580,117 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
 
   const updates = {
     updatedAt: nowIso,
-    "profile.profilePic": secureUrl
+    "profile.profilePic": secureUrl,
+    "profile.photoURL": secureUrl,
+    "profile.photo": secureUrl,
+    "profile.avatar": secureUrl,
+    "security.profilePic": secureUrl,
+    "security.photoURL": secureUrl,
+    "security.photo": secureUrl,
+    "security.avatar": secureUrl
   };
-  if (publicId) updates["profile.profilePicPublicId"] = publicId;
-  if (width) updates["profile.profilePicWidth"] = width;
-  if (height) updates["profile.profilePicHeight"] = height;
-  if (format) updates["profile.profilePicFormat"] = format;
-  if (bytes) updates["profile.profilePicBytes"] = bytes;
+  if (publicId) {
+    updates["profile.profilePicPublicId"] = publicId;
+    updates["profile.photoURLPublicId"] = publicId;
+    updates["profile.photoPublicId"] = publicId;
+    updates["profile.avatarPublicId"] = publicId;
+    updates["security.profilePicPublicId"] = publicId;
+    updates["security.photoURLPublicId"] = publicId;
+    updates["security.photoPublicId"] = publicId;
+    updates["security.avatarPublicId"] = publicId;
+  }
+  if (width) {
+    updates["profile.profilePicWidth"] = width;
+    updates["profile.photoURLWidth"] = width;
+    updates["profile.photoWidth"] = width;
+    updates["profile.avatarWidth"] = width;
+    updates["security.profilePicWidth"] = width;
+    updates["security.photoURLWidth"] = width;
+    updates["security.photoWidth"] = width;
+    updates["security.avatarWidth"] = width;
+  }
+  if (height) {
+    updates["profile.profilePicHeight"] = height;
+    updates["profile.photoURLHeight"] = height;
+    updates["profile.photoHeight"] = height;
+    updates["profile.avatarHeight"] = height;
+    updates["security.profilePicHeight"] = height;
+    updates["security.photoURLHeight"] = height;
+    updates["security.photoHeight"] = height;
+    updates["security.avatarHeight"] = height;
+  }
+  if (format) {
+    updates["profile.profilePicFormat"] = format;
+    updates["profile.photoURLFormat"] = format;
+    updates["profile.photoFormat"] = format;
+    updates["profile.avatarFormat"] = format;
+    updates["security.profilePicFormat"] = format;
+    updates["security.photoURLFormat"] = format;
+    updates["security.photoFormat"] = format;
+    updates["security.avatarFormat"] = format;
+  }
+  if (bytes) {
+    updates["profile.profilePicBytes"] = bytes;
+    updates["profile.photoURLBytes"] = bytes;
+    updates["profile.photoBytes"] = bytes;
+    updates["profile.avatarBytes"] = bytes;
+    updates["security.profilePicBytes"] = bytes;
+    updates["security.photoURLBytes"] = bytes;
+    updates["security.photoBytes"] = bytes;
+    updates["security.avatarBytes"] = bytes;
+  }
 
   try {
     const db = getFirestore();
     await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+    const refreshedSnap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+    const dbData = refreshedSnap && refreshedSnap.exists ? (refreshedSnap.data() || {}) : null;
+    const dbProf = (dbData && dbData.profile) || (req.user?.profile) || {};
+    const dbSec = (dbData && dbData.security) || (req.user?.security) || {};
+    const kycDone = Boolean(
+      dbProf.kycCompleted || dbProf.KYCDone || dbProf.kycDone ||
+      dbSec.kycCompleted || dbSec.KYCDone || dbSec.kycDone ||
+      (dbProf.country && dbProf.preferredLanguage)
+    );
+    res.status(200).json({
+      ok: true,
+      profilePic: secureUrl,
+      photoURL: secureUrl,
+      photo: secureUrl,
+      avatar: secureUrl,
+      profilePicPublicId: publicId || null,
+      photoURLPublicId: publicId || null,
+      photoPublicId: publicId || null,
+      avatarPublicId: publicId || null,
+      kycCompleted: kycDone,
+      kycDone: kycDone,
+      KYCDone: kycDone,
+      profile: Object.assign({}, dbProf || {}, {
+        profilePic: secureUrl,
+        photoURL: secureUrl,
+        photo: secureUrl,
+        avatar: secureUrl,
+        profilePicPublicId: publicId || dbProf.profilePicPublicId || null,
+        kycCompleted: kycDone,
+        kycDone: kycDone,
+        KYCDone: kycDone
+      }),
+      security: Object.assign({}, dbSec || {}, {
+        profilePic: secureUrl,
+        photoURL: secureUrl,
+        photo: secureUrl,
+        avatar: secureUrl,
+        profilePicPublicId: publicId || dbSec.profilePicPublicId || null,
+        kycCompleted: kycDone,
+        kycDone: kycDone,
+        KYCDone: kycDone
+      })
+    });
   } catch (e) {
     const normalized = normalizeFirebaseAdminError(e, "Unable to save profile picture.");
     res.status(normalized.status).json({ error: normalized.error });
     return;
   }
-
-  res.status(200).json({
-    ok: true,
-    profilePic: secureUrl,
-    profilePicPublicId: publicId || null
-  });
 });
 
 function cleanString(v, maxLen) {
@@ -639,10 +744,14 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     "security.KYCDone": true,
     "security.kycDone": true,
     "security.kycCompletedAt": nowIso,
+    "security.KYCDoneAt": nowIso,
+    "security.kycDoneAt": nowIso,
     "profile.kycCompleted": true,
     "profile.KYCDone": true,
     "profile.kycDone": true,
-    "profile.kycCompletedAt": nowIso
+    "profile.kycCompletedAt": nowIso,
+    "profile.KYCDoneAt": nowIso,
+    "profile.kycDoneAt": nowIso
   };
 
   updates["profile.country"] = country;
@@ -657,21 +766,28 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   updates["profile.occupation"] = occupation;
   if (phone) updates["profile.phone"] = phone;
 
+  let dbSnapshot = null;
   try {
     const db = getFirestore();
     await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+    const refreshedSnap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+    dbSnapshot = refreshedSnap && refreshedSnap.exists ? (refreshedSnap.data() || {}) : null;
   } catch (e) {
     const normalized = normalizeFirebaseAdminError(e, "Unable to save KYC profile.");
     res.status(normalized.status).json({ error: normalized.error });
     return;
   }
 
-  const profSnapshot = (req.user?.profile) || {};
-  const secSnapshot = (req.user?.security) || {};
+  const profSnapshot = ((dbSnapshot && dbSnapshot.profile) || (req.user?.profile) || {}) ;
+  const secSnapshot = ((dbSnapshot && dbSnapshot.security) || (req.user?.security) || {}) ;
+  const picUrl = String(
+    profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar ||
+    secSnapshot.profilePic || secSnapshot.photoURL || secSnapshot.photo || secSnapshot.avatar || ""
+  );
   res.status(200).json({
     ok: true,
     preferredLanguage: langCode,
-    profilePic: String(profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar || ""),
+    profilePic: picUrl,
     profile: {
       firstname: profSnapshot.firstname || "",
       lastname: profSnapshot.lastname || "",
@@ -686,11 +802,24 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
       nationality,
       occupation,
       phone,
-      profilePic: String(profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar || "")
+      profilePic: picUrl,
+      photoURL: picUrl,
+      photo: picUrl,
+      avatar: picUrl,
+      kycCompleted: true,
+      kycDone: true,
+      KYCDone: true,
+      kycCompletedAt: nowIso,
+      kycDoneAt: nowIso,
+      KYCDoneAt: nowIso
     },
     security: {
       kycCompleted: true,
+      kycDone: true,
+      KYCDone: true,
       kycCompletedAt: nowIso,
+      kycDoneAt: nowIso,
+      KYCDoneAt: nowIso,
       twoFactorEnabled: Boolean(secSnapshot.twoFactorEnabled || false)
     }
   });
@@ -792,8 +921,22 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     const safe = rawPic.trim();
     if (safe === "") {
       updates["profile.profilePic"] = "";
+      updates["profile.photoURL"] = "";
+      updates["profile.photo"] = "";
+      updates["profile.avatar"] = "";
+      updates["security.profilePic"] = "";
+      updates["security.photoURL"] = "";
+      updates["security.photo"] = "";
+      updates["security.avatar"] = "";
     } else if (isSafeCloudinaryUrl(safe)) {
       updates["profile.profilePic"] = safe;
+      updates["profile.photoURL"] = safe;
+      updates["profile.photo"] = safe;
+      updates["profile.avatar"] = safe;
+      updates["security.profilePic"] = safe;
+      updates["security.photoURL"] = safe;
+      updates["security.photo"] = safe;
+      updates["security.avatar"] = safe;
     } else {
       res.status(400).json({ error: "Invalid profile picture URL. Please upload via Cloudinary first." });
       return;
@@ -829,9 +972,77 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   }
 
   const db = getFirestore();
-  await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+  const nowIso = new Date().toISOString();
+  const finalCountry = ("profile.country" in updates && typeof updates["profile.country"] === "string")
+    ? updates["profile.country"]
+    : (typeof country === "string" ? country.trim() : "") || (prof?.country || "");
+  const finalLanguage = ("profile.preferredLanguage" in updates && typeof updates["profile.preferredLanguage"] === "string")
+    ? updates["profile.preferredLanguage"]
+    : (typeof preferredLanguage === "string" && preferredLanguage.trim() ? preferredLanguage.trim() : (prof?.preferredLanguage || ""));
+  if (finalCountry && finalLanguage) {
+    updates["security.kycCompleted"] = true;
+    updates["security.KYCDone"] = true;
+    updates["security.kycDone"] = true;
+    updates["security.kycCompletedAt"] = nowIso;
+    updates["security.KYCDoneAt"] = nowIso;
+    updates["security.kycDoneAt"] = nowIso;
+    updates["profile.kycCompleted"] = true;
+    updates["profile.KYCDone"] = true;
+    updates["profile.kycDone"] = true;
+    updates["profile.kycCompletedAt"] = nowIso;
+    updates["profile.KYCDoneAt"] = nowIso;
+    updates["profile.kycDoneAt"] = nowIso;
+  }
+  let refreshedSnap = null;
+  try {
+    await db.collection("users").doc(String(uid)).set(updates, { merge: true });
+    const r = await db.collection("users").doc(String(uid)).get().catch(() => null);
+    refreshedSnap = r && r.exists ? (r.data() || {}) : null;
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to save profile.");
+    res.status(normalized.status).json({ error: normalized.error });
+    return;
+  }
 
-  res.json({ ok: true });
+  const fsProf = (refreshedSnap && refreshedSnap.profile) || prof || {};
+  const fsSec = (refreshedSnap && refreshedSnap.security) || (req.user?.security) || {};
+  const picUrl = String(
+    fsProf.profilePic || fsProf.photoURL || fsProf.photo || fsProf.avatar ||
+    fsSec.profilePic || fsSec.photoURL || fsSec.photo || fsSec.avatar || ""
+  );
+  const kycCompleted = Boolean(
+    fsProf.kycCompleted || fsProf.KYCDone || fsProf.kycDone ||
+    fsSec.kycCompleted || fsSec.KYCDone || fsSec.kycDone ||
+    (fsProf.country && fsProf.preferredLanguage)
+  );
+  res.json({
+    ok: true,
+    profilePic: picUrl,
+    photoURL: picUrl,
+    photo: picUrl,
+    avatar: picUrl,
+    kycCompleted,
+    kycDone: kycCompleted,
+    KYCDone: kycCompleted,
+    profile: Object.assign({}, fsProf || {}, {
+      kycCompleted,
+      kycDone: kycCompleted,
+      KYCDone: kycCompleted,
+      profilePic: picUrl,
+      photoURL: picUrl,
+      photo: picUrl,
+      avatar: picUrl
+    }),
+    security: Object.assign({}, fsSec || {}, {
+      kycCompleted,
+      kycDone: kycCompleted,
+      KYCDone: kycCompleted,
+      profilePic: picUrl,
+      photoURL: picUrl,
+      photo: picUrl,
+      avatar: picUrl
+    })
+  });
 });
 
 app.get("/api/customer/transactions", requireAuth, async (req, res) => {
