@@ -754,6 +754,18 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     "profile.kycDoneAt": nowIso
   };
 
+  const existingSnapshot = await (async () => {
+    try {
+      const db = getFirestore();
+      const existingSnap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+      if (existingSnap && existingSnap.exists) return existingSnap.data() || {};
+    } catch (_) {}
+    return {};
+  })();
+  const existingProfile = typeof existingSnapshot?.profile === "object" && existingSnapshot.profile ? existingSnapshot.profile : {};
+
+  updates["profile.firstname"] = cleanString(b.firstname || existingProfile.firstname, 80) || cleanString(b.firstName || existingProfile.firstName || existingProfile.firstname, 80) || cleanString(existingProfile.firstname, 80);
+  updates["profile.lastname"] = cleanString(b.lastname || existingProfile.lastname, 80) || cleanString(b.lastName || existingProfile.lastName || existingProfile.lastname, 80) || cleanString(existingProfile.lastname, 80);
   updates["profile.country"] = country;
   updates["profile.preferredLanguage"] = langCode;
   updates["profile.dateOfBirth"] = dateOfBirth;
@@ -789,8 +801,8 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     preferredLanguage: langCode,
     profilePic: picUrl,
     profile: {
-      firstname: profSnapshot.firstname || "",
-      lastname: profSnapshot.lastname || "",
+      firstname: (b.firstname || b.firstName || profSnapshot.firstname || profSnapshot.firstName || ""),
+      lastname: (b.lastname || b.lastName || profSnapshot.lastname || profSnapshot.lastName || ""),
       country,
       preferredLanguage: langCode,
       dateOfBirth,
@@ -806,6 +818,7 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
       photoURL: picUrl,
       photo: picUrl,
       avatar: picUrl,
+      profilePicPublicId: profSnapshot.profilePicPublicId || profSnapshot.photoURLPublicId || profSnapshot.photoPublicId || profSnapshot.avatarPublicId || null,
       kycCompleted: true,
       kycDone: true,
       KYCDone: true,
@@ -1197,7 +1210,7 @@ app.post("/api/customer/transfer", requireAuth, async (req, res) => {
   }
   const recipientCurrency = String(recipientAccount?.currency || senderAccount?.currency || "USD").toUpperCase() || "USD";
   if (recipientCurrency !== currency) {
-    res.status(400).json({ error: `Recipient uses a different currency (${recipientCurrency}). Please use International Transfer for cross-currency payments.` });
+    res.status(400).json({ error: `Recipient uses a different currency (${recipientCurrency}). Please use Bank Transfer for cross-currency payments.` });
     return;
   }
   const reference = `TX-${makeTxId()}`;

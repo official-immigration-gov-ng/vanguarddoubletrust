@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>International Transfer - VanguardDoubleTrust</title>
+    <title>Bank Transfer - VanguardDoubleTrust</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="Securely send money to any bank account." name="description" />
 
@@ -607,15 +607,11 @@
           </a>
         </nav>
 
-        <div class="vt-section-label">FUND TRANSFER</div>
+        <div class="vt-section-label">BANK TRANSFER</div>
         <nav class="vt-nav">
-          <a href="#" onclick="return false;">
-            <span class="ico"><i class="fas fa-right-left"></i></span>
-            <span data-i18n="actions_transfer">Local Transfer</span>
-          </a>
           <a class="active" href="/customer/international.php">
-            <span class="ico"><i class="fas fa-globe"></i></span>
-            <span data-i18n="nav_international">International Transfer</span>
+            <span class="ico"><i class="fas fa-building-columns"></i></span>
+            <span data-i18n="actions_transfer">Bank Transfer</span>
           </a>
           <a href="/customer/transferhistory.php">
             <span class="ico"><i class="fas fa-clock-rotate-left"></i></span>
@@ -668,7 +664,7 @@
 
         <div class="vt-content">
           <div class="vt-page-title">
-            <h1>International Transfer</h1>
+            <h1 data-i18n="intl_title">Bank Transfer</h1>
             <p>Securely send money to any bank account.</p>
           </div>
 
@@ -716,7 +712,7 @@
               </div>
 
               <div>
-                <label for="amount">Amount To Transfer</label>
+                <label for="amount">Amount</label>
                 <input id="amount" name="amount" type="number" min="1" step="0.01" inputmode="decimal" />
               </div>
               <div>
@@ -727,7 +723,7 @@
               </div>
 
               <div class="full tf-actions">
-                <button id="submitTransfer" class="tf-btn" type="submit">Proceed Transfer</button>
+                <button id="submitTransfer" class="tf-btn" type="submit">Proceed</button>
               </div>
             </form>
           </section>

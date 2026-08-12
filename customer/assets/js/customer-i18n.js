@@ -13,7 +13,7 @@
       nav_statement: "Statement",
       nav_stocks: "Invest / Stocks",
       nav_card: "Cards",
-      nav_international: "International Transfer",
+      nav_international: "Bank Transfer",
       nav_profile: "My Profile",
       nav_kyc: "KYC / Profile Setup",
       nav_pin: "Account PIN",
@@ -26,7 +26,7 @@
       hero_balance: "Available Balance",
       hero_viewDetails: "View Details",
       hero_viewStatement: "View Statement",
-      actions_transfer: "Transfer",
+      actions_transfer: "Bank Transfer",
       actions_deposit: "Deposit",
       actions_withdraw: "Withdraw",
       actions_bills: "Pay Bills",
@@ -111,7 +111,7 @@
       st_closingBalance: "Closing Balance",
       st_totalIn: "Total In",
       st_totalOut: "Total Out",
-      intl_title: "International Transfer",
+      intl_title: "Bank Transfer",
       intl_sendAmount: "You Send",
       intl_receiveAmount: "Recipient Gets",
       intl_fee: "Fee",
@@ -189,7 +189,7 @@
       nav_statement: "Estado de Cuenta",
       nav_stocks: "Invertir / Acciones",
       nav_card: "Tarjetas",
-      nav_international: "Transferencia Internacional",
+      nav_international: "Transferencia Bancaria",
       nav_profile: "Mi Perfil",
       nav_kyc: "KYC / Configurar Perfil",
       nav_pin: "PIN de la Cuenta",
@@ -202,7 +202,7 @@
       hero_balance: "Saldo Disponible",
       hero_viewDetails: "Ver Detalles",
       hero_viewStatement: "Ver Estado",
-      actions_transfer: "Transferir",
+      actions_transfer: "Transferencia Bancaria",
       actions_deposit: "Depositar",
       actions_withdraw: "Retirar",
       actions_bills: "Pagar Facturas",
@@ -287,7 +287,7 @@
       st_closingBalance: "Saldo Final",
       st_totalIn: "Total Entradas",
       st_totalOut: "Total Salidas",
-      intl_title: "Transferencia Internacional",
+      intl_title: "Transferencia Bancaria",
       intl_sendAmount: "Envías",
       intl_receiveAmount: "Recibe",
       intl_fee: "Comisión",
@@ -365,7 +365,7 @@
       nav_statement: "Relevé",
       nav_stocks: "Investir / Actions",
       nav_card: "Cartes",
-      nav_international: "Virement international",
+      nav_international: "Virement bancaire",
       nav_profile: "Mon profil",
       nav_kyc: "KYC / Configurer le profil",
       nav_pin: "Code PIN",
@@ -378,7 +378,7 @@
       hero_balance: "Solde disponible",
       hero_viewDetails: "Voir les détails",
       hero_viewStatement: "Voir le relevé",
-      actions_transfer: "Virement",
+      actions_transfer: "Virement bancaire",
       actions_deposit: "Dépôt",
       actions_withdraw: "Retrait",
       actions_bills: "Payer les factures",
@@ -463,7 +463,7 @@
       st_closingBalance: "Solde final",
       st_totalIn: "Total entrées",
       st_totalOut: "Total sorties",
-      intl_title: "Virement international",
+      intl_title: "Virement bancaire",
       intl_sendAmount: "Vous envoyez",
       intl_receiveAmount: "Le bénéficiaire reçoit",
       intl_fee: "Frais",
@@ -541,7 +541,7 @@
       nav_statement: "Kontoauszug",
       nav_stocks: "Investieren / Aktien",
       nav_card: "Karten",
-      nav_international: "Internationale Überweisung",
+      nav_international: "Banküberweisung",
       nav_profile: "Mein Profil",
       nav_kyc: "KYC / Profil einrichten",
       nav_pin: "Konto-PIN",
@@ -554,7 +554,7 @@
       hero_balance: "Verfügbares Guthaben",
       hero_viewDetails: "Details anzeigen",
       hero_viewStatement: "Kontoauszug anzeigen",
-      actions_transfer: "Überweisen",
+      actions_transfer: "Banküberweisung",
       actions_deposit: "Einzahlen",
       actions_withdraw: "Abheben",
       actions_bills: "Rechnungen zahlen",
@@ -639,7 +639,7 @@
       st_closingBalance: "Endguthaben",
       st_totalIn: "Eingänge gesamt",
       st_totalOut: "Ausgänge gesamt",
-      intl_title: "Internationale Überweisung",
+      intl_title: "Banküberweisung",
       intl_sendAmount: "Sie senden",
       intl_receiveAmount: "Empfänger erhält",
       intl_fee: "Gebühr",
@@ -717,7 +717,7 @@
       nav_statement: "Extrato",
       nav_stocks: "Investir / Ações",
       nav_card: "Cartões",
-      nav_international: "Transferência Internacional",
+      nav_international: "Transferência Bancária",
       nav_profile: "Meu Perfil",
       nav_kyc: "KYC / Configurar Perfil",
       nav_pin: "PIN da Conta",
@@ -730,7 +730,7 @@
       hero_balance: "Saldo Disponível",
       hero_viewDetails: "Ver Detalhes",
       hero_viewStatement: "Ver Extrato",
-      actions_transfer: "Transferir",
+      actions_transfer: "Transferência Bancária",
       actions_deposit: "Depositar",
       actions_withdraw: "Sacar",
       actions_bills: "Pagar Contas",
@@ -815,7 +815,7 @@
       st_closingBalance: "Saldo Final",
       st_totalIn: "Total de Entradas",
       st_totalOut: "Total de Saídas",
-      intl_title: "Transferência Internacional",
+      intl_title: "Transferência Bancária",
       intl_sendAmount: "Você Envia",
       intl_receiveAmount: "Beneficiário Recebe",
       intl_fee: "Taxa",
@@ -893,7 +893,7 @@
       nav_statement: "Выписка",
       nav_stocks: "Инвестиции / Акции",
       nav_card: "Карты",
-      nav_international: "Международный перевод",
+      nav_international: "Банковский перевод",
       nav_profile: "Мой профиль",
       nav_kyc: "KYC / Настройка профиля",
       nav_pin: "PIN-код",
@@ -906,7 +906,7 @@
       hero_balance: "Доступный остаток",
       hero_viewDetails: "Подробнее",
       hero_viewStatement: "Посмотреть выписку",
-      actions_transfer: "Перевод",
+      actions_transfer: "Банковский перевод",
       actions_deposit: "Пополнить",
       actions_withdraw: "Снять",
       actions_bills: "Оплатить счета",
@@ -991,7 +991,7 @@
       st_closingBalance: "Исходящий остаток",
       st_totalIn: "Всего приход",
       st_totalOut: "Всего расход",
-      intl_title: "Международный перевод",
+      intl_title: "Банковский перевод",
       intl_sendAmount: "Отправляете",
       intl_receiveAmount: "Получатель получит",
       intl_fee: "Комиссия",
@@ -1069,7 +1069,7 @@
       nav_statement: "账单",
       nav_stocks: "投资 / 股票",
       nav_card: "卡片",
-      nav_international: "国际转账",
+      nav_international: "银行转账",
       nav_profile: "我的资料",
       nav_kyc: "实名认证 / 设置资料",
       nav_pin: "账户密码",
@@ -1082,7 +1082,7 @@
       hero_balance: "可用余额",
       hero_viewDetails: "查看详情",
       hero_viewStatement: "查看账单",
-      actions_transfer: "转账",
+      actions_transfer: "银行转账",
       actions_deposit: "存款",
       actions_withdraw: "取款",
       actions_bills: "缴费",
@@ -1167,7 +1167,7 @@
       st_closingBalance: "期末余额",
       st_totalIn: "总收入",
       st_totalOut: "总支出",
-      intl_title: "国际转账",
+      intl_title: "银行转账",
       intl_sendAmount: "转出金额",
       intl_receiveAmount: "收款金额",
       intl_fee: "手续费",
@@ -1245,7 +1245,7 @@
       nav_statement: "كشف الحساب",
       nav_stocks: "الاستثمار / الأسهم",
       nav_card: "البطاقات",
-      nav_international: "تحويل دولي",
+      nav_international: "تحويل بنكي",
       nav_profile: "ملفي الشخصي",
       nav_kyc: "بيانات التعرف على العملاء",
       nav_pin: "رقم الحساب السري",
@@ -1258,7 +1258,7 @@
       hero_balance: "الرصيد المتاح",
       hero_viewDetails: "عرض التفاصيل",
       hero_viewStatement: "عرض الكشف",
-      actions_transfer: "تحويل",
+      actions_transfer: "تحويل بنكي",
       actions_deposit: "إيداع",
       actions_withdraw: "سحب",
       actions_bills: "دفع الفواتير",
@@ -1343,7 +1343,7 @@
       st_closingBalance: "الرصيد الختامي",
       st_totalIn: "إجمالي الوارد",
       st_totalOut: "إجمالي الصادر",
-      intl_title: "تحويل دولي",
+      intl_title: "تحويل بنكي",
       intl_sendAmount: "المبلغ المرسل",
       intl_receiveAmount: "المبلغ المستلم",
       intl_fee: "الرسوم",
@@ -1420,8 +1420,8 @@
       nav_profile: "Dettagli account",
       nav_statement: "Riepilogo conto",
       nav_stocks: "Azioni e trading",
-      actions_transfer: "Bonifico locale",
-      nav_international: "Bonifico internazionale",
+      actions_transfer: "Bonifico bancario",
+      nav_international: "Bonifico bancario",
       nav_transferHistory: "Cronologia trasferimenti",
       nav_card: "Carta ATM",
       nav_pin: "PIN transazione",
@@ -1482,7 +1482,7 @@
       st_closingBalance: "Saldo finale",
       st_totalIn: "Totale entrate",
       st_totalOut: "Totale uscite",
-      intl_title: "Bonifico internazionale",
+      intl_title: "Bonifico bancario",
       intl_sendAmount: "Importo da inviare",
       intl_receiveAmount: "Importo ricevuto",
       intl_rate: "Tasso di cambio",
@@ -1577,8 +1577,8 @@
       nav_profile: "Accountgegevens",
       nav_statement: "Accountoverzicht",
       nav_stocks: "Aandelen en trading",
-      actions_transfer: "Lokale overschrijving",
-      nav_international: "Internationale overschrijving",
+      actions_transfer: "Bankoverschrijving",
+      nav_international: "Bankoverschrijving",
       nav_transferHistory: "Overdrachtsgeschiedenis",
       nav_card: "ATM-pas",
       nav_pin: "Transactie-PIN",
@@ -1610,7 +1610,7 @@
       recent_empty: "Nog geen transacties",
       th_title: "Geschiedenis",
       st_title: "Rekeningafschrift",
-      intl_title: "Internationale overschrijving",
+      intl_title: "Bankoverschrijving",
       profile_title: "Mijn profiel",
       pin_title: "Transactie-PIN",
       pw_title: "Accountwachtwoord",
@@ -1659,8 +1659,8 @@
       nav_profile: "アカウント詳細",
       nav_statement: "アカウント概要",
       nav_stocks: "株式・トレード",
-      actions_transfer: "国内送金",
-      nav_international: "国際送金",
+      actions_transfer: "銀行振込",
+      nav_international: "銀行振込",
       nav_transferHistory: "送金履歴",
       nav_card: "ATMカード",
       nav_pin: "取引暗証番号",
@@ -1692,7 +1692,7 @@
       status_SUSPENDED: "停止",
       th_title: "送金履歴",
       st_title: "口座明細",
-      intl_title: "国際送金",
+      intl_title: "銀行振込",
       profile_title: "プロフィール",
       pin_title: "取引暗証番号",
       pw_title: "アカウントパスワード",
@@ -1741,8 +1741,8 @@
       nav_profile: "계정 세부 정보",
       nav_statement: "계정 요약",
       nav_stocks: "주식 및 거래",
-      actions_transfer: "국내 이체",
-      nav_international: "해외 이체",
+      actions_transfer: "은행 이체",
+      nav_international: "은행 이체",
       nav_transferHistory: "이체 기록",
       nav_card: "ATM 카드",
       nav_pin: "거래 비밀번호",
@@ -1774,7 +1774,7 @@
       status_SUSPENDED: "정지",
       th_title: "이체 기록",
       st_title: "계좌 명세서",
-      intl_title: "해외 이체",
+      intl_title: "은행 이체",
       profile_title: "내 프로필",
       pin_title: "거래 PIN",
       pw_title: "계정 비밀번호",
@@ -1823,8 +1823,8 @@
       nav_profile: "खाता विवरण",
       nav_statement: "खाता सारांश",
       nav_stocks: "स्टॉक और ट्रेडिंग",
-      actions_transfer: "स्थानीय ट्रांसफर",
-      nav_international: "अंतर्राष्ट्रीय ट्रांसफर",
+      actions_transfer: "बैंक ट्रांसफर",
+      nav_international: "बैंक ट्रांसफर",
       nav_transferHistory: "ट्रांसफर इतिहास",
       nav_card: "ATM कार्ड",
       nav_pin: "लेन-देन पिन",
@@ -1856,7 +1856,7 @@
       status_SUSPENDED: "निलंबित",
       th_title: "ट्रांसफर इतिहास",
       st_title: "खाता स्टेटमेंट",
-      intl_title: "अंतर्राष्ट्रीय ट्रांसफर",
+      intl_title: "बैंक ट्रांसफर",
       profile_title: "मेरी प्रोफ़ाइल",
       pin_title: "लेन-देन पिन",
       pw_title: "खाता पासवर्ड",
@@ -1905,8 +1905,8 @@
       nav_profile: "অ্যাকাউন্ট বিবরণ",
       nav_statement: "অ্যাকাউন্ট সারাংশ",
       nav_stocks: "স্টক ও ট্রেডিং",
-      actions_transfer: "স্থানীয় ট্রান্সফার",
-      nav_international: "আন্তর্জাতিক ট্রান্সফার",
+      actions_transfer: "ব্যাংক ট্রান্সফার",
+      nav_international: "ব্যাংক ট্রান্সফার",
       nav_transferHistory: "ট্রান্সফার ইতিহাস",
       nav_card: "এটিএম কার্ড",
       nav_pin: "লেনদেন পিন",
@@ -1938,7 +1938,7 @@
       status_SUSPENDED: "স্থগিত",
       th_title: "ট্রান্সফার ইতিহাস",
       st_title: "অ্যাকাউন্ট স্টেটমেন্ট",
-      intl_title: "আন্তর্জাতিক ট্রান্সফার",
+      intl_title: "ব্যাংক ট্রান্সফার",
       profile_title: "আমার প্রোফাইল",
       pin_title: "লেনদেন পিন",
       pw_title: "অ্যাকাউন্ট পাসওয়ার্ড",
@@ -1987,8 +1987,8 @@
       nav_profile: "اکاؤنٹ کی تفصیلات",
       nav_statement: "اکاؤنٹ کا خلاصہ",
       nav_stocks: "اسٹاک اور ٹریڈنگ",
-      actions_transfer: "مقامی ٹرانسفر",
-      nav_international: "بین الاقوامی ٹرانسفر",
+      actions_transfer: "بینک ٹرانسفر",
+      nav_international: "بینک ٹرانسفر",
       nav_transferHistory: "ٹرانسفر کی تاریخ",
       nav_card: "ATM کارڈ",
       nav_pin: "ٹرانزیکشن پن",
@@ -2020,7 +2020,7 @@
       status_SUSPENDED: "معطل",
       th_title: "ٹرانسفر کی تاریخ",
       st_title: "اکاؤنٹ اسٹیٹمنٹ",
-      intl_title: "بین الاقوامی ٹرانسفر",
+      intl_title: "بینک ٹرانسفر",
       profile_title: "میرا پروفائل",
       pin_title: "ٹرانزیکشن پن",
       pw_title: "اکاؤنٹ پاس ورڈ",
@@ -2069,8 +2069,8 @@
       nav_profile: "Hesap Detayları",
       nav_statement: "Hesap Özeti",
       nav_stocks: "Hisse Senetleri ve Ticaret",
-      actions_transfer: "Yerel Transfer",
-      nav_international: "Uluslararası Transfer",
+      actions_transfer: "Banka Transferi",
+      nav_international: "Banka Transferi",
       nav_transferHistory: "Transfer Geçmişi",
       nav_card: "ATM Kartı",
       nav_pin: "İşlem PIN'i",
@@ -2102,7 +2102,7 @@
       status_SUSPENDED: "Duraklatıldı",
       th_title: "Transfer Geçmişi",
       st_title: "Hesap Ekstresi",
-      intl_title: "Uluslararası Transfer",
+      intl_title: "Banka Transferi",
       profile_title: "Profilim",
       pin_title: "İşlem PIN'i",
       pw_title: "Hesap Şifresi",
@@ -2151,8 +2151,8 @@
       nav_profile: "Chi tiết tài khoản",
       nav_statement: "Tóm tắt tài khoản",
       nav_stocks: "Cổ phiếu và giao dịch",
-      actions_transfer: "Chuyển khoản nội địa",
-      nav_international: "Chuyển khoản quốc tế",
+      actions_transfer: "Chuyển khoản ngân hàng",
+      nav_international: "Chuyển khoản ngân hàng",
       nav_transferHistory: "Lịch sử chuyển khoản",
       nav_card: "Thẻ ATM",
       nav_pin: "Mã PIN giao dịch",
@@ -2184,7 +2184,7 @@
       status_SUSPENDED: "Đình chỉ",
       th_title: "Lịch sử chuyển khoản",
       st_title: "Sao kê tài khoản",
-      intl_title: "Chuyển khoản quốc tế",
+      intl_title: "Chuyển khoản ngân hàng",
       profile_title: "Hồ sơ của tôi",
       pin_title: "Mã PIN giao dịch",
       pw_title: "Mật khẩu tài khoản",
@@ -2233,8 +2233,8 @@
       nav_profile: "รายละเอียดบัญชี",
       nav_statement: "สรุปบัญชี",
       nav_stocks: "หุ้นและการซื้อขาย",
-      actions_transfer: "โอนภายในประเทศ",
-      nav_international: "โอนระหว่างประเทศ",
+      actions_transfer: "โอนเงินผ่านธนาคาร",
+      nav_international: "โอนเงินผ่านธนาคาร",
       nav_transferHistory: "ประวัติการโอน",
       nav_card: "บัตร ATM",
       nav_pin: "PIN ทำรายการ",
@@ -2266,7 +2266,7 @@
       status_SUSPENDED: "ระงับ",
       th_title: "ประวัติการโอน",
       st_title: "รายการเดินบัญชี",
-      intl_title: "โอนระหว่างประเทศ",
+      intl_title: "โอนเงินผ่านธนาคาร",
       profile_title: "โปรไฟล์ของฉัน",
       pin_title: "PIN ทำรายการ",
       pw_title: "รหัสผ่านบัญชี",
@@ -2315,8 +2315,8 @@
       nav_profile: "Detail Rekening",
       nav_statement: "Ringkasan Rekening",
       nav_stocks: "Saham dan Perdagangan",
-      actions_transfer: "Transfer Lokal",
-      nav_international: "Transfer Internasional",
+      actions_transfer: "Transfer Bank",
+      nav_international: "Transfer Bank",
       nav_transferHistory: "Riwayat Transfer",
       nav_card: "Kartu ATM",
       nav_pin: "PIN Transaksi",
@@ -2479,8 +2479,8 @@
       nav_profile: "Деталі рахунку",
       nav_statement: "Підсумок рахунку",
       nav_stocks: "Акції та торгівля",
-      actions_transfer: "Локальний переказ",
-      nav_international: "Міжнародний переказ",
+      actions_transfer: "Банківський переказ",
+      nav_international: "Банківський переказ",
       nav_transferHistory: "Історія переказів",
       nav_card: "ATM-карта",
       nav_pin: "PIN-код транзакції",
@@ -2512,7 +2512,7 @@
       status_SUSPENDED: "Призупинено",
       th_title: "Історія переказів",
       st_title: "Виписка з рахунку",
-      intl_title: "Міжнародний переказ",
+      intl_title: "Банківський переказ",
       profile_title: "Мій профіль",
       pin_title: "PIN транзакції",
       pw_title: "Пароль акаунту",
@@ -2561,8 +2561,8 @@
       nav_profile: "Szczegóły konta",
       nav_statement: "Podsumowanie konta",
       nav_stocks: "Akcje i handel",
-      actions_transfer: "Przelew krajowy",
-      nav_international: "Przelew międzynarodowy",
+      actions_transfer: "Przelew bankowy",
+      nav_international: "Przelew bankowy",
       nav_transferHistory: "Historia przelewów",
       nav_card: "Karta ATM",
       nav_pin: "PIN transakcji",
@@ -2594,7 +2594,7 @@
       status_SUSPENDED: "Zawieszone",
       th_title: "Historia przelewów",
       st_title: "Wyciąg z konta",
-      intl_title: "Przelew międzynarodowy",
+      intl_title: "Przelew bankowy",
       profile_title: "Mój profil",
       pin_title: "PIN transakcji",
       pw_title: "Hasło do konta",
@@ -2643,8 +2643,8 @@
       nav_profile: "Kontouppgifter",
       nav_statement: "Kontosammanfattning",
       nav_stocks: "Aktier och handel",
-      actions_transfer: "Lokal överföring",
-      nav_international: "Internationell överföring",
+      actions_transfer: "Banköverföring",
+      nav_international: "Banköverföring",
       nav_transferHistory: "Överföringshistorik",
       nav_card: "ATM-kort",
       nav_pin: "Transaktions-PIN",
@@ -2676,7 +2676,7 @@
       status_SUSPENDED: "Uppsatt",
       th_title: "Överföringshistorik",
       st_title: "Kontoutdrag",
-      intl_title: "Internationell överföring",
+      intl_title: "Banköverföring",
       profile_title: "Min profil",
       pin_title: "Transaktions-PIN",
       pw_title: "Kontolösenord",
@@ -2725,8 +2725,8 @@
       nav_profile: "Kontodetaljer",
       nav_statement: "Kontosammendrag",
       nav_stocks: "Aktier og handel",
-      actions_transfer: "Lokal overførsel",
-      nav_international: "International overførsel",
+      actions_transfer: "Bankoverførsel",
+      nav_international: "Bankoverførsel",
       nav_transferHistory: "Overførselshistorik",
       nav_card: "ATM-kort",
       nav_pin: "Transaktions-PIN",
@@ -2758,7 +2758,7 @@
       status_SUSPENDED: "Suspenderet",
       th_title: "Overførselshistorik",
       st_title: "Kontoudtog",
-      intl_title: "International overførsel",
+      intl_title: "Bankoverførsel",
       profile_title: "Min profil",
       pin_title: "Transaktions-PIN",
       pw_title: "Kontoadgangskode",
@@ -2807,8 +2807,8 @@
       nav_profile: "Kontodetaljer",
       nav_statement: "Kontooppsummering",
       nav_stocks: "Aksjer og trading",
-      actions_transfer: "Lokal overføring",
-      nav_international: "Internasjonal overføring",
+      actions_transfer: "Bankoverføring",
+      nav_international: "Bankoverføring",
       nav_transferHistory: "Overføringshistorikk",
       nav_card: "Bankkort",
       nav_pin: "Transaksjons-PIN",
@@ -2840,7 +2840,7 @@
       status_SUSPENDED: "Suspendert",
       th_title: "Overføringshistorikk",
       st_title: "Kontoutskrift",
-      intl_title: "Internasjonal overføring",
+      intl_title: "Bankoverføring",
       profile_title: "Min profil",
       pin_title: "Transaksjons-PIN",
       pw_title: "Konto passord",
@@ -2889,8 +2889,8 @@
       nav_profile: "Tilin tiedot",
       nav_statement: "Tilin yhteenveto",
       nav_stocks: "Osakkeet ja kauppa",
-      actions_transfer: "Paikallinen siirto",
-      nav_international: "Kansainvälinen siirto",
+      actions_transfer: "Pankkisiirto",
+      nav_international: "Pankkisiirto",
       nav_transferHistory: "Siirtohistoria",
       nav_card: "ATM-kortti",
       nav_pin: "Tapahtuma-PIN",
@@ -2922,7 +2922,7 @@
       status_SUSPENDED: "Keskeytetty",
       th_title: "Siirtohistoria",
       st_title: "Tiliote",
-      intl_title: "Kansainvälinen siirto",
+      intl_title: "Pankkisiirto",
       profile_title: "Oma profiili",
       pin_title: "Tapahtuma-PIN",
       pw_title: "Tilin salasana",
@@ -2971,8 +2971,8 @@
       nav_profile: "Detaily účtu",
       nav_statement: "Shrnutí účtu",
       nav_stocks: "Akcie a obchodování",
-      actions_transfer: "Místní převod",
-      nav_international: "Mezinárodní převod",
+      actions_transfer: "Bankovní převod",
+      nav_international: "Bankovní převod",
       nav_transferHistory: "Historie převodů",
       nav_card: "Bankomat karta",
       nav_pin: "Transakční PIN",
@@ -3004,7 +3004,7 @@
       status_SUSPENDED: "Pozastaveno",
       th_title: "Historie převodů",
       st_title: "Výpis z účtu",
-      intl_title: "Mezinárodní převod",
+      intl_title: "Bankovní převod",
       profile_title: "Můj profil",
       pin_title: "Transakční PIN",
       pw_title: "Heslo k účtu",
@@ -3053,8 +3053,8 @@
       nav_profile: "פרטי חשבון",
       nav_statement: "תקציר חשבון",
       nav_stocks: "מניות ומסחר",
-      actions_transfer: "העברה מקומית",
-      nav_international: "העברה בינלאומית",
+      actions_transfer: "העברה בנקאית",
+      nav_international: "העברה בנקאית",
       nav_transferHistory: "היסטוריית העברות",
       nav_card: "כרטיס אשראי",
       nav_pin: "PIN לעיסקה",
@@ -3086,7 +3086,7 @@
       status_SUSPENDED: "מושעה",
       th_title: "היסטוריית העברות",
       st_title: "חשבון בנק",
-      intl_title: "העברה בינלאומית",
+      intl_title: "העברה בנקאית",
       profile_title: "הפרופיל שלי",
       pin_title: "PIN לעיסקה",
       pw_title: "סיסמה לחשבון",
@@ -3135,8 +3135,8 @@
       nav_profile: "جزئیات حساب",
       nav_statement: "خلاصه حساب",
       nav_stocks: "سهام و معاملات",
-      actions_transfer: "انتقال محلی",
-      nav_international: "انتقال بین‌المللی",
+      actions_transfer: "انتقال بانکی",
+      nav_international: "انتقال بانکی",
       nav_transferHistory: "تاریخچه انتقال",
       nav_card: "کارت ATM",
       nav_pin: "PIN تراکنش",
@@ -3168,7 +3168,7 @@
       status_SUSPENDED: "معلق",
       th_title: "تاریخچه انتقال",
       st_title: "صورتحساب حساب",
-      intl_title: "انتقال بین‌المللی",
+      intl_title: "انتقال بانکی",
       profile_title: "پروفایل من",
       pin_title: "PIN تراکنش",
       pw_title: "رمز عبور حساب",
@@ -4490,6 +4490,13 @@
     const countries = countryOptions();
     const dict = DICT[currentLang] ? DICT[currentLang] : DICT.en;
 
+    const firstName = String(
+      (profile.firstname || profile.firstName || profile.first_name || (mergedGateMe && mergedGateMe.firstname) || (mergedGateMe && mergedGateMe.firstName) || (mergedGateMe && mergedGateMe.first_name) || "")
+    ).trim();
+    const lastName = String(
+      (profile.lastname || profile.lastName || profile.last_name || (mergedGateMe && mergedGateMe.lastname) || (mergedGateMe && mergedGateMe.lastName) || (mergedGateMe && mergedGateMe.last_name) || "")
+    ).trim();
+
     function buildLanguageOptions(countryCode, selectedCode) {
       const info = getCountryLanguages(countryCode);
       const allLangs = getAllDictionaryLanguages();
@@ -4548,6 +4555,16 @@
         <div class="k-card">
           <form id="vtKycForm" autocomplete="on" novalidate>
             <div class="k-grid">
+              <div>
+                <label data-i18n="kyc_firstname">${dict.kyc_firstname}<span class="req">*</span></label>
+                <input id="kFirstname" name="firstname" type="text" value="${escapeHtml(firstName || "")}" autocomplete="given-name" />
+                <div class="k-err" data-k-err="firstname"></div>
+              </div>
+              <div>
+                <label data-i18n="kyc_lastname">${dict.kyc_lastname}<span class="req">*</span></label>
+                <input id="kLastname" name="lastname" type="text" value="${escapeHtml(lastName || "")}" autocomplete="family-name" />
+                <div class="k-err" data-k-err="lastname"></div>
+              </div>
               <div>
                 <label data-i18n="kyc_phone">${dict.kyc_phone}</label>
                 <input id="kPhone" name="phone" type="tel" value="${escapeHtml(profile.phone || "")}" autocomplete="tel" inputmode="tel" />
@@ -4633,9 +4650,19 @@
       gate.querySelectorAll("[data-k-err]").forEach((el) => (el.textContent = ""));
       const fd = new FormData(form);
       const payload = Object.fromEntries(fd.entries());
+      const firstname = String(payload.firstname || "").trim();
+      const lastname = String(payload.lastname || "").trim();
       const country = String(payload.country || "").trim();
       const pLanguage = String(payload.preferredLanguage || "en").trim();
       let hasErr = false;
+      if (!firstname) {
+        const el = gate.querySelector("[data-k-err='firstname']");
+        if (el) { el.textContent = dict.kyc_required || "Required"; hasErr = true; }
+      }
+      if (!lastname) {
+        const el = gate.querySelector("[data-k-err='lastname']");
+        if (el) { el.textContent = dict.kyc_required || "Required"; hasErr = true; }
+      }
       if (!country) {
         const el = gate.querySelector("[data-k-err='country']");
         if (el) { el.textContent = dict.kyc_required || "Required"; hasErr = true; }
@@ -4646,11 +4673,13 @@
         submitBtn.disabled = true;
         submitBtn.textContent = dict.kyc_submitting || "Saving…";
       }
-      writeVtKycCache({ kycCompleted: true, country: country, preferredLanguage: pLanguage });
+      writeVtKycCache({ kycCompleted: true, country: country, preferredLanguage: pLanguage, firstname, lastname });
       try {
         const data = await api("/api/customer/kyc", {
           method: "POST",
           body: JSON.stringify({
+            firstname,
+            lastname,
             country,
             preferredLanguage: pLanguage,
             phone: String(payload.phone || "").trim(),
@@ -4669,7 +4698,7 @@
           (data && data.profile && (data.profile.profilePic || data.profile.photoURL || data.profile.photo || data.profile.avatar)) || "");
         const serverPicPub = String((data && (data.profilePicPublicId || data.photoURLPublicId || data.photoPublicId || data.avatarPublicId)) ||
           (data && data.profile && (data.profile.profilePicPublicId || data.profile.photoURLPublicId || data.profile.photoPublicId || data.profile.avatarPublicId)) || "");
-        var cachePatch = { kycCompleted: true, kycDone: true, KYCDone: true, country: country, preferredLanguage: newLang };
+        var cachePatch = { kycCompleted: true, kycDone: true, KYCDone: true, country: country, preferredLanguage: newLang, firstname, lastname };
         if (serverPic) {
           cachePatch.profilePic = serverPic;
           cachePatch.photoURL = serverPic;
@@ -5139,6 +5168,128 @@
     return buildPicGate(Object.assign({}, options, { me: mergedMe }));
   }
 
+  function replaceTextInRoot(rootNode) {
+    if (!rootNode) return;
+    const labelMap = [
+      ["International Transfer", "Bank Transfer"],
+      ["International transfer", "Bank transfer"],
+      ["Local Transfer", "Bank Transfer"],
+      ["local transfer", "Bank transfer"],
+      [" Transfer", " Bank Transfer"],
+      [" transfer", " bank transfer"]
+    ];
+    const titleSuffixMap = [
+      ["International Transfer", "Bank Transfer"],
+      ["International transfer", "Bank transfer"],
+      ["Transfer ", "Bank Transfer "],
+      ["Transfer", "Bank Transfer"],
+      ["transfer", "Bank transfer"]
+    ];
+    walkText(rootNode, function (node) {
+      if (!node) return;
+      if (node.nodeType === 3) {
+        let txt = node.nodeValue || "";
+        labelMap.forEach(function (pair) {
+          if (!txt) return;
+          const from = pair[0];
+          const to = pair[1];
+          if (from && txt.includes(from)) {
+            txt = txt.split(from).join(to);
+          }
+        });
+        if (txt !== node.nodeValue && node.parentNode) {
+          try { node.parentNode.replaceChild(document.createTextNode(txt), node); } catch (_) {}
+        }
+      } else if (node.nodeType === 1) {
+        const attrs = ["title", "alt", "placeholder", "aria-label"];
+        for (let i = 0; i < attrs.length; i++) {
+          const a = attrs[i];
+          if (!node.getAttribute) continue;
+          const attrVal = node.getAttribute(a);
+          if (typeof attrVal !== "string" || !attrVal) continue;
+          let nextVal = attrVal;
+          titleSuffixMap.forEach(function (pair) {
+            const from = pair[0];
+            const to = pair[1];
+            if (from && nextVal.includes(from)) {
+              nextVal = nextVal.split(from).join(to);
+            }
+          });
+          if (nextVal !== attrVal) {
+            try { node.setAttribute(a, nextVal); } catch (_) {}
+          }
+        }
+        const datAttrs = ["data-i18n", "data-i18n-title", "data-i18n-placeholder", "data-i18n-label"];
+        for (let i = 0; i < datAttrs.length; i++) {
+          const a = datAttrs[i];
+          if (!node.getAttribute) continue;
+          const val = node.getAttribute(a);
+          if (typeof val !== "string" || !val) continue;
+          if (val === "nav_international") try { node.setAttribute(a, "actions_transfer"); } catch (_) {}
+        }
+        if (node.tagName === "A" || node.tagName === "BUTTON") {
+          if (!node.getAttribute) return;
+          const href = node.getAttribute("href");
+          if (typeof href === "string" && /\/international\.php/i.test(href)) {
+            try { node.removeAttribute("onclick"); } catch (_) {}
+          }
+        }
+      }
+    });
+  }
+
+  function walkText(root, visitor) {
+    if (!root || typeof document.createTreeWalker !== "function") return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, { acceptNode: function () { return NodeFilter.FILTER_ACCEPT; } });
+    let n = walker.nextNode();
+    while (n) {
+      visitor(n);
+      n = walker.nextNode();
+    }
+  }
+
+  function bindBankTransferHijack(el) {
+    if (!el || typeof el.addEventListener !== "function") return;
+    el.addEventListener("click", function (e) {
+      if (e) {
+        try { e.preventDefault(); } catch (_) {}
+        try { e.stopPropagation(); } catch (_) {}
+      }
+      if (window && window.location) {
+        window.location.href = "/customer/international.php";
+      }
+      return false;
+    });
+  }
+
+  function installBankTransferLinks() {
+    if (typeof document === "undefined") return;
+    try {
+      document.querySelectorAll("a,button").forEach(function (el) {
+        if (!el.getAttribute) return;
+        const txt = el.textContent || "";
+        const href = el.getAttribute("href");
+        const hasTransferWord = /Transfer|Local Transfer|International Transfer/i.test(txt);
+        const isTransferLink = typeof href === "string" && /\/international\.php/i.test(href);
+        if (!hasTransferWord && !isTransferLink) return;
+        if (el.getAttribute("data-vt-bank-transfer")) return;
+        try { el.setAttribute("data-vt-bank-transfer", "1"); } catch (_) {}
+        if (el.tagName === "A" && !/\/international\.php/i.test(href || "")) {
+          try { el.setAttribute("href", "/customer/international.php"); } catch (_) {}
+          try { el.removeAttribute("onclick"); } catch (_) {}
+        } else if (el.tagName === "BUTTON") {
+          bindBankTransferHijack(el);
+        }
+      });
+    } catch (_) {}
+    replaceTextInRoot(document.body || document.documentElement);
+    if (document.title) {
+      let t = String(document.title || "");
+      if (/International Transfer/i.test(t)) document.title = t.replace(/International Transfer/gi, "Bank Transfer");
+      else if (/Transfer/i.test(t)) document.title = t.replace(/Transfer/gi, "Bank Transfer");
+    }
+  }
+
   const exports = {
     I18N: {
       dict: DICT,
@@ -5149,7 +5300,8 @@
       languageName,
       availableLanguages: availableDictionaryLanguages,
       countryOptions,
-      dictForCode
+      dictForCode,
+      replaceText: replaceTextInRoot
     },
     API: {
       fetchJson,
@@ -5203,9 +5355,21 @@
     window.VT = window.VT || {};
     window.VT.I18N = exports.I18N;
     window.VT.API = exports.API;
-    window.VT.UI = exports.UI;
+    window.VT.UI = Object.assign({}, exports.UI, {
+      installBankTransferLinks: installBankTransferLinks
+    });
     window.VT.Upload = exports.Upload;
     window.VT.Cache = exports.Cache;
+    if (window.addEventListener && typeof installBankTransferLinks === "function") {
+      function vtBootBank() {
+        try { installBankTransferLinks(); } catch (_) {}
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", vtBootBank, false);
+      } else {
+        vtBootBank();
+      }
+    }
   }
 
   return exports;

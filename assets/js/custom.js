@@ -154,9 +154,9 @@
 	// Text Animation JS
 	try {
 		const texts = [
-			"Money Transfer",
+			"Bank Transfer",
 			"fast & secure",
-			"international",
+			"worldwide",
 			"Our Features",
 		];
 		const container = document.getElementById("text");

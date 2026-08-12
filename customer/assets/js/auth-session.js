@@ -1021,7 +1021,7 @@
           status: "Pending"
         });
 
-        toast("success", "Transfer submitted");
+        toast("success", "Bank Transfer submitted");
         form.reset();
         setReady(false);
       };

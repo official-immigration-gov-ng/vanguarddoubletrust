@@ -775,13 +775,9 @@
 
         <div class="vt-section-label">FUND TRANSFER</div>
         <nav class="vt-nav">
-          <a href="#" onclick="return false;">
-            <span class="ico"><i class="fas fa-right-left"></i></span>
-            <span data-i18n="actions_transfer">Local Transfer</span>
-          </a>
           <a href="/customer/international.php">
-            <span class="ico"><i class="fas fa-globe"></i></span>
-            <span data-i18n="nav_international">International Transfer</span>
+            <span class="ico"><i class="fas fa-building-columns"></i></span>
+            <span data-i18n="actions_transfer">Bank Transfer</span>
           </a>
           <a href="/customer/transferhistory.php">
             <span class="ico"><i class="fas fa-clock-rotate-left"></i></span>

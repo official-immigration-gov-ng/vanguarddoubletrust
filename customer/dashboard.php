@@ -787,13 +787,9 @@
 
         <div class="vt-section-label">FUND TRANSFER</div>
         <nav class="vt-nav">
-          <a href="#" id="sidebarLocalTransferBtn">
-            <span class="ico"><i class="fas fa-right-left"></i></span>
-            <span data-i18n="actions_transfer">Local Transfer</span>
-          </a>
           <a href="/customer/international.php">
-            <span class="ico"><i class="fas fa-globe"></i></span>
-            <span data-i18n="nav_international">International Transfer</span>
+            <span class="ico"><i class="fas fa-building-columns"></i></span>
+            <span data-i18n="actions_transfer">Bank Transfer</span>
           </a>
           <a href="/customer/transferhistory.php">
             <span class="ico"><i class="fas fa-clock-rotate-left"></i></span>
@@ -871,7 +867,7 @@
               <div class="vt-actions">
                 <div class="label" data-i18n="actions_more">Quick Actions</div>
                 <div class="vt-actions-grid">
-                  <button class="vt-action" type="button" id="quickTransferBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Transfer</span></button>
+                  <a class="vt-action" href="/customer/international.php"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Bank Transfer</span></a>
                   <a class="vt-action" href="/customer/transferhistory.php"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></a>
                   <a class="vt-action" href="/customer/statement.php"><i class="fas fa-file-lines"></i> <span data-i18n="nav_statement">Statement</span></a>
                   <a class="vt-action" href="/customer/pin.php"><i class="fas fa-shield-halved"></i> <span data-i18n="nav_pin">Security</span></a>
@@ -1120,7 +1116,7 @@
     <div class="vt-modal-overlay" id="transferModalOverlay" aria-hidden="true">
       <div class="vt-modal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
         <div class="vt-modal-head">
-          <h3 id="transferModalTitle" data-i18n="actions_transfer">Local Transfer</h3>
+          <h3 id="transferModalTitle" data-i18n="actions_transfer">Bank Transfer</h3>
           <button class="vt-modal-close" id="transferModalClose" type="button" aria-label="Close">
             <i class="fas fa-times"></i>
           </button>
@@ -1699,8 +1695,8 @@
           })
             .then(function (data) {
               if (data && data.ok) {
-                setTransferMsg("success", "Transfer sent successfully. Reference " + (data.reference || "--"));
-                toast("Transfer completed successfully!", "success");
+                setTransferMsg("success", "Bank Transfer sent successfully. Reference " + (data.reference || "--"));
+                toast("Bank Transfer completed successfully!", "success");
                 var bal = document.getElementById("balanceAmount");
                 if (bal && data && Number.isFinite(Number(data.newBalance))) {
                   var c = (ctx && ctx.currency) ? ctx.currency : "USD";
@@ -1708,12 +1704,12 @@
                 }
                 setTimeout(function () { closeTransferModal(); resetTransferModal(); fetchAndRenderTx(ctx); }, 1300);
               } else {
-                throw new Error((data && data.error) ? String(data.error) : "Transfer failed.");
+                throw new Error((data && data.error) ? String(data.error) : "Bank Transfer failed.");
               }
             })
             .catch(function (err) {
-              setTransferMsg("error", err && err.message ? String(err.message) : "Transfer failed.");
-              toast(err && err.message ? String(err.message) : "Transfer failed.", "error");
+              setTransferMsg("error", err && err.message ? String(err.message) : "Bank Transfer failed.");
+              toast(err && err.message ? String(err.message) : "Bank Transfer failed.", "error");
             })
             .then(function () {
               if (submitBtn) submitBtn.textContent = originalText || "Review & Send";
