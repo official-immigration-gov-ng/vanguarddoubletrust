@@ -625,7 +625,8 @@
         }
 
         .vt-balance .mini {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
         }
 
         .vt-balance .amount {
@@ -634,20 +635,44 @@
         }
 
         .vt-row {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+
+        .vt-row .left {
+          flex: 1;
+          min-width: 0;
         }
 
         .vt-row .right {
-          width: 100%;
-          text-align: left;
+          width: auto;
+          text-align: right;
+          flex: 0 0 auto;
         }
 
         .vt-list .head {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
+          flex-direction: row;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .vt-txrow {
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 12px;
+        }
+
+        .vt-txrow .body {
+          flex: 1 1 160px;
+          min-width: 0;
+        }
+
+        .vt-txrow .amount {
+          flex: 0 0 auto;
+          text-align: right;
         }
 
         .vt-user .meta span {
@@ -691,6 +716,50 @@
         .vt-user .avatar {
           width: 34px;
           height: 34px;
+        }
+
+        .vt-balance .mini {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 9px;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 11px;
+        }
+
+        .vt-row {
+          padding: 9px 10px;
+          flex-wrap: wrap;
+        }
+
+        .vt-row .left {
+          flex: 1 1 140px;
+        }
+
+        .vt-row .pill {
+          width: 34px;
+          height: 34px;
+          border-radius: 12px;
+        }
+
+        .vt-row .left strong {
+          font-size: 11.5px;
+        }
+
+        .vt-row .left span {
+          font-size: 10.5px;
+        }
+
+        .vt-row .right {
+          font-size: 11.5px;
+        }
+
+        .vt-row .right small {
+          font-size: 10.5px;
         }
       }
 
@@ -736,6 +805,116 @@
 
         .vt-sidebar {
           width: min(290px, 86vw);
+        }
+
+        .vt-balance {
+          padding: 14px;
+        }
+
+        .vt-balance .amount {
+          font-size: 22px;
+        }
+
+        .vt-balance .mini {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+          margin-top: 12px;
+          padding-top: 12px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 8.5px;
+          letter-spacing: 0.1em;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 10.5px;
+        }
+
+        .vt-actions {
+          margin-top: 12px;
+        }
+
+        .vt-chart {
+          margin-top: 12px;
+        }
+
+        .vt-transactions {
+          margin-top: 12px;
+        }
+
+        .vt-transactions h4 {
+          font-size: 12.5px;
+        }
+
+        .vt-list .head strong {
+          font-size: 12.5px;
+        }
+
+        .vt-row {
+          padding: 8px 9px;
+          border-radius: 12px;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .vt-row .left {
+          flex: 1 1 120px;
+          gap: 8px;
+        }
+
+        .vt-row .pill {
+          width: 32px;
+          height: 32px;
+          border-radius: 10px;
+          font-size: 10px;
+        }
+
+        .vt-row .left strong {
+          font-size: 11px;
+        }
+
+        .vt-row .left span {
+          font-size: 10px;
+        }
+
+        .vt-row .right {
+          font-size: 11px;
+          flex: 1 1 auto;
+          min-width: 70px;
+        }
+
+        .vt-row .right small {
+          font-size: 10px;
+        }
+
+        .vt-txrow {
+          padding: 10px 11px;
+          gap: 8px;
+        }
+
+        .vt-txrow .ico {
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+          font-size: 14px;
+        }
+
+        .vt-txrow .body .title {
+          font-size: 13px;
+        }
+
+        .vt-txrow .body .sub {
+          font-size: 11px;
+        }
+
+        .vt-txrow .amount {
+          font-size: 13px;
+        }
+
+        .vt-list .head a {
+          font-size: 10.5px;
+          flex: 0 0 auto;
         }
       }
 

@@ -346,6 +346,8 @@
       }
 
       .vt-action {
+        text-decoration: none;
+        cursor: pointer;
         border: 1px solid var(--vt-border);
         background: #fff;
         border-radius: 16px;
@@ -588,21 +590,57 @@
         .vt-top-left,
         .vt-top-right,
         .vt-topbar {
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
         }
 
         .vt-topbar {
-          height: auto;
+          height: 68px;
+          gap: 10px;
         }
 
         .vt-search {
-          order: 3;
-          width: 100%;
-          margin-top: 8px;
+          width: auto;
+          flex: 1;
+          min-width: 0;
+          margin-top: 0;
+          padding: 8px 12px;
+          gap: 8px;
+          order: 2;
+        }
+
+        .vt-search input {
+          font-size: 12px;
+        }
+
+        .vt-top-left {
+          flex: 1;
+          min-width: 0;
+          gap: 8px;
+        }
+
+        .vt-top-right {
+          flex: 0 0 auto;
+          gap: 8px;
+        }
+
+        .vt-user {
+          padding: 6px 8px 6px 6px;
+          gap: 6px;
         }
 
         .vt-user .meta {
-          max-width: 44vw;
+          max-width: 30vw;
+        }
+
+        .vt-user .meta strong {
+          font-size: 12px;
+        }
+
+        .vt-user .avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 12px;
+          font-size: 11px;
         }
       }
 
@@ -617,20 +655,59 @@
         .vt-topbar {
           padding-top: 10px;
           padding-bottom: 10px;
-          gap: 10px;
+          gap: 8px;
+        }
+
+        .vt-burger {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          flex: 0 0 auto;
         }
 
         .vt-actions-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .vt-action {
+          padding: 14px 12px;
+          font-size: 13px;
+          gap: 10px;
+          justify-content: flex-start;
+          border-radius: 18px;
+        }
+
+        .vt-action i {
+          font-size: 16px;
+        }
+
+        .vt-balance {
+          border-radius: 22px;
         }
 
         .vt-balance .mini {
-          grid-template-columns: 1fr;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 8px;
+          margin-top: 12px;
+          padding-top: 12px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          line-height: 1.2;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 11px;
+          margin-top: 3px;
+          word-break: break-word;
         }
 
         .vt-balance .amount {
-          font-size: 24px;
-          word-break: break-word;
+          font-size: 32px;
+          line-height: 1.1;
         }
 
         .vt-row {
@@ -653,76 +730,132 @@
         .vt-user .meta span {
           display: none;
         }
+
+        .vt-user {
+          padding: 5px 7px 5px 5px;
+          gap: 5px;
+        }
+
+        .vt-user .avatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 12px;
+          font-size: 11px;
+        }
+
+        .vt-right-card {
+          display: none;
+        }
+
+        .vt-chart svg {
+          height: 180px;
+        }
       }
 
       @media (max-width: 560px) {
         .vt-topbar {
           padding-left: 10px;
           padding-right: 10px;
+          gap: 6px;
         }
 
         .vt-top-left {
-          gap: 8px;
+          gap: 6px;
         }
 
         .vt-top-right {
-          gap: 8px;
+          gap: 6px;
         }
 
         .vt-search {
-          padding: 9px 12px;
-          gap: 8px;
+          padding: 7px 10px;
+          gap: 6px;
         }
 
         .vt-search input {
-          font-size: 12.5px;
+          font-size: 11.5px;
         }
 
         .vt-user {
-          padding: 6px 8px;
-          gap: 8px;
+          padding: 5px 6px 5px 5px;
+          gap: 5px;
           border-radius: 14px;
         }
 
         .vt-user .meta {
-          max-width: 46vw;
+          max-width: 34vw;
+        }
+
+        .vt-user .meta strong {
+          font-size: 11px;
         }
 
         .vt-user .avatar {
-          width: 34px;
-          height: 34px;
+          width: 30px;
+          height: 30px;
+        }
+
+        .vt-balance .amount {
+          font-size: 28px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 8.5px;
+          letter-spacing: 0.06em;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 10.5px;
+        }
+
+        .vt-actions-grid {
+          gap: 10px;
+        }
+
+        .vt-action {
+          padding: 13px 11px;
+          font-size: 12px;
+          gap: 8px;
+        }
+
+        .vt-action i {
+          font-size: 15px;
         }
       }
 
       @media (max-width: 480px) {
         .vt-burger {
-          width: 40px;
-          height: 40px;
+          width: 38px;
+          height: 38px;
           border-radius: 12px;
           flex: 0 0 auto;
         }
 
         .vt-user {
-          padding: 6px 8px 6px 6px;
-          gap: 6px;
+          padding: 4px 5px 4px 4px;
+          gap: 4px;
           border-radius: 14px;
         }
 
         .vt-user .meta {
-          max-width: 36vw;
+          max-width: 30vw;
+        }
+
+        .vt-user .meta strong {
+          font-size: 10.5px;
         }
 
         .vt-user .avatar {
-          width: 32px;
-          height: 32px;
-          border-radius: 12px;
-          font-size: 11px;
+          width: 28px;
+          height: 28px;
+          border-radius: 11px;
+          font-size: 10px;
         }
 
         .vt-action {
-          padding: 11px 8px;
-          font-size: 11px;
-          gap: 8px;
+          padding: 12px 10px;
+          font-size: 11.5px;
+          gap: 7px;
         }
 
         .vt-action i {
@@ -731,11 +864,63 @@
 
         .vt-card.pad {
           padding: 14px;
-          border-radius: 16px;
+          border-radius: 18px;
         }
 
         .vt-sidebar {
           width: min(290px, 86vw);
+        }
+
+        .vt-balance {
+          border-radius: 20px;
+          padding: 14px !important;
+        }
+
+        .vt-balance .amount {
+          font-size: 24px;
+        }
+
+        .vt-balance .sub {
+          font-size: 10px;
+          letter-spacing: 0.1em;
+        }
+
+        .vt-balance .mini {
+          gap: 6px;
+          margin-top: 10px;
+          padding-top: 10px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 8px;
+          letter-spacing: 0.05em;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 10px;
+        }
+
+        .vt-content {
+          padding-top: 14px;
+          padding-bottom: 14px;
+        }
+
+        .vt-chart h4,
+        .vt-transactions h4,
+        .vt-actions .label {
+          font-size: 14px;
+        }
+
+        .vt-actions {
+          margin-top: 16px;
+        }
+
+        .vt-chart {
+          margin-top: 18px;
+        }
+
+        .vt-transactions {
+          margin-top: 18px;
         }
       }
 
@@ -868,12 +1053,12 @@
                 <div class="label" data-i18n="actions_more">Quick Actions</div>
                 <div class="vt-actions-grid">
                   <a class="vt-action" href="/customer/international.php"><i class="fas fa-paper-plane"></i> <span data-i18n="actions_transfer">Bank Transfer</span></a>
-                  <button class="vt-action" type="button"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></button>
+                  <a class="vt-action" href="/customer/transferhistory.php"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="nav_transferHistory">History</span></a>
                   <a class="vt-action" href="/customer/statement.php"><i class="fas fa-file-lines"></i> <span data-i18n="nav_statement">Statement</span></a>
                   <a class="vt-action" href="/customer/pin.php"><i class="fas fa-shield-halved"></i> <span data-i18n="nav_pin">Security</span></a>
                   <a class="vt-action" href="/customer/stocks.php"><i class="fas fa-chart-line"></i> <span data-i18n="nav_stocks">Stocks</span></a>
                   <a class="vt-action" href="/customer/card.php"><i class="fas fa-credit-card"></i> <span data-i18n="nav_card">Card</span></a>
-                  <button class="vt-action" type="button"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Account</span></button>
+                  <a class="vt-action" href="/customer/myprofile.php"><i class="fas fa-user"></i> <span data-i18n="nav_profile">Account</span></a>
                   <button class="vt-action" type="button" id="logoutBtn2"><i class="fas fa-power-off"></i> <span data-i18n="nav_logout">Logout</span></button>
                 </div>
               </div>
