@@ -588,21 +588,62 @@
         .vt-top-left,
         .vt-top-right,
         .vt-topbar {
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
         }
 
         .vt-topbar {
-          height: auto;
+          height: 68px;
+          padding-left: 12px;
+          padding-right: 12px;
+          gap: 10px;
+        }
+
+        .vt-top-left {
+          gap: 10px;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .vt-top-right {
+          gap: 10px;
+          flex: 0 0 auto;
         }
 
         .vt-search {
-          order: 3;
-          width: 100%;
-          margin-top: 8px;
+          order: 0;
+          width: auto;
+          margin-top: 0;
+          flex: 1 1 auto;
+          min-width: 0;
+          padding: 8px 10px;
+          gap: 6px;
+          border-radius: 14px;
+        }
+
+        .vt-search input {
+          font-size: 12px;
+        }
+
+        .vt-burger {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          flex: 0 0 auto;
         }
 
         .vt-user .meta {
-          max-width: 44vw;
+          max-width: 30vw;
+        }
+
+        .vt-user {
+          padding: 6px 8px;
+          border-radius: 14px;
+          gap: 8px;
+        }
+
+        .vt-user .avatar {
+          width: 34px;
+          height: 34px;
         }
       }
 
@@ -617,7 +658,49 @@
         .vt-topbar {
           padding-top: 10px;
           padding-bottom: 10px;
-          gap: 10px;
+          gap: 8px;
+          height: 64px;
+        }
+
+        .vt-burger {
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+        }
+
+        .vt-search {
+          padding: 7px 10px;
+          gap: 6px;
+          border-radius: 12px;
+        }
+
+        .vt-search input {
+          font-size: 12px;
+        }
+
+        .vt-search i {
+          font-size: 13px;
+        }
+
+        .vt-user {
+          padding: 5px 7px;
+          gap: 7px;
+          border-radius: 12px;
+        }
+
+        .vt-user .avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 11px;
+          font-size: 11px;
+        }
+
+        .vt-user .meta strong {
+          font-size: 12px;
+        }
+
+        .vt-user .meta span {
+          font-size: 10.5px;
         }
 
         .vt-actions-grid {
@@ -625,8 +708,19 @@
         }
 
         .vt-balance .mini {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .vt-balance .mini .k {
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          word-break: break-word;
+        }
+
+        .vt-balance .mini .v {
+          font-size: 11px;
+          word-break: break-word;
         }
 
         .vt-balance .amount {
@@ -676,7 +770,7 @@
         }
 
         .vt-user .meta span {
-          display: none;
+          display: block;
         }
       }
 
@@ -684,51 +778,89 @@
         .vt-topbar {
           padding-left: 10px;
           padding-right: 10px;
+          gap: 6px;
+          height: 60px;
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+
+        .vt-top-left,
+        .vt-top-right,
+        .vt-topbar {
+          flex-wrap: nowrap;
         }
 
         .vt-top-left {
-          gap: 8px;
+          gap: 6px;
+          flex: 1 1 auto;
+          min-width: 0;
         }
 
         .vt-top-right {
-          gap: 8px;
+          gap: 6px;
+          flex: 0 0 auto;
+        }
+
+        .vt-burger {
+          width: 36px;
+          height: 36px;
+          border-radius: 11px;
         }
 
         .vt-search {
-          padding: 9px 12px;
-          gap: 8px;
+          padding: 6px 8px;
+          gap: 5px;
+          border-radius: 11px;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .vt-search i {
+          font-size: 12px;
         }
 
         .vt-search input {
-          font-size: 12.5px;
+          font-size: 11.5px;
         }
 
         .vt-user {
-          padding: 6px 8px;
-          gap: 8px;
-          border-radius: 14px;
+          padding: 4px 6px;
+          gap: 6px;
+          border-radius: 11px;
         }
 
         .vt-user .meta {
-          max-width: 46vw;
+          max-width: 34vw;
         }
 
         .vt-user .avatar {
-          width: 34px;
-          height: 34px;
+          width: 30px;
+          height: 30px;
+          border-radius: 10px;
+          font-size: 10.5px;
+        }
+
+        .vt-user .meta strong {
+          font-size: 11.5px;
+        }
+
+        .vt-user .meta span {
+          font-size: 10px;
+          display: block;
         }
 
         .vt-balance .mini {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
         }
 
         .vt-balance .mini .k {
-          font-size: 9px;
+          font-size: 8px;
+          letter-spacing: 0.06em;
         }
 
         .vt-balance .mini .v {
-          font-size: 11px;
+          font-size: 10.5px;
         }
 
         .vt-row {
@@ -764,28 +896,83 @@
       }
 
       @media (max-width: 480px) {
-        .vt-burger {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
+        .vt-topbar,
+        .vt-top-left,
+        .vt-top-right {
+          flex-wrap: nowrap;
+        }
+
+        .vt-topbar {
+          padding-left: 8px;
+          padding-right: 8px;
+          gap: 5px;
+          height: 58px;
+          padding-top: 7px;
+          padding-bottom: 7px;
+        }
+
+        .vt-top-left {
+          gap: 5px;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .vt-top-right {
+          gap: 5px;
           flex: 0 0 auto;
         }
 
+        .vt-burger {
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          flex: 0 0 auto;
+        }
+
+        .vt-burger i {
+          font-size: 14px;
+        }
+
+        .vt-search {
+          padding: 5px 7px;
+          gap: 4px;
+          border-radius: 10px;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .vt-search i {
+          font-size: 11.5px;
+        }
+
+        .vt-search input {
+          font-size: 11px;
+        }
+
         .vt-user {
-          padding: 6px 8px 6px 6px;
-          gap: 6px;
-          border-radius: 14px;
+          padding: 4px 5px 4px 4px;
+          gap: 5px;
+          border-radius: 10px;
         }
 
         .vt-user .meta {
-          max-width: 36vw;
+          max-width: 32vw;
         }
 
         .vt-user .avatar {
-          width: 32px;
-          height: 32px;
-          border-radius: 12px;
+          width: 28px;
+          height: 28px;
+          border-radius: 10px;
+          font-size: 10px;
+        }
+
+        .vt-user .meta strong {
           font-size: 11px;
+        }
+
+        .vt-user .meta span {
+          font-size: 9.5px;
+          display: block;
         }
 
         .vt-action {
@@ -816,19 +1003,24 @@
         }
 
         .vt-balance .mini {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 8px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 5px;
           margin-top: 12px;
           padding-top: 12px;
         }
 
         .vt-balance .mini .k {
-          font-size: 8.5px;
-          letter-spacing: 0.1em;
+          font-size: 7.5px;
+          letter-spacing: 0.05em;
+          word-break: break-word;
+          line-height: 1.2;
         }
 
         .vt-balance .mini .v {
-          font-size: 10.5px;
+          font-size: 10px;
+          word-break: break-word;
+          line-height: 1.3;
+          margin-top: 2px;
         }
 
         .vt-actions {
