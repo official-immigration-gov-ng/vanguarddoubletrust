@@ -19,14 +19,14 @@
 
     <style>
       :root {
-        --vt-primary: #0B0F14;
-        --vt-primary-2: #0F172A;
+        --vt-primary: #165DFF;
+        --vt-primary-2: #0E42D2;
         --vt-bg: #f6f8fc;
         --vt-card: #ffffff;
         --vt-text: #0f172a;
         --vt-muted: #64748b;
         --vt-border: rgba(15, 23, 42, 0.08);
-        --vt-shadow: 0 18px 42px -18px rgba(2, 6, 23, 0.25);
+        --vt-shadow: 0 18px 42px -18px rgba(22, 93, 255, 0.18);
         --vt-radius: 18px;
       }
 
@@ -213,7 +213,7 @@
       .vt-user .avatar {
         width: 34px;
         height: 34px;
-        border-radius: 14px;
+        border-radius: 50%;
         background: linear-gradient(135deg, rgba(0, 51, 153, 0.18), rgba(0, 93, 157, 0.12));
         border: 1px solid rgba(0, 51, 153, 0.18);
         display: grid;
@@ -593,7 +593,7 @@
         .vt-user .avatar {
           width: 32px;
           height: 32px;
-          border-radius: 12px;
+          border-radius: 50%;
           font-size: 11px;
         }
 

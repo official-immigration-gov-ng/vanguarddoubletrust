@@ -19,14 +19,14 @@
 
     <style>
       :root {
-        --vt-primary: #0B0F14;
-        --vt-primary-2: #0F172A;
+        --vt-primary: #165DFF;
+        --vt-primary-2: #0E42D2;
         --vt-bg: #f6f8fc;
         --vt-card: #ffffff;
         --vt-text: #0f172a;
         --vt-muted: #64748b;
         --vt-border: rgba(15, 23, 42, 0.08);
-        --vt-shadow: 0 18px 42px -18px rgba(2, 6, 23, 0.25);
+        --vt-shadow: 0 18px 42px -18px rgba(22, 93, 255, 0.18);
         --vt-radius: 18px;
       }
 
@@ -213,7 +213,7 @@
       .vt-user .avatar {
         width: 34px;
         height: 34px;
-        border-radius: 14px;
+        border-radius: 50%;
         background: linear-gradient(135deg, rgba(0, 51, 153, 0.18), rgba(0, 93, 157, 0.12));
         border: 1px solid rgba(0, 51, 153, 0.18);
         display: grid;
@@ -516,7 +516,7 @@
         .vt-user .avatar {
           width: 32px;
           height: 32px;
-          border-radius: 12px;
+          border-radius: 50%;
           font-size: 11px;
         }
 
@@ -647,8 +647,8 @@
             </div>
             <div class="vt-panel-body">
               <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
-                <div id="profileAvatarBox" style="width:148px;height:148px;border-radius:50%;overflow:hidden;border:3px solid rgba(11,15,20,0.1);background:#f1f5f9;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -18px rgba(2,6,23,0.4);">
-                  <i class="fas fa-user" style="font-size:56px;color:#94a3b8;"></i>
+                <div id="profileAvatarBox" style="width:148px;height:148px;border-radius:50%;overflow:hidden;border:3px solid rgba(22,93,255,0.15);background:#EFF4FF;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -18px rgba(22,93,255,0.25);">
+                  <i class="fas fa-user" style="font-size:56px;color:#165DFF;"></i>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
                   <button type="button" class="btn btn-dark" id="profilePicUploadBtn" style="border-radius:14px;padding:10px 18px;font-weight:800;font-size:13px;">
@@ -829,12 +829,12 @@
             if (picUrl) {
               box.innerHTML = `<img src="${picUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
             } else {
-              box.innerHTML = `<i class="fas fa-user" style="font-size:56px;color:#94a3b8;"></i>`;
+              box.innerHTML = `<i class="fas fa-user" style="font-size:56px;color:#165DFF;"></i>`;
             }
           }
           if (topAvatar) {
             if (picUrl) {
-              topAvatar.innerHTML = `<img src="${picUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;" />`;
+              topAvatar.innerHTML = `<img src="${picUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />`;
             } else {
               topAvatar.textContent = getUserInitials(me);
             }
