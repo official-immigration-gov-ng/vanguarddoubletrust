@@ -128,7 +128,7 @@
     } catch (e) {
       setReviewTitle("Customer Account Review", "Load failed");
       setReviewBody(
-        `<div class="review-empty" style="color:#fecaca">${escapeHtml(
+        `<div class="review-empty" style="color:#bfdbfe">${escapeHtml(
           e?.message || "Unable to load customer details."
         )}</div>`
       );
@@ -214,7 +214,7 @@
                 : -1;
             const signedAmt = sign * Math.abs(amt);
             const signPrefix = signedAmt >= 0 ? "+" : "";
-            const amountColor = signedAmt >= 0 ? "#86efac" : "#fecaca";
+            const amountColor = signedAmt >= 0 ? "#93c5fd" : "#dbeafe";
             const amountText = signPrefix + money(signedAmt, t.currency || acc.currency || "USD");
             return [
               "<tr>",
@@ -404,14 +404,14 @@
     const el = document.getElementById("adminFlash") || document.getElementById("adminLoginError");
     if (!el) return;
     el.textContent = message || "";
-    el.style.color = isError ? "#fecaca" : "#bbf7d0";
+    el.style.color = isError ? "#bfdbfe" : "#93c5fd";
   }
 
   function flashCreate(message, isError) {
     const el = document.getElementById("adminCreateFlash");
     if (!el) return;
     el.textContent = message || "";
-    el.style.color = isError ? "#fecaca" : "#bbf7d0";
+    el.style.color = isError ? "#bfdbfe" : "#93c5fd";
   }
 
   function wireAdminLogin() {

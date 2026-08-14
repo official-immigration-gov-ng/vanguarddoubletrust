@@ -8,14 +8,14 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg: #070b10;
-        --bg-2: #0b0f14;
-        --panel: rgba(15, 23, 42, 0.82);
-        --line: rgba(255, 255, 255, 0.08);
+        --bg: #1e3a8a;
+        --bg-2: #1d4ed8;
+        --panel: rgba(30, 58, 138, 0.82);
+        --line: rgba(219, 234, 254, 0.2);
         --text: #f8fafc;
-        --muted: #94a3b8;
-        --gold: #d4af37;
-        --ok: #22c55e;
+        --muted: #93c5fd;
+        --gold: #165DFF;
+        --ok: #2563eb;
       }
 
       * { box-sizing: border-box; }
@@ -23,7 +23,7 @@
         margin: 0;
         font-family: Inter, Arial, sans-serif;
         background:
-          radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 28%),
+          radial-gradient(circle at top, rgba(22, 93, 255, 0.12), transparent 28%),
           linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
         color: var(--text);
       }
@@ -60,13 +60,13 @@
       }
 
       .btn {
-        color: #0b0f14;
-        background: linear-gradient(135deg, #d4af37, #f5d87a);
+        color: #ffffff;
+        background: linear-gradient(135deg, #165DFF, #3b82f6);
       }
 
       .btn-secondary {
         color: var(--text);
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(219, 234, 254, 0.08);
         border: 1px solid var(--line);
       }
 
@@ -108,7 +108,7 @@
         padding: 13px 15px;
         border-radius: 14px;
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(219, 234, 254, 0.06);
         color: var(--text);
       }
 
@@ -120,11 +120,11 @@
       th, td {
         text-align: left;
         padding: 14px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(219, 234, 254, 0.15);
         vertical-align: top;
       }
 
-      th { color: #cbd5e1; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+      th { color: #93c5fd; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
       td { font-size: 14px; }
 
       td input, td select {
@@ -132,7 +132,7 @@
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(219, 234, 254, 0.06);
         color: var(--text);
       }
 
@@ -142,15 +142,15 @@
         display: inline-block;
         padding: 6px 10px;
         border-radius: 999px;
-        background: rgba(34, 197, 94, 0.12);
-        color: #bbf7d0;
+        background: rgba(37, 99, 235, 0.12);
+        color: #bfdbfe;
         font-size: 12px;
         font-weight: 800;
       }
 
       .flash {
         min-height: 20px;
-        color: #bbf7d0;
+        color: #bfdbfe;
         font-size: 13px;
         margin-top: 12px;
       }
@@ -218,17 +218,17 @@
 
       .review-link {
         cursor: pointer;
-        color: #fcd34d;
+        color: #60a5fa;
         text-decoration: underline;
-        text-decoration-color: rgba(252, 211, 77, 0.35);
+        text-decoration-color: rgba(96, 165, 250, 0.35);
         text-underline-offset: 3px;
       }
-      .review-link:hover { text-decoration-color: rgba(252, 211, 77, 0.9); }
+      .review-link:hover { text-decoration-color: rgba(96, 165, 250, 0.9); }
 
       #adminReviewModal {
         position: fixed;
         inset: 0;
-        background: rgba(2, 6, 23, 0.72);
+        background: rgba(30, 58, 138, 0.72);
         padding: 18px;
         display: none;
         z-index: 60;
@@ -261,8 +261,8 @@
         gap: 14px;
       }
       .review-panel {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(219, 234, 254, 0.05);
+        border: 1px solid rgba(219, 234, 254, 0.2);
         border-radius: 16px;
         padding: 16px;
       }
@@ -270,7 +270,7 @@
         margin: 0 0 12px;
         font-size: 13px;
         letter-spacing: 0.08em;
-        color: #cbd5e1;
+        color: #93c5fd;
         text-transform: uppercase;
       }
       .kv {
@@ -279,7 +279,7 @@
         align-items: flex-start;
         gap: 10px;
         padding: 8px 0;
-        border-bottom: 1px dashed rgba(255,255,255,0.08);
+        border-bottom: 1px dashed rgba(219, 234, 254, 0.2);
       }
       .kv:last-child { border-bottom: 0; padding-bottom: 0; }
       .kv:first-child { padding-top: 0; }
@@ -293,10 +293,10 @@
         font-size: 12px;
         font-weight: 800;
       }
-      .pill.ok { background: rgba(34,197,94,0.14); color: #86efac; }
-      .pill.warn { background: rgba(251,191,36,0.16); color: #fde68a; }
-      .pill.bad { background: rgba(248,113,113,0.14); color: #fecaca; }
-      .pill.info { background: rgba(56,189,248,0.14); color: #bae6fd; }
+      .pill.ok { background: rgba(37, 99, 235, 0.14); color: #93c5fd; }
+      .pill.warn { background: rgba(59, 130, 246, 0.16); color: #bfdbfe; }
+      .pill.bad { background: rgba(30, 58, 138, 0.14); color: #dbeafe; }
+      .pill.info { background: rgba(37, 99, 235, 0.14); color: #93c5fd; }
 
       .review-txs {
         grid-column: 1 / -1;
@@ -318,8 +318,8 @@
         min-height: 150px;
         padding: 14px;
         border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(0,0,0,0.25);
+        border: 1px solid rgba(219, 234, 254, 0.2);
+        background: rgba(30, 58, 138, 0.25);
         color: #f8fafc;
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: 13px;
@@ -333,7 +333,7 @@
       }
       .review-creds .warn {
         font-size: 12px;
-        color: #fde68a;
+        color: #93c5fd;
         margin-bottom: 10px;
       }
       .review-empty {
@@ -445,7 +445,7 @@
         </div>
       </div>
 
-      <div id="adminCreateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); padding:18px; z-index:50">
+      <div id="adminCreateModal" style="display:none; position:fixed; inset:0; background:rgba(30, 58, 138, 0.72); padding:18px; z-index:50">
         <div class="card" style="max-width:760px; margin:0 auto; padding:22px">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px">
             <div>
@@ -457,31 +457,31 @@
 
           <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; margin-bottom:14px">
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Customer First Name</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer First Name</label>
               <input id="createFirstname" type="text" placeholder="Frank" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Customer Last Name</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer Last Name</label>
               <input id="createLastname" type="text" placeholder="James" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Login Email</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Email</label>
               <input id="createEmail" type="email" placeholder="customer@email.com" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Login Password</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Password</label>
               <input id="createPassword" type="text" placeholder="Generated password" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Account PIN (6 digits)</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Account PIN (6 digits)</label>
               <input id="createAccountPin" type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Transfer Code</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Transfer Code</label>
               <input id="createTransferCode" type="text" placeholder="6 digits or strong code" />
             </div>
             <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#cbd5e1; font-weight:800">Starting Balance</label>
+              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Starting Balance</label>
               <input id="createStartingBalance" type="number" min="0" step="0.01" placeholder="0.00" />
             </div>
           </div>
@@ -492,7 +492,7 @@
           </div>
 
           <div class="muted" style="margin-bottom:8px">Generated Account Info (copy and send to customer)</div>
-          <textarea id="adminCreateOutput" style="width:100%; min-height:120px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#f8fafc" readonly></textarea>
+          <textarea id="adminCreateOutput" style="width:100%; min-height:120px; padding:12px; border-radius:14px; border:1px solid rgba(219, 234, 254, 0.2); background:rgba(219, 234, 254, 0.05); color:#f8fafc" readonly></textarea>
           <div class="flash" id="adminCreateFlash"></div>
         </div>
       </div>
