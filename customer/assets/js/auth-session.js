@@ -633,7 +633,7 @@
 
   function balanceFromMe(me) {
     const n = Number(me?.account?.balance);
-    return Number.isFinite(n) && n >= 0 ? n : getBalanceUSD();
+    return Number.isFinite(n) && n >= 0 ? n : 0;
   }
 
   function safeStorageKey(name) {
@@ -644,15 +644,7 @@
     return safeStorageKey("balance_usd");
   }
 
-  function getBalanceUSD() {
-    const b = Number(window.localStorage.getItem(balanceKey()));
-    if (Number.isFinite(b) && b >= 0) return b;
-    const init = 4365423;
-    try {
-      window.localStorage.setItem(balanceKey(), String(init));
-    } catch {}
-    return init;
-  }
+  
 
   function setBalanceUSD(value) {
     const v = Number(value);
@@ -976,72 +968,106 @@
     debitFrom?.addEventListener("change", validate);
 
     form?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!validate()) {
-        toast("warning", "Please complete all fields");
-        return;
-      }
+  e.preventDefault();
+  if (!validate()) {
+    toast("warning", "Please complete all fields");
+    return;
+  }
 
-      const receiverName = getField("receiverName");
-      const bankName = getField("bankName");
-      const bankAddress = getField("bankAddress");
-      const swift = getField("swift");
-      const accountNumber = getField("accountNumber");
-      const amount = Number(getField("amount"));
+  const receiverName = getField("receiverName");
+  const bankName = getField("bankName");
+  const bankAddress = getField("bankAddress");
+  const swift = getField("swift");
+  const accountNumber = getField("accountNumber");
+  const amount = Number(getField("amount"));
 
-      const balance = getBalanceUSD();
-      if (amount > balance) {
-        modalError("Insufficient balance", "Your available balance is not enough for this transfer.");
-        return;
-      }
+  // Get the latest user data from Firebase
+  const me = await getMe();
+  if (!me) {
+    window.location.href = "/customer/login.php.html";
+    return;
+  }
 
-      const doIt = async () => {
-        setBalanceUSD(balance - amount);
-        if (balEl) balEl.textContent = formatMoney(getBalanceUSD());
+ function balanceFromMe(me) {
+  const n = Number(me?.account?.balance);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
 
-        const txId = newTxId();
-        addTransaction({
-          at: new Date().toISOString(),
-          id: txId,
-          type: "TRANSFER",
-          desc: `International transfer to ${receiverName} (${bankName})`,
-          amount: -Math.abs(amount),
-          status: "Pending"
+  const doIt = async () => {
+    const newBalance = balance - amount;
+
+    // Save the new balance to Firebase
+        async function setBalanceFirebase(me, newBalance) {
+      if (!me?.uid) return false;
+
+      const value = Number(newBalance);
+      if (!Number.isFinite(value) || value < 0) return false;
+
+      try {
+        // Update the local object
+        if (!me.account) me.account = {};
+        me.account.balance = value;
+
+        // Write to Firestore
+        const db = firebase.firestore();
+        await db.collection("users").doc(me.uid).update({
+          "account.balance": value
         });
 
-        addTransferHistory({
-          at: new Date().toISOString(),
-          id: txId,
-          beneficiary: receiverName,
-          bank: bankName,
-          bankAddress,
-          swift,
-          accountNumber,
-          amount: -Math.abs(amount),
-          status: "Pending"
-        });
-
-        toast("success", "Bank Transfer submitted");
-        form.reset();
-        setReady(false);
-      };
-
-      if (hasSwal()) {
-        const res = await window.Swal.fire({
-          icon: "question",
-          title: "Confirm transfer",
-          text: `Send ${formatMoney(amount)} to ${receiverName}?`,
-          showCancelButton: true,
-          confirmButtonText: "Proceed",
-          cancelButtonText: "Cancel"
-        });
-        if (!res.isConfirmed) return;
-        await doIt();
-        return;
+        return true;
+      } catch (err) {
+        console.error("Failed to update balance:", err);
+        return false;
       }
+    }
 
-      if (!window.confirm(`Send ${formatMoney(amount)} to ${receiverName}?`)) return;
-      await doIt();
+    // Update the balance shown on the page
+    if (balEl) balEl.textContent = formatMoney(newBalance);
+
+    const txId = newTxId();
+    addTransaction({
+      at: new Date().toISOString(),
+      id: txId,
+      type: "TRANSFER",
+      desc: `International transfer to ${receiverName} (${bankName})`,
+      amount: -Math.abs(amount),
+      status: "Pending"
+    });
+
+    addTransferHistory({
+      at: new Date().toISOString(),
+      id: txId,
+      beneficiary: receiverName,
+      bank: bankName,
+      bankAddress,
+      swift,
+      accountNumber,
+      amount: -Math.abs(amount),
+      status: "Pending"
+    });
+
+    toast("success", "Bank Transfer submitted");
+    form.reset();
+    setReady(false);
+  };
+
+  // Confirmation dialog
+  if (hasSwal()) {
+    const res = await window.Swal.fire({
+      icon: "question",
+      title: "Confirm transfer",
+      text: `Send ${formatMoney(amount)} to ${receiverName}?`,
+      showCancelButton: true,
+      confirmButtonText: "Proceed",
+      cancelButtonText: "Cancel"
+    });
+    if (!res.isConfirmed) return;
+    await doIt();
+    return;
+  }
+
+  if (!window.confirm(`Send ${formatMoney(amount)} to ${receiverName}?`)) return;
+  await doIt();
     });
 
     (async () => {
@@ -1774,13 +1800,13 @@
     const portfolioKey = safeStorageKey("portfolio");
     const historyKey = safeStorageKey("stock_history");
 
-    function getBalance() {
-      return getBalanceUSD();
-    }
+    // function getBalance() {
+    //   return getBalanceUSD();
+    // }
 
-    function setBalance(b) {
-      setBalanceUSD(b);
-    }
+    // function setBalance(b) {
+    //   setBalanceUSD(b);
+    // }
 
     function loadPortfolio() {
       return loadJson(portfolioKey, {});
