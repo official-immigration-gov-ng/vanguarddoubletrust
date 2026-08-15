@@ -967,8 +967,10 @@
     form?.addEventListener("input", validate);
     debitFrom?.addEventListener("change", validate);
 
+
     form?.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   if (!validate()) {
     toast("warning", "Please complete all fields");
     return;
@@ -981,94 +983,374 @@
   const accountNumber = getField("accountNumber");
   const amount = Number(getField("amount"));
 
-  // Get the latest user data from Firebase
+  if (!Number.isFinite(amount) || amount <= 0) {
+    toast("warning", "Please enter a valid transfer amount.");
+    return;
+  }
+
   const me = await getMe();
+
   if (!me) {
     window.location.href = "/customer/login.php.html";
     return;
   }
 
- function balanceFromMe(me) {
-  const n = Number(me?.account?.balance);
-  return Number.isFinite(n) && n >= 0 ? n : 0;
-}
+  const showTransferCodeDialog = async () => {
+    if (hasSwal()) {
+      const result = await window.Swal.fire({
+        title: "Enter Transfer Code",
+        text: "Enter your transfer code to authorize this transfer.",
+        input: "password",
+        inputAttributes: {
+          maxlength: 32,
+          autocomplete: "off",
+          autocapitalize: "off"
+        },
+        inputPlaceholder: "Transfer code",
+        showCancelButton: true,
+        confirmButtonText: "Confirm Transfer",
+        cancelButtonText: "Cancel",
+        allowOutsideClick: false,
+        inputValidator: (value) => {
+          const code = String(value || "").trim();
 
-  const doIt = async () => {
-    const newBalance = balance - amount;
+          if (!code) {
+            return "Please enter your transfer code.";
+          }
 
-    // Save the new balance to Firebase
-        async function setBalanceFirebase(me, newBalance) {
-      if (!me?.uid) return false;
+          return undefined;
+        }
+      });
 
-      const value = Number(newBalance);
-      if (!Number.isFinite(value) || value < 0) return false;
-
-      try {
-        // Update the local object
-        if (!me.account) me.account = {};
-        me.account.balance = value;
-
-        // Write to Firestore
-        const db = firebase.firestore();
-        await db.collection("users").doc(me.uid).update({
-          "account.balance": value
-        });
-
-        return true;
-      } catch (err) {
-        console.error("Failed to update balance:", err);
-        return false;
+      if (!result.isConfirmed) {
+        return null;
       }
+
+      return String(result.value || "").trim();
     }
 
-    // Update the balance shown on the page
-    if (balEl) balEl.textContent = formatMoney(newBalance);
+    const code = window.prompt("Enter your transfer code to authorize this transfer:");
 
-    const txId = newTxId();
-    addTransaction({
-      at: new Date().toISOString(),
-      id: txId,
-      type: "TRANSFER",
-      desc: `International transfer to ${receiverName} (${bankName})`,
-      amount: -Math.abs(amount),
-      status: "Pending"
-    });
+    if (code === null) {
+      return null;
+    }
 
-    addTransferHistory({
-      at: new Date().toISOString(),
-      id: txId,
-      beneficiary: receiverName,
-      bank: bankName,
-      bankAddress,
-      swift,
-      accountNumber,
-      amount: -Math.abs(amount),
-      status: "Pending"
-    });
+    if (!String(code).trim()) {
+      toast("warning", "Transfer code is required.");
+      return null;
+    }
 
-    toast("success", "Bank Transfer submitted");
-    form.reset();
-    setReady(false);
+    return String(code).trim();
   };
 
-  // Confirmation dialog
+  const processTransfer = async () => {
+    try {
+      /*
+       * Look up the VanguardDoubleTrust recipient by account number.
+       * The backend performs the authoritative lookup.
+       */
+      const lookupResponse = await fetch(
+        `/api/customer/lookup-account?accountNumber=${encodeURIComponent(accountNumber)}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
+
+      let lookupData = {};
+
+      try {
+        lookupData = await lookupResponse.json();
+      } catch (_) {
+        lookupData = {};
+      }
+
+      if (!lookupResponse.ok || !lookupData.ok || !lookupData.recipient) {
+        throw new Error(
+          lookupData.error || "Recipient account could not be found."
+        );
+      }
+
+      const recipient = lookupData.recipient;
+
+      /*
+       * Make sure the entered receiver name matches the account
+       * returned by the server.
+       */
+      const enteredName = receiverName.trim().toLowerCase();
+      const actualName = String(recipient.fullName || "")
+        .trim()
+        .toLowerCase();
+
+      if (actualName && enteredName !== actualName) {
+        throw new Error(
+          `The receiver name does not match the account holder. Account holder: ${recipient.fullName}`
+        );
+      }
+
+      /*
+       * Ask for the transfer code only after the confirmation dialog.
+       */
+      const transferCode = await showTransferCodeDialog();
+
+      if (transferCode === null) {
+        return;
+      }
+
+      if (hasSwal()) {
+        window.Swal.fire({
+          title: "Processing transfer...",
+          text: "Please wait while we process your transfer.",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            window.Swal.showLoading();
+          }
+        });
+      }
+
+      /*
+       * IMPORTANT:
+       * The server is responsible for changing the balance.
+       * Do NOT update Firestore directly from this page.
+       */
+      const response = await fetch("/api/customer/transfer", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          toAccountNumber: recipient.accountNumber || accountNumber,
+          toEmail: recipient.email || "",
+          amount: amount,
+          currency: recipient.currency || "USD",
+          transferCode: transferCode,
+          memo: `Bank transfer to ${recipient.fullName || receiverName}`
+        })
+      });
+
+      let data = {};
+
+      try {
+        data = await response.json();
+      } catch (_) {
+        data = {};
+      }
+
+      if (!response.ok || !data.ok) {
+        throw new Error(
+          data.error || "The transfer could not be completed."
+        );
+      }
+
+      /*
+       * The backend has successfully deducted the sender's balance
+       * and credited the recipient's balance.
+       */
+      const newBalance = Number(data.newBalance);
+      const reference = String(data.reference || "");
+
+      if (Number.isFinite(newBalance)) {
+        if (balEl) {
+          balEl.textContent = formatMoney(newBalance);
+        }
+
+        if (!me.account) {
+          me.account = {};
+        }
+
+        me.account.balance = newBalance;
+      }
+
+      /*
+       * Clear the form after a successful server response.
+       */
+      form.reset();
+      setReady(false);
+
+      /*
+       * SUCCESS SCREEN
+       */
+      if (hasSwal()) {
+        await window.Swal.fire({
+          icon: "success",
+          title: "Transfer Successful",
+          html: `
+            <div style="text-align:center;">
+              <div style="
+                width:78px;
+                height:78px;
+                margin:0 auto 18px;
+                border-radius:50%;
+                background:#dcfce7;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+              ">
+                <i class="fas fa-check" style="
+                  font-size:38px;
+                  color:#16a34a;
+                "></i>
+              </div>
+
+              <div style="
+                font-size:16px;
+                font-weight:800;
+                color:#0f172a;
+                margin-bottom:8px;
+              ">
+                Your transfer was successful.
+              </div>
+
+              <div style="
+                font-size:13px;
+                color:#64748b;
+                line-height:1.6;
+              ">
+                <strong>${formatMoney(amount)}</strong>
+                was successfully transferred to
+                <strong>${escapeHtml(recipient.fullName || receiverName)}</strong>.
+              </div>
+
+              ${
+                reference
+                  ? `
+                    <div style="
+                      margin-top:14px;
+                      padding:10px 12px;
+                      background:#f8fafc;
+                      border-radius:10px;
+                      font-size:12px;
+                      color:#475569;
+                    ">
+                      Reference: <strong>${escapeHtml(reference)}</strong>
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                Number.isFinite(newBalance)
+                  ? `
+                    <div style="
+                      margin-top:10px;
+                      font-size:12px;
+                      color:#64748b;
+                    ">
+                      Available balance:
+                      <strong>${formatMoney(newBalance)}</strong>
+                    </div>
+                  `
+                  : ""
+              }
+            </div>
+          `,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#16a34a",
+          allowOutsideClick: false
+        });
+      } else {
+        alert(
+          `Transfer successful.\n\n` +
+          `${formatMoney(amount)} was transferred to ${recipient.fullName || receiverName}.` +
+          (reference ? `\nReference: ${reference}` : "")
+        );
+      }
+
+      /*
+       * Reload the current customer data so the dashboard/balance
+       * state is refreshed from the server.
+       */
+      try {
+        const refreshedMe = await getMe();
+
+        if (refreshedMe) {
+          const refreshedBalance = Number(refreshedMe?.account?.balance);
+
+          if (Number.isFinite(refreshedBalance) && balEl) {
+            balEl.textContent = formatMoney(refreshedBalance);
+          }
+        }
+      } catch (refreshError) {
+        console.warn(
+          "[VT] Could not refresh customer balance:",
+          refreshError
+        );
+      }
+    } catch (error) {
+      console.error("[VT] Transfer failed:", error);
+
+      if (hasSwal()) {
+        await window.Swal.fire({
+          icon: "error",
+          title: "Transfer Failed",
+          text:
+            error?.message ||
+            "The transfer could not be completed. No balance was deducted.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#0f172a"
+        });
+      } else {
+        alert(
+          error?.message ||
+            "The transfer could not be completed. No balance was deducted."
+        );
+      }
+    }
+  };
+
+  /*
+   * FIRST confirmation:
+   * "Send US$5,000 to Frank James?"
+   */
   if (hasSwal()) {
-    const res = await window.Swal.fire({
+    const confirmation = await window.Swal.fire({
       icon: "question",
       title: "Confirm transfer",
-      text: `Send ${formatMoney(amount)} to ${receiverName}?`,
+      html: `
+        <div style="
+          text-align:center;
+          font-size:14px;
+          color:#475569;
+          line-height:1.7;
+        ">
+          Send
+          <strong>${escapeHtml(formatMoney(amount))}</strong>
+          to
+          <strong>${escapeHtml(receiverName)}</strong>?
+        </div>
+      `,
       showCancelButton: true,
-      confirmButtonText: "Proceed",
-      cancelButtonText: "Cancel"
+      confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#0f172a",
+      allowOutsideClick: false
     });
-    if (!res.isConfirmed) return;
-    await doIt();
+
+    if (!confirmation.isConfirmed) {
+      return;
+    }
+
+    await processTransfer();
     return;
   }
 
-  if (!window.confirm(`Send ${formatMoney(amount)} to ${receiverName}?`)) return;
-  await doIt();
-    });
+  if (
+    !window.confirm(
+      `Send ${formatMoney(amount)} to ${receiverName}?`
+    )
+  ) {
+    return;
+  }
+
+  await processTransfer();
+});
 
     (async () => {
       const me = await getMe();
