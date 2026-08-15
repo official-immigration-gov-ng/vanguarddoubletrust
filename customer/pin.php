@@ -213,7 +213,8 @@
       .vt-user .avatar {
         width: 34px;
         height: 34px;
-        border-radius: 14px;
+        border-radius: 50%;
+        overflow: hidden;
         background: linear-gradient(135deg, rgba(0, 51, 153, 0.18), rgba(0, 93, 157, 0.12));
         border: 1px solid rgba(0, 51, 153, 0.18);
         display: grid;
@@ -585,7 +586,8 @@
         .vt-user .avatar {
           width: 32px;
           height: 32px;
-          border-radius: 12px;
+          border-radius: 50%;
+          overflow: hidden;
           font-size: 11px;
         }
 
