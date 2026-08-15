@@ -1049,22 +1049,16 @@
        * Look up the VanguardDoubleTrust recipient by account number.
        * The backend performs the authoritative lookup.
        */
-
-      const response = await fetch("/api/customer/transfer", {
-  method: "POST",
-  credentials: "include",
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json"
-  },
-  body: JSON.stringify({
-    toAccountNumber: accountNumber,
-    amount: amount,
-    currency: "USD",
-    transferCode: transferCode,
-    memo: `Bank transfer to ${receiverName}`
-  })
-});
+      const lookupResponse = await fetch(
+        `/api/customer/lookup-account?accountNumber=${encodeURIComponent(accountNumber)}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
 
       let lookupData = {};
 
