@@ -2073,7 +2073,74 @@
                   var c = (ctx && ctx.currency) ? ctx.currency : "USD";
                   bal.textContent = fmtCurrency(Number(data.newBalance), c);
                 }
-                setTimeout(function () { closeTransferModal(); resetTransferModal(); fetchAndRenderTx(ctx); }, 1300);
+                var newBal = Number(data.newBalance);
+                var ref = String(data.reference || "");
+                var amtVal = Number(amount);
+                var curr = (ctx && ctx.currency) ? ctx.currency : "USD";
+                var acctHolder = transferState.recipient && transferState.recipient.data ? (transferState.recipient.data.fullName || transferState.recipient.data.name || "") : "";
+                var nowDate = new Date();
+                var dateStr = nowDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) + ", " +
+                  nowDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+                var esc = function(s) { return String(s || "").replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]; }); };
+                var fmtAmt = fmtCurrency(amtVal, curr);
+                var fmtBal = Number.isFinite(newBal) ? fmtCurrency(newBal, curr) : "";
+                var detailData = [
+                  { label: "Amount Debited", value: curr + " " + fmtAmt.replace(/^[^\d]*/, "") },
+                  { label: "Transaction reference:", value: ref || "--" },
+                  { label: "Account holder:", value: esc(acctHolder || "Recipient") },
+                  { label: "Date:", value: dateStr }
+                ];
+                if (Number.isFinite(newBal)) {
+                  detailData.push({ label: "Available Balance:", value: curr + " " + fmtBal.replace(/^[^\d]*/, "") });
+                }
+                var rows = detailData.map(function(row) {
+                  return '<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 14px;border-bottom:1px solid rgba(148,163,184,0.15);">' +
+                    '<div style="display:flex;align-items:center;gap:14px;">' +
+                      '<div style="width:28px;height:28px;border-radius:50%;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;flex:0 0 auto;">' +
+                        '<i class="fas fa-check" style="font-size:13px;color:#38bdf8;"></i>' +
+                      '</div>' +
+                      '<span style="font-size:14px;font-weight:600;color:#cbd5e1;">' + esc(row.label) + '</span>' +
+                    '</div>' +
+                    '<span style="font-size:14px;font-weight:700;color:#e2e8f0;text-align:right;max-width:60%;word-break:break-word;">' + row.value + '</span>' +
+                  '</div>';
+                }).join("");
+                var successHtml = '<div style="background:#0b1220;margin:-40px -40px -40px -40px;padding:40px 40px 30px;text-align:center;">' +
+                  '<div style="width:96px;height:96px;margin:0 auto 22px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 40px -12px rgba(16,185,129,0.55);">' +
+                    '<i class="fas fa-check" style="font-size:48px;color:#ffffff;font-weight:900;"></i>' +
+                  '</div>' +
+                  '<h2 style="margin:0 0 16px;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-0.3px;">Transaction successful!</h2>' +
+                  '<p style="margin:0 0 12px;font-size:16px;font-weight:500;color:#cbd5e1;line-height:1.6;">' +
+                    'You have successfully transfered ' + fmtAmt + ' to <strong style="color:#f1f5f9;">' + esc(acctHolder || "Recipient") + '</strong>.' +
+                  '</p>' +
+                  '<p style="margin:0 0 28px;font-size:15px;font-weight:600;color:#94a3b8;">Details of your transaction are shown below;</p>' +
+                  '<div style="border:1px solid rgba(148,163,184,0.18);border-radius:10px;overflow:hidden;background:rgba(15,23,42,0.6);margin-bottom:28px;">' + rows + '</div>' +
+                  '<div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">' +
+                    '<button id="vtDashNewTxBtn" type="button" style="padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;background:#2563eb;color:#ffffff;box-shadow:0 8px 24px -10px rgba(37,99,235,0.7);">New transaction</button>' +
+                    '<button id="vtDashHomeBtn" type="button" style="padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;background:#dc2626;color:#ffffff;box-shadow:0 8px 24px -10px rgba(220,38,38,0.7);">Back to home</button>' +
+                  '</div>' +
+                '</div>';
+                setTimeout(function () {
+                  closeTransferModal();
+                  resetTransferModal();
+                  fetchAndRenderTx(ctx);
+                  if (window.Swal && typeof window.Swal.fire === "function") {
+                    window.Swal.fire({
+                      html: successHtml,
+                      showConfirmButton: false,
+                      showCancelButton: false,
+                      allowOutsideClick: false,
+                      allowEscapeKey: false,
+                      background: "#0b1220",
+                      padding: 0,
+                      didOpen: function() {
+                        var n = document.getElementById("vtDashNewTxBtn");
+                        var h = document.getElementById("vtDashHomeBtn");
+                        if (n) n.addEventListener("click", function() { try { window.Swal.close(); } catch(_) {} try { openTransferModal(); } catch(_) {} });
+                        if (h) h.addEventListener("click", function() { try { window.Swal.close(); } catch(_) {} window.location.href = "/customer/dashboard.php"; });
+                      }
+                    });
+                  }
+                }, 400);
               } else {
                 throw new Error((data && data.error) ? String(data.error) : "Bank Transfer failed.");
               }
