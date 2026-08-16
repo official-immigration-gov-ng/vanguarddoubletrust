@@ -544,41 +544,163 @@
     });
 
     function rowMarkup(user) {
-      const fullName = `${user.firstname || ""} ${user.lastname || ""}`.trim() || "No name set";
-      return `
-        <tr data-uid="${user.uid}">
-          <td>
-            <div class="name"><a class="review-link" data-action="review" data-uid="${user.uid}" href="javascript:void(0)">${escapeHtml(
-              fullName
-            )}</a></div>
-            <div class="sub">${user.email ? escapeHtml(user.email) : "No email"}</div>
-            <div class="sub">UID: ${escapeHtml(user.uid)}</div>
-          </td>
-          <td>
-            <div>${user.accountNumber ? escapeHtml(user.accountNumber) : "--"}</div>
-            <div class="sub">${escapeHtml(user.currency || "USD")}</div>
-          </td>
-          <td>
-            <input type="number" step="0.01" min="0" data-field="balance" value="${Number(user.balance || 0)}" />
-          </td>
-          <td>
-            <select data-field="status">
-              <option value="ACTIVE" ${user.status === "ACTIVE" ? "selected" : ""}>ACTIVE</option>
-              <option value="PENDING" ${user.status === "PENDING" ? "selected" : ""}>PENDING</option>
-              <option value="SUSPENDED" ${user.status === "SUSPENDED" ? "selected" : ""}>SUSPENDED</option>
-            </select>
-            <div class="sub"><span class="status">${escapeHtml(user.status || "ACTIVE")}</span></div>
-          </td>
-          <td>
-            <input type="text" data-field="firstname" value="${escapeHtml(user.firstname || "")}" placeholder="First name" style="margin-bottom:8px" />
-            <input type="text" data-field="lastname" value="${escapeHtml(user.lastname || "")}" placeholder="Last name" />
-          </td>
-          <td>
-            <button class="btn" type="button" data-action="save">Save</button>
-          </td>
-        </tr>
-      `;
-    }
+  const fullName =
+    `${user.firstname || ""} ${user.lastname || ""}`.trim() ||
+    "No name set";
+
+  return `
+    <tr data-uid="${escapeHtml(user.uid)}">
+
+      <td>
+        <div class="name">
+          <a
+            class="review-link"
+            data-action="review"
+            data-uid="${escapeHtml(user.uid)}"
+            href="javascript:void(0)"
+          >
+            ${escapeHtml(fullName)}
+          </a>
+        </div>
+
+        <div class="sub">
+          ${user.email ? escapeHtml(user.email) : "No email"}
+        </div>
+
+        <div class="sub">
+          UID: ${escapeHtml(user.uid)}
+        </div>
+      </td>
+
+      <td>
+        <input
+          type="text"
+          data-field="accountNumber"
+          value="${escapeHtml(user.accountNumber || "")}"
+          placeholder="Account number"
+          style="margin-bottom:8px"
+        />
+
+        <div class="sub">
+          ${escapeHtml(user.currency || "USD")}
+        </div>
+      </td>
+
+      <td>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          data-field="balance"
+          value="${Number(user.balance || 0)}"
+        />
+      </td>
+
+      <td>
+        <select data-field="status">
+
+          <option
+            value="ACTIVE"
+            ${user.status === "ACTIVE" ? "selected" : ""}
+          >
+            ACTIVE
+          </option>
+
+          <option
+            value="PENDING"
+            ${user.status === "PENDING" ? "selected" : ""}
+          >
+            PENDING
+          </option>
+
+          <option
+            value="EXPIRED"
+            ${user.status === "EXPIRED" ? "selected" : ""}
+          >
+            EXPIRED
+          </option>
+
+          <option
+            value="SUSPENDED"
+            ${user.status === "SUSPENDED" ? "selected" : ""}
+          >
+            SUSPENDED
+          </option>
+
+          <option
+            value="BLOCKED"
+            ${user.status === "BLOCKED" ? "selected" : ""}
+          >
+            BLOCKED
+          </option>
+
+          <option
+            value="CLOSED"
+            ${user.status === "CLOSED" ? "selected" : ""}
+          >
+            CLOSED
+          </option>
+
+        </select>
+
+        <div class="sub">
+          <span class="status">
+            ${escapeHtml(user.status || "ACTIVE")}
+          </span>
+        </div>
+      </td>
+
+      <td>
+        <input
+          type="text"
+          data-field="firstname"
+          value="${escapeHtml(user.firstname || "")}"
+          placeholder="First name"
+          style="margin-bottom:8px"
+        />
+
+        <input
+          type="text"
+          data-field="lastname"
+          value="${escapeHtml(user.lastname || "")}"
+          placeholder="Last name"
+        />
+      </td>
+
+      <td>
+        <div style="
+          display:flex;
+          flex-direction:column;
+          gap:8px;
+          min-width:120px;
+        ">
+
+          <button
+            class="btn"
+            type="button"
+            data-action="save"
+          >
+            Save / Repair
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            data-action="delete"
+            style="
+              border-color:rgba(239,68,68,.45);
+              color:#fecaca;
+            "
+          >
+            Delete
+          </button>
+
+        </div>
+      </td>
+
+    </tr>
+  `;
+}
 
     function render(users) {
       if (!users.length) {
@@ -625,17 +747,102 @@
       }
 
       const button = event.target.closest("[data-action='save']");
+
+      const deleteButton = event.target.closest("[data-action='delete']");
+
+if (deleteButton) {
+  const row = deleteButton.closest("tr[data-uid]");
+
+  if (!row) return;
+
+  const uid = row.getAttribute("data-uid");
+
+  if (!uid) return;
+
+  const name =
+    row.querySelector(".name")?.textContent?.trim() ||
+    "this customer";
+
+  const accountNumber =
+    row.querySelector("[data-field='accountNumber']")?.value?.trim() ||
+    "";
+
+  const confirmed = window.confirm(
+    `PERMANENTLY DELETE CUSTOMER?\n\n` +
+    `Customer: ${name}\n` +
+    `Account: ${accountNumber || "Unknown"}\n\n` +
+    `This will remove the customer's login and account data from the platform.\n\n` +
+    `This action cannot be undone.\n\n` +
+    `Click OK to permanently delete this customer.`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  deleteButton.disabled = true;
+  deleteButton.textContent = "Deleting...";
+  flash("");
+
+  try {
+    await api(
+      `/api/admin/users/${encodeURIComponent(uid)}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    flash("Customer account permanently deleted.");
+
+    /*
+     * Close the review modal if the deleted customer
+     * happens to be open there.
+     */
+    if (reviewState?.uid === uid) {
+      setReviewOpen(false);
+    }
+
+    /*
+     * Reload the existing customer list and totals.
+     */
+    await loadUsers();
+
+  } catch (error) {
+
+    flash(
+      error?.message ||
+        "Unable to permanently delete customer.",
+      true
+    );
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = "Delete";
+  }
+
+  return;
+}
       if (!button) return;
 
       const row = button.closest("tr[data-uid]");
       if (!row) return;
       const uid = row.getAttribute("data-uid");
+
       const payload = {
-        balance: row.querySelector("[data-field='balance']")?.value || "",
-        status: row.querySelector("[data-field='status']")?.value || "ACTIVE",
-        firstname: row.querySelector("[data-field='firstname']")?.value || "",
-        lastname: row.querySelector("[data-field='lastname']")?.value || ""
-      };
+  accountNumber:
+    row.querySelector("[data-field='accountNumber']")?.value?.trim() || "",
+
+  balance:
+    row.querySelector("[data-field='balance']")?.value || "",
+
+  status:
+    row.querySelector("[data-field='status']")?.value || "ACTIVE",
+
+  firstname:
+    row.querySelector("[data-field='firstname']")?.value?.trim() || "",
+
+  lastname:
+    row.querySelector("[data-field='lastname']")?.value?.trim() || ""
+};
 
       button.disabled = true;
       button.textContent = "Saving...";

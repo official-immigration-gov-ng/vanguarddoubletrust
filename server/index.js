@@ -1686,59 +1686,181 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
   }
 });
 
+
 app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
   const uid = String(req.params?.uid || "").trim();
+
   if (!uid) {
     res.status(400).json({ error: "Missing user id." });
     return;
   }
 
-  const updates = { updatedAt: new Date().toISOString() };
+  const updates = {
+    updatedAt: new Date().toISOString()
+  };
+
   const balance = req.body?.balance;
   const status = req.body?.status;
   const firstname = req.body?.firstname;
   const lastname = req.body?.lastname;
+  const accountNumber = req.body?.accountNumber;
 
   let deltaInfo = null;
+
+  /*
+   * BALANCE
+   */
   if (balance != null && balance !== "") {
     const nextBalance = Number(balance);
+
     if (!Number.isFinite(nextBalance) || nextBalance < 0) {
-      res.status(400).json({ error: "Balance must be a valid non-negative number." });
+      res.status(400).json({
+        error: "Balance must be a valid non-negative number."
+      });
       return;
     }
+
     updates["account.balance"] = nextBalance;
     deltaInfo = { nextBalance };
   }
 
+  /*
+   * STATUS
+   */
   if (typeof status === "string" && status.trim()) {
-    updates["account.status"] = status.trim().toUpperCase();
+    const normalizedStatus = status.trim().toUpperCase();
+
+    const allowedStatuses = [
+      "ACTIVE",
+      "PENDING",
+      "EXPIRED",
+      "SUSPENDED",
+      "BLOCKED",
+      "CLOSED"
+    ];
+
+    if (!allowedStatuses.includes(normalizedStatus)) {
+      res.status(400).json({
+        error: "Invalid account status."
+      });
+      return;
+    }
+
+    updates["account.status"] = normalizedStatus;
   }
 
+  /*
+   * FIRST NAME
+   */
   if (typeof firstname === "string") {
     updates["profile.firstname"] = firstname.trim();
   }
 
+  /*
+   * LAST NAME
+   */
   if (typeof lastname === "string") {
     updates["profile.lastname"] = lastname.trim();
   }
 
+  /*
+   * ACCOUNT NUMBER REPAIR
+   */
+  if (typeof accountNumber === "string") {
+    const newAccountNumber = accountNumber.trim();
+
+    if (!newAccountNumber) {
+      res.status(400).json({
+        error: "Account number cannot be empty."
+      });
+      return;
+    }
+
+    if (!/^[A-Za-z0-9_-]{6,32}$/.test(newAccountNumber)) {
+      res.status(400).json({
+        error: "Account number must contain 6-32 letters, numbers, hyphens or underscores."
+      });
+      return;
+    }
+
+    /*
+     * Make sure another customer does not already have
+     * this account number.
+     */
+    const db = getFirestore();
+
+    const duplicateSnap = await db
+      .collection("users")
+      .where("account.accountNumber", "==", newAccountNumber)
+      .limit(2)
+      .get();
+
+    const duplicate = duplicateSnap.docs.find(
+      (doc) => doc.id !== uid
+    );
+
+    if (duplicate) {
+      res.status(409).json({
+        error: "That account number is already assigned to another customer."
+      });
+      return;
+    }
+
+    updates["account.accountNumber"] = newAccountNumber;
+  }
+
   try {
     const db = getFirestore();
-    if (deltaInfo) {
-      const snap = await db.collection("users").doc(uid).get().catch(() => null);
-      const current = Number(snap?.data()?.account?.balance || 0);
-      const currency = snap?.data()?.account?.currency || "USD";
-      deltaInfo.prevBalance = Number.isFinite(current) ? current : 0;
-      deltaInfo.currency = String(currency || "USD");
-    }
-    await db.collection("users").doc(uid).set(updates, { merge: true });
+    const userRef = db.collection("users").doc(uid);
 
-    if (deltaInfo && Number.isFinite(deltaInfo.prevBalance) && Number.isFinite(deltaInfo.nextBalance)) {
-      const delta = Number(deltaInfo.nextBalance) - Number(deltaInfo.prevBalance);
+    const existingSnap = await userRef.get();
+
+    if (!existingSnap.exists) {
+      res.status(404).json({
+        error: "Customer account not found."
+      });
+      return;
+    }
+
+    const existingData = existingSnap.data() || {};
+    const currentBalance = Number(
+      existingData?.account?.balance || 0
+    );
+
+    const currency = String(
+      existingData?.account?.currency || "USD"
+    );
+
+    if (deltaInfo) {
+      deltaInfo.prevBalance = Number.isFinite(currentBalance)
+        ? currentBalance
+        : 0;
+
+      deltaInfo.currency = currency;
+    }
+
+    await userRef.set(updates, {
+      merge: true
+    });
+
+    /*
+     * Keep the existing admin balance transaction behavior.
+     */
+    if (
+      deltaInfo &&
+      Number.isFinite(deltaInfo.prevBalance) &&
+      Number.isFinite(deltaInfo.nextBalance)
+    ) {
+      const delta =
+        Number(deltaInfo.nextBalance) -
+        Number(deltaInfo.prevBalance);
+
       if (delta !== 0) {
         await writeTransaction({
           uid,
-          type: delta > 0 ? "ADMIN_CREDIT" : "ADMIN_DEBIT",
+          type: delta > 0
+            ? "ADMIN_CREDIT"
+            : "ADMIN_DEBIT",
           amount: Math.abs(delta),
           currency: deltaInfo.currency || "USD",
           status: "COMPLETED",
@@ -1748,9 +1870,152 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
         }).catch(() => {});
       }
     }
-    res.json({ ok: true });
-  } catch {
-    res.status(500).json({ error: "Unable to update user." });
+
+    res.json({
+      ok: true,
+      message: "Customer account repaired successfully."
+    });
+
+  } catch (e) {
+    console.error("[ADMIN] User update failed:", e);
+
+    res.status(500).json({
+      error: "Unable to update customer account."
+    });
+  }
+});
+
+app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
+  const uid = String(req.params?.uid || "").trim();
+
+  if (!uid) {
+    res.status(400).json({
+      error: "Missing user id."
+    });
+    return;
+  }
+
+  try {
+    const db = getFirestore();
+    const auth = getAuth();
+
+    const userRef = db.collection("users").doc(uid);
+    const userSnap = await userRef.get();
+
+    if (!userSnap.exists) {
+      res.status(404).json({
+        error: "Customer account not found."
+      });
+      return;
+    }
+
+    /*
+     * Delete Firebase Authentication account first.
+     *
+     * This prevents the customer from logging in again
+     * even if Firestore cleanup encounters a problem.
+     */
+    try {
+      await auth.deleteUser(uid);
+    } catch (authError) {
+      const authCode = String(authError?.code || "");
+
+      /*
+       * If the Auth account is already gone, continue
+       * cleaning the Firestore data.
+       */
+      if (authCode !== "auth/user-not-found") {
+        console.error(
+          "[ADMIN] Firebase Auth deletion failed:",
+          authError
+        );
+
+        res.status(500).json({
+          error: "Unable to delete the customer's login account."
+        });
+
+        return;
+      }
+    }
+
+    /*
+     * Delete all customer transactions stored beneath
+     * users/{uid}/transactions.
+     */
+    const transactionSnap = await userRef
+      .collection("transactions")
+      .get();
+
+    let batch = db.batch();
+    let batchCount = 0;
+
+    for (const doc of transactionSnap.docs) {
+      batch.delete(doc.ref);
+      batchCount++;
+
+      if (batchCount >= 400) {
+        await batch.commit();
+
+        batch = db.batch();
+        batchCount = 0;
+      }
+    }
+
+    if (batchCount > 0) {
+      await batch.commit();
+    }
+
+    /*
+     * Delete global transaction records belonging to
+     * this customer.
+     */
+    const globalTransactions = await db
+      .collection("transactions")
+      .where("uid", "==", uid)
+      .get();
+
+    batch = db.batch();
+    batchCount = 0;
+
+    for (const doc of globalTransactions.docs) {
+      batch.delete(doc.ref);
+      batchCount++;
+
+      if (batchCount >= 400) {
+        await batch.commit();
+
+        batch = db.batch();
+        batchCount = 0;
+      }
+    }
+
+    if (batchCount > 0) {
+      await batch.commit();
+    }
+
+    /*
+     * Finally remove the main customer document.
+     */
+    await userRef.delete();
+
+    console.log(
+      `[ADMIN] Permanently deleted customer ${uid} by ${req.admin?.email || "admin"}`
+    );
+
+    res.json({
+      ok: true,
+      message: "Customer account permanently deleted."
+    });
+
+  } catch (error) {
+    console.error(
+      "[ADMIN] Permanent user deletion failed:",
+      error
+    );
+
+    res.status(500).json({
+      error: "Unable to permanently delete customer account."
+    });
   }
 });
 
