@@ -785,9 +785,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script src="assets/js/auth-session.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/js/auth-session.js?v=20260817"></script>
 
-    <script src="assets/js/customer-i18n.js"></script>
+    <script src="assets/js/customer-i18n.js?v=20260817"></script>
     <script>
 (function () {
   function bootI18nAndKyc() {
