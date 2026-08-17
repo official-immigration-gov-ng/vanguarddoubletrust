@@ -15,55 +15,70 @@
         <title>VanguardDoubleTrust - Contact Us</title>
 
     <style>
-        html, body { background: #0a0f1a !important; color: #ffffff !important; }
-        html, body, :root, * {
+        :root {
           color-scheme: dark;
-          --bg: #0a0f1a !important;
-          --bg-2: #10172a !important;
-          --bg-3: #121a2d !important;
-          --panel: #10172a !important;
-          --panel-2: #121a2d !important;
-          --panel-3: #162038 !important;
-          --fg: #ffffff !important;
-          --fg-2: #cdd5e3 !important;
-          --muted: #8a95ac !important;
-          --line: rgba(255,255,255,0.08) !important;
-          --accent: #e8c367 !important;
-          --accent-2: #ffffff !important;
-          --accent-3: #0a0f1a !important;
-          --warn: #e8c367 !important;
-          --error: #ffffff !important;
-          --ok: #6ee7a7 !important;
-          --primary-color: #e8c367 !important;
-          --secondary-color: #10172a !important;
-          --dark-bg-color: #0a0f1a !important;
-          --light-color: #ffffff !important;
-          --white-color: #ffffff !important;
-          --dark-color: #0a0f1a !important;
-          --light-bg: #10172a !important;
-          --gray-bg: #121a2d !important;
-          --text-dark: #ffffff !important;
-          --text-light: #0a0f1a !important;
-          --border-color: rgba(255,255,255,0.10) !important;
-          --vt-primary: #e8c367 !important;
-          --vt-primary-2: #ffffff !important;
-          --vt-bg: #0a0f1a !important;
-          --vt-card-bg: #10172a !important;
-          --vt-card-2: #121a2d !important;
-          --vt-text: #ffffff !important;
-          --vt-text-2: #cdd5e3 !important;
-          --vt-muted: #8a95ac !important;
-          --vt-border: rgba(255,255,255,0.10) !important;
-          --vt-success: #6ee7a7 !important;
-          --vt-danger: #ffffff !important;
-          --vt-warn: #e8c367 !important;
-          --vt-info: #ffffff !important;
-          --vt-accent: #e8c367 !important;
-          --vt-avatar-bg: #121a2d !important;
-          /* background: #0a0f1a !important; */
-          color: #ffffff !important;
+          --bg: #0a0f1a;
+          --bg-2: #10172a;
+          --bg-3: #121a2d;
+          --panel: #10172a;
+          --panel-2: #121a2d;
+          --panel-3: #162038;
+          --fg: #ffffff;
+          --fg-2: #cdd5e3;
+          --muted: #8a95ac;
+          --line: rgba(255,255,255,0.08);
+          --accent: #e8c367;
+          --accent-2: #ffffff;
+          --accent-3: #0a0f1a;
+          --warn: #e8c367;
+          --error: #ffffff;
+          --ok: #6ee7a7;
+          --primary-color: #e8c367;
+          --secondary-color: #10172a;
+          --dark-bg-color: #0a0f1a;
+          --light-color: #ffffff;
+          --white-color: #ffffff;
+          --dark-color: #0a0f1a;
+          --light-bg: #10172a;
+          --gray-bg: #121a2d;
+          --text-dark: #ffffff;
+          --text-light: #0a0f1a;
+          --border-color: rgba(255,255,255,0.10);
+          --vt-primary: #e8c367;
+          --vt-primary-2: #ffffff;
+          --vt-bg: #0a0f1a;
+          --vt-card-bg: #10172a;
+          --vt-card-2: #121a2d;
+          --vt-text: #ffffff;
+          --vt-text-2: #cdd5e3;
+          --vt-muted: #8a95ac;
+          --vt-border: rgba(255,255,255,0.10);
+          --vt-success: #6ee7a7;
+          --vt-danger: #ffffff;
+          --vt-warn: #e8c367;
+          --vt-info: #ffffff;
+          --vt-accent: #e8c367;
+          --vt-avatar-bg: #121a2d;
+        }
+        button, .btn, [class*="button"], [role="button"],
+        input[type="submit"], input[type="button"],
+        a.btn, a[class*="-btn"],
+        .default-btn {
+          --bg-btn: var(--primary-color) !important;
+          background: var(--primary-color) !important;
+          background-color: var(--primary-color) !important;
+          color: #0a0f1a !important;
+          border-color: var(--primary-color) !important;
+        }
+        button.btn-secondary, .btn-secondary, .btn-outline, .btn-outline-primary,
+        button.outline, .button.secondary, [class*="outline"] {
+          background: transparent !important;
+          background-color: transparent !important;
+          color: var(--primary-color) !important;
+          border-color: var(--primary-color) !important;
         }
         * { border-color: rgba(255,255,255,0.10) !important; }
+        html, body { background: var(--bg); color: var(--fg); }
         :root {
             --primary-color: #165DFF !important;
             --secondary-color: #0E42D2 !important;
@@ -316,6 +331,123 @@
                 padding: 20px 16px !important;
             }
         }
+
+    /* ===== FINAL PALETTE CORRECTION - WINS OVER ALL EARLIER RULES ===== */
+    :root {
+        --primary-color: #e8c367 !important;
+        --secondary-color: #10172a !important;
+        --dark-bg-color: #0a0f1a !important;
+        --accent-color: #e8c367 !important;
+        --form-bg-color: #000000 !important;
+        --light-bg: #10172a !important;
+        --gray-bg: #121a2d !important;
+        --text-dark: #ffffff !important;
+        --text-light: #0a0f1a !important;
+        --border-color: rgba(255,255,255,0.10) !important;
+    }
+    button, .btn, [class*="button"], [role="button"],
+    input[type="submit"], input[type="button"],
+    a.btn, a[class*="-btn"],
+    .default-btn, .hero-cta-btn, .read-more-btn,
+    .default-btn.border-btn {
+        --bg-btn: #e8c367 !important;
+        background: #e8c367 !important;
+        background-color: #e8c367 !important;
+        color: #0a0f1a !important;
+        border-color: #e8c367 !important;
+    }
+    button.btn-secondary, .btn-secondary, .btn-outline, .btn-outline-primary,
+    button.outline, .button.secondary, [class*="outline"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        color: #e8c367 !important;
+        border-color: #e8c367 !important;
+    }
+    .default-btn.active {
+        background-color: #ffffff !important;
+        border-color: #ffffff !important;
+        color: #0a0f1a !important;
+    }
+    .default-btn.active:hover {
+        background-color: #f5f5f5 !important;
+        border-color: #f5f5f5 !important;
+        color: #0a0f1a !important;
+    }
+    .default-btn.border-btn {
+        background-color: transparent !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+    .default-btn.border-btn:hover {
+        background-color: #e8c367 !important;
+        border-color: #e8c367 !important;
+        color: #0a0f1a !important;
+    }
+    .default-btn:hover {
+        background-color: #d4b258 !important;
+        border-color: #d4b258 !important;
+        color: #0a0f1a !important;
+        box-shadow: 0 6px 20px rgba(232, 195, 103, 0.25) !important;
+    }
+    .bg-dark-div, .navbar, .footer-area, .pay-support-area, .countries-area,
+    .page-banner-area, .services-area, #backtotop,
+    .contact-us-area .bg-img {
+        background-color: #0a0f1a !important;
+        background: #0a0f1a !important;
+    }
+    .page-banner-area {
+        background: linear-gradient(135deg, #0a0f1a 0%, #10172a 100%) !important;
+    }
+    .top-title,
+    .mobile-menu-list.active a,
+    .contact-info-item a {
+        color: #e8c367 !important;
+    }
+    .contact-info-item a:hover {
+        color: #d4b258 !important;
+    }
+    .main-title .under-line {
+        background-image: linear-gradient(to top, #e8c367 25%, rgba(255, 255, 255, 0) 40%) !important;
+    }
+    .contact-info-item, .contact-form-wrap,
+    .contact-area,
+    .mobile-navbar .offcanvas-body, .dropdown-menu {
+        background-color: #10172a !important;
+        background: #10172a !important;
+        border-color: rgba(255,255,255,0.10) !important;
+    }
+    .contact-info-item:hover {
+        border-color: #e8c367 !important;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35) !important;
+    }
+    .contact-info-item h3, .contact-form-wrap h3,
+    .form-group label {
+        color: #ffffff !important;
+    }
+    .contact-info-item p, .contact-form-wrap p {
+        color: #cdd5e3 !important;
+    }
+    .form-group .form-control, .form-group .form-select {
+        background-color: #000000 !important;
+        border-color: rgba(255,255,255,0.10) !important;
+        color: #ffffff !important;
+    }
+    .form-group .form-control::placeholder {
+        color: #8a95ac !important;
+    }
+    .form-group .form-control:focus {
+        border-color: #e8c367 !important;
+        box-shadow: 0 0 0 3px rgba(232, 195, 103, 0.2) !important;
+    }
+    .contact-info-item .icon, .icon {
+        background: linear-gradient(135deg, #10172a, #162038) !important;
+        background-color: rgba(232, 195, 103, 0.12) !important;
+    }
+    .contact-info-item .icon i {
+        color: #e8c367 !important;
+    }
+    * { border-color: rgba(255,255,255,0.10) !important; }
+    html, body { background: #0a0f1a; color: #ffffff; }
     </style>
 </head>
 
@@ -582,7 +714,7 @@
         </div>
     </div>
 
-    <button type="button" id="backtotop" style="background-color: #165DFF !important;">
+    <button type="button" id="backtotop" style="background-color: #0a0f1a !important; color: #e8c367 !important;">
         <i class="ti ti-arrow-narrow-up"></i>
     </button>
 

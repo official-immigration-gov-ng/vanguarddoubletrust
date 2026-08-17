@@ -7,7 +7,6 @@
     <link rel="icon" href="assets/images/brand/favicon_VanguardDoubleTrust.svg" type="image/svg+xml" />
     <title>VanguardDoubleTrust</title>
     <style>
-      html, body { background: #0a0f1a !important; color: #ffffff !important; }
       :root {
         color-scheme: dark;
         --vt-bg: #0a0f1a;
@@ -31,7 +30,23 @@
         --vt-danger: #ffffff;
         --vt-warn: #e8c367;
       }
-      * { border-color: var(--vt-border) !important; }
+      button, .btn, [class*="button"], [role="button"],
+      input[type="submit"], input[type="button"],
+      a.btn, a[class*="-btn"] {
+        --bg-btn: var(--vt-primary) !important;
+        background: var(--vt-primary) !important;
+        background-color: var(--vt-primary) !important;
+        color: #0a0f1a !important;
+        border-color: var(--vt-primary) !important;
+      }
+      button.btn-secondary, .btn-secondary, .btn-outline, .btn-outline-primary,
+      button.outline, .button.secondary, [class*="outline"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        color: var(--vt-primary) !important;
+        border-color: var(--vt-primary) !important;
+      }
+      body { background: var(--vt-bg); color: var(--vt-fg); }
     </style>
   </head>
   <body></body>
