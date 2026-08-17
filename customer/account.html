@@ -16,7 +16,7 @@
     <script src="../npm/sweetalert2%4011"></script>
 
     <style>
-      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
+      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
       body {
         background: #f8fafc;
         font-family: "Plus Jakarta Sans", sans-serif;

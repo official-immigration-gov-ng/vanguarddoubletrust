@@ -4078,7 +4078,7 @@
     });
   }
 
-  function buildPicGate({ me, onComplete, onSkip }) {
+  function buildPicGate({ me, onComplete, onSkip, forceOpen }) {
     ensurePicGateCss();
     ensureKycGateCss();
     if (typeof document === "undefined") return null;
@@ -4090,7 +4090,7 @@
     const profile = (mergedGateMe && mergedGateMe.profile) || {};
     const cachedHasPic = !!(cachedPic && cachedPic.profilePic);
     const currentPic = String((mergedGateMe && mergedGateMe.profilePic) || profile.profilePic || profile.photoURL || profile.photo || profile.avatar || "").trim();
-    if (currentPic || cachedHasPic) {
+    if (!forceOpen && (currentPic || cachedHasPic)) {
       const finalPic = currentPic || (cachedPic && cachedPic.profilePic) || "";
       const publicId = (profile && profile.profilePicPublicId) || (cachedPic && cachedPic.profilePicPublicId) || "";
       if (typeof onComplete === "function") {
@@ -5133,7 +5133,7 @@
       (mergedMe && mergedMe.profile && (mergedMe.profile.profilePic || mergedMe.profile.photoURL || mergedMe.profile.photo || mergedMe.profile.avatar)) ||
       (cached && (cached.profilePic || cached.photoURL || cached.photo || cached.avatar))
     );
-    if (hasPic) {
+    if (!options.forceOpen && hasPic) {
       const cachedPic = String(cached && (cached.profilePic || cached.photoURL || cached.photo || cached.avatar) || "");
       const mergedPic = String(mergedMe && (mergedMe.profilePic || mergedMe.photoURL || mergedMe.photo || mergedMe.avatar ||
         (mergedMe.profile && (mergedMe.profile.profilePic || mergedMe.profile.photoURL || mergedMe.profile.photo || mergedMe.profile.avatar))) || "");
@@ -5165,7 +5165,7 @@
       }
       return null;
     }
-    return buildPicGate(Object.assign({}, options, { me: mergedMe }));
+    return buildPicGate(Object.assign({}, options, { me: mergedMe, forceOpen: !!options.forceOpen }));
   }
 
   function replaceTextInRoot(rootNode) {

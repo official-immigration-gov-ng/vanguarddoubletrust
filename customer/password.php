@@ -18,7 +18,7 @@
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     <style>
-      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
+      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
       :root {
         --vt-primary: #0B0F14;
         --vt-primary-2: #0F172A;
@@ -787,9 +787,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="assets/js/auth-session.js?v=20260817"></script>
+    <script src="assets/js/auth-session.js?v=20260817b"></script>
 
-    <script src="assets/js/customer-i18n.js?v=20260817"></script>
+    <script src="assets/js/customer-i18n.js?v=20260817b"></script>
     <script>
 (function () {
   function bootI18nAndKyc() {

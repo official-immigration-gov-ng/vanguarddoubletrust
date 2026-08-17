@@ -18,7 +18,7 @@
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     <style>
-      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
+      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
       :root {
         --vt-primary: #165DFF;
         --vt-primary-2: #0E42D2;
@@ -768,8 +768,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="assets/js/auth-session.js?v=20260817"></script>
-    <script src="assets/js/customer-i18n.js?v=20260817"></script>
+    <script src="assets/js/auth-session.js?v=20260817b"></script>
+    <script src="assets/js/customer-i18n.js?v=20260817b"></script>
     <script>
       (function () {
         function getProfilePicUrl(me) {
@@ -960,10 +960,12 @@
         function openPicGateFromProfile() {
           if (!window.VT || !window.VT.UI || typeof window.VT.UI.showPicGate !== "function") {
             if (window.console) window.console.error("[VT] showPicGate not available");
+            try { window.alert("Upload photo is currently unavailable. Please refresh the page and try again."); } catch (_) {}
             return;
           }
           window.VT.UI.showPicGate({
             me: latestMe || {},
+            forceOpen: true,
             onComplete: function (res) {
               const r = res || {};
               const finalPic = String(r.profilePic || r.photoURL || r.photo || r.avatar || "").trim();

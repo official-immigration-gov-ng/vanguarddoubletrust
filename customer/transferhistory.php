@@ -18,7 +18,7 @@
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     <style>
-      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
+      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
       :root {
         --vt-primary: #165DFF;
         --vt-primary-2: #0E42D2;

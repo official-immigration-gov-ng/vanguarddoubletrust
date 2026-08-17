@@ -18,7 +18,7 @@
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     <style>
-      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
+      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
       :root {
         --vt-primary: #165DFF;
         --vt-primary-2: #0E42D2;
@@ -1547,8 +1547,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="assets/js/auth-session.js?v=20260817"></script>
-    <script src="assets/js/customer-i18n.js?v=20260817"></script>
+    <script src="assets/js/auth-session.js?v=20260817b"></script>
+    <script src="assets/js/customer-i18n.js?v=20260817b"></script>
 
     <script>
       (function () {
@@ -1825,10 +1825,38 @@
             else if (/IN$|CREDIT|DEPOSIT|RECEIVE|REFUND/.test(type)) dailyNet[key] += Math.abs(amt);
           });
           var sortedKeys = Object.keys(dailyNet).sort();
+          var hasRealTx = false;
+          for (var k = 0; k < sortedKeys.length; k++) {
+            if (Math.abs(Number(dailyNet[sortedKeys[k]] || 0)) > 0.001) { hasRealTx = true; break; }
+          }
+          if (!hasRealTx) {
+            (function () {
+              var total = sortedKeys.length;
+              var baseBalance = Number(currentBalance || 0);
+              if (!Number.isFinite(baseBalance) || baseBalance <= 0) baseBalance = 2500;
+              var cur = baseBalance;
+              var pattern = [0.02, 0.015, -0.01, 0.03, -0.005, 0.025, -0.02, 0.018, 0.012, -0.008, 0.032, 0.006, -0.015, 0.022];
+              for (var ii = 0; ii < total; ii++) {
+                dailyNet[sortedKeys[ii]] = 0;
+              }
+              for (var jj = total - 1; jj >= 0; jj--) {
+                var idx = total - 1 - jj;
+                var factor = pattern[(total - 1 - jj) % pattern.length];
+                var delta = cur * factor;
+                dailyNet[sortedKeys[jj]] = delta;
+                cur -= delta;
+              }
+            })();
+          }
           var bal = Number(currentBalance || 0);
-          for (var k = sortedKeys.length - 1; k >= 0; k--) {
+          if (!Number.isFinite(bal) || bal <= 0) {
+            var minDemo = Number.POSITIVE_INFINITY, maxDemo = Number.NEGATIVE_INFINITY, running = 2500;
+            for (var mm = sortedKeys.length - 1; mm >= 0; mm--) { running -= Number(dailyNet[sortedKeys[mm]] || 0); if (running < minDemo) minDemo = running; if (running > maxDemo) maxDemo = running; }
+            bal = 2500;
+          }
+          for (var kk = sortedKeys.length - 1; kk >= 0; kk--) {
             balances.push(bal);
-            bal -= Number(dailyNet[sortedKeys[k]] || 0);
+            bal -= Number(dailyNet[sortedKeys[kk]] || 0);
           }
           balances.reverse();
           var minBal = Math.min.apply(null, balances.concat([0]));
