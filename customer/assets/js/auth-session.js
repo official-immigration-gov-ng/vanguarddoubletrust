@@ -22,6 +22,15 @@
     return typeof window !== "undefined" && window.Swal && typeof window.Swal.fire === "function";
   }
 
+  function escapeHtml(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function toast(type, title) {
     if (hasSwal()) {
       window.Swal.fire({
@@ -1114,6 +1123,7 @@
 
     form?.addEventListener("submit", async (e) => {
   e.preventDefault();
+  try {
 
   if (!validate()) {
     toast("warning", "Please complete all fields");
@@ -1465,6 +1475,15 @@
   }
 
   await processTransfer();
+  } catch (outerErr) {
+    console.error("[VT] Submit handler error:", outerErr);
+    try {
+      toast("error", (outerErr && outerErr.message) ? outerErr.message : "Something went wrong.");
+    } catch (_) {}
+    try {
+      window.alert("Error: " + ((outerErr && outerErr.message) ? outerErr.message : "Something went wrong."));
+    } catch (__) {}
+  }
 });
 
     (async () => {

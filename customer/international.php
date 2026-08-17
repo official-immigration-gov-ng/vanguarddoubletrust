@@ -18,6 +18,7 @@
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     <style>
+      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
       :root {
         --vt-primary: #0B0F14;
         --vt-primary-2: #0F172A;

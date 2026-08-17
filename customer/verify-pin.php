@@ -16,6 +16,7 @@
     <script src="../npm/sweetalert2%4011"></script>
 
     <style>
+      html { filter: grayscale(1) !important; -webkit-filter: grayscale(1) !important; }
       :root {
         --vt-primary: #0b0f14;
         --vt-primary-2: #0f172a;
