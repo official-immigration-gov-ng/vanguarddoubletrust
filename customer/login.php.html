@@ -16,7 +16,15 @@
       <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css">
       <script src="../npm/sweetalert2%4011"></script>
       <style>
-    html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
+    html, body { filter: contrast(1000%) saturate(0%) brightness(1.05) !important; -webkit-filter: contrast(1000%) saturate(0%) brightness(1.05) !important; }
+    html, body, :root, * {
+        --primary-purple: #000000 !important; --dark-purple: #ffffff !important; --white: #ffffff !important;
+        --gray-1: #ffffff !important; --gray-2: #ffffff !important; --gray-3: #ffffff !important;
+        --gray-4: #ffffff !important; --gray-5: #ffffff !important; --gray-6: #000000 !important;
+        --gray-7: #000000 !important; --text-dark: #000000 !important; --text-light: #ffffff !important;
+        --accent: #000000 !important; --border-color: #000000 !important; --bg: #ffffff !important;
+        background: #ffffff !important; color: #000000 !important;
+    }
     :root {
         /* --- UPDATED TO BLUE THEME --- */
         --primary-purple: #0B0F14; 

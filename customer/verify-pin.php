@@ -16,7 +16,15 @@
     <script src="../npm/sweetalert2%4011"></script>
 
     <style>
-      html { filter: grayscale(1) contrast(1.1) brightness(1.02) !important; -webkit-filter: grayscale(1) contrast(1.1) brightness(1.02) !important; }
+      html, body { filter: contrast(1000%) saturate(0%) brightness(1.05) !important; -webkit-filter: contrast(1000%) saturate(0%) brightness(1.05) !important; }
+      html, body, :root, * {
+        --vt-primary: #000000 !important; --vt-primary-2: #ffffff !important; --vt-bg: #ffffff !important;
+        --vt-card-bg: #ffffff !important; --vt-card-2: #ffffff !important; --vt-text: #000000 !important;
+        --vt-text-2: #000000 !important; --vt-muted: #000000 !important; --vt-border: #000000 !important;
+        --vt-success: #000000 !important; --vt-danger: #000000 !important; --vt-warn: #000000 !important;
+        --vt-info: #000000 !important; --vt-accent: #ffffff !important; --vt-avatar-bg: #ffffff !important;
+        background: #ffffff !important; color: #000000 !important;
+      }
       :root {
         --vt-primary: #0b0f14;
         --vt-primary-2: #0f172a;
