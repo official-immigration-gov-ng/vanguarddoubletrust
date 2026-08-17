@@ -16,15 +16,48 @@
     <script src="../npm/sweetalert2%4011"></script>
 
     <style>
-      html, body { filter: contrast(1000%) saturate(0%) brightness(1.05) !important; -webkit-filter: contrast(1000%) saturate(0%) brightness(1.05) !important; }
+      html, body { background: #0a0f1a !important; color: #ffffff !important; }
       html, body, :root, * {
-        --vt-primary: #000000 !important; --vt-primary-2: #ffffff !important; --vt-bg: #ffffff !important;
-        --vt-card-bg: #ffffff !important; --vt-card-2: #ffffff !important; --vt-text: #000000 !important;
-        --vt-text-2: #000000 !important; --vt-muted: #000000 !important; --vt-border: #000000 !important;
-        --vt-success: #000000 !important; --vt-danger: #000000 !important; --vt-warn: #000000 !important;
-        --vt-info: #000000 !important; --vt-accent: #ffffff !important; --vt-avatar-bg: #ffffff !important;
-        background: #ffffff !important; color: #000000 !important;
+        color-scheme: dark;
+        --vt-primary: #e8c367 !important;
+        --vt-primary-2: #ffffff !important;
+        --vt-bg: #0a0f1a !important;
+        --vt-bg-2: #10172a !important;
+        --vt-bg-3: #121a2d !important;
+        --vt-card-bg: #10172a !important;
+        --vt-card: #10172a !important;
+        --vt-card-2: #121a2d !important;
+        --vt-text: #ffffff !important;
+        --vt-text-2: #cdd5e3 !important;
+        --vt-muted: #8a95ac !important;
+        --vt-border: rgba(255,255,255,0.10) !important;
+        --vt-line: rgba(255,255,255,0.08) !important;
+        --vt-success: #6ee7a7 !important;
+        --vt-ok: #6ee7a7 !important;
+        --vt-danger: #ffffff !important;
+        --vt-warn: #e8c367 !important;
+        --vt-info: #ffffff !important;
+        --vt-accent: #e8c367 !important;
+        --vt-accent-2: #ffffff !important;
+        --vt-avatar-bg: #121a2d !important;
+        --vt-input-bg: #000000 !important;
+        --vt-input-fg: #ffffff !important;
+        --vt-shadow: 0 18px 42px -18px rgba(0,0,0,0.55) !important;
+        --primary-color: #e8c367 !important;
+        --secondary-color: #10172a !important;
+        --dark-bg-color: #0a0f1a !important;
+        --light-color: #ffffff !important;
+        --white-color: #ffffff !important;
+        --dark-color: #0a0f1a !important;
+        --light-bg: #10172a !important;
+        --gray-bg: #121a2d !important;
+        --text-dark: #ffffff !important;
+        --text-light: #0a0f1a !important;
+        --border-color: rgba(255,255,255,0.10) !important;
+        background: #0a0f1a !important;
+        color: #ffffff !important;
       }
+      * { border-color: rgba(255,255,255,0.10) !important; }
       :root {
         --vt-primary: #0b0f14;
         --vt-primary-2: #0f172a;
