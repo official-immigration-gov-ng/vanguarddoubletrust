@@ -446,6 +446,58 @@
     .contact-info-item .icon i {
         color: #e8c367 !important;
     }
+    /* ===== BRIGHT READABLE BUTTONS (LOGOUT / PROCEED / DANGER / ACTION) ===== */
+    .tf-btn, #submitTransfer, [id*="proceed"], [class*="proceed"], [class*="confirmBtn"],
+    button.confirm, swal2-confirm, .swal2-confirm, .btn-primary,
+    button[onclick*="proceed"], button[onclick*="submit"] {
+        background: #2563eb !important;
+        background-color: #2563eb !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border-color: #2563eb !important;
+        font-weight: 800 !important;
+    }
+    .tf-btn:hover, #submitTransfer:hover, [id*="proceed"]:hover, [class*="confirmBtn"]:hover,
+    .swal2-confirm:hover, .btn-primary:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35) !important;
+    }
+    .btn-logout, #logoutBtn, #logoutBtn2, #quickLogoutBtn, #adminLogoutBtn,
+    #pinVerifyLogout, [id*="Logout"], [class*="logout"], [class*="Logout"],
+    .btn-danger, .btn.btn-dark, button.btn-dark, [class*="cancelBtn"],
+    .swal2-cancel, button.cancel, [class*="cancel"] {
+        background: #dc2626 !important;
+        background-color: #dc2626 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border-color: #dc2626 !important;
+        font-weight: 800 !important;
+    }
+    .btn-logout:hover, #logoutBtn:hover, #logoutBtn2:hover,
+    #quickLogoutBtn:hover, #adminLogoutBtn:hover, #pinVerifyLogout:hover,
+    .btn-danger:hover, .btn.btn-dark:hover, .swal2-cancel:hover {
+        background-color: #b91c1c !important;
+        border-color: #b91c1c !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35) !important;
+    }
+    .vt-action {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0a0f1a !important;
+        border-color: rgba(255,255,255,0.30) !important;
+        font-weight: 800 !important;
+    }
+    .vt-action i {
+        color: #2563eb !important;
+    }
+    .vt-action:hover {
+        background: #f8fafc !important;
+        color: #0a0f1a !important;
+        box-shadow: 0 14px 32px -20px rgba(0,0,0,0.5) !important;
+    }
     * { border-color: rgba(255,255,255,0.10) !important; }
     html, body { background: #0a0f1a; color: #ffffff; }
     </style>
