@@ -602,6 +602,69 @@
         display: block;
       }
       /* ===== BRIGHT READABLE BUTTONS (LOGOUT / PROCEED / DANGER / ACTION) ===== */
+      #vtDashNewTxBtn, #vtCustomNewTxBtn {
+        background: #3b82f6 !important;
+        background-color: #3b82f6 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px -10px rgba(59,130,246,0.9) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+      }
+      #vtDashNewTxBtn:hover, #vtCustomNewTxBtn:hover {
+        background-color: #2563eb !important;
+        border-color: #1e40af !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(59,130,246,1) !important;
+      }
+      #vtDashHomeBtn, #vtCustomBackHomeBtn {
+        background: #ef4444 !important;
+        background-color: #ef4444 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #b91c1c !important;
+        border-color: #b91c1c !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px -10px rgba(239,68,68,0.9) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+      }
+      #vtDashHomeBtn:hover, #vtCustomBackHomeBtn:hover {
+        background-color: #dc2626 !important;
+        border-color: #991b1b !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(239,68,68,1) !important;
+      }
+      .vt-burger, #sidebarToggle, [class*="vt-burger"] {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0a0f1a !important;
+        border: 2px solid rgba(232,195,103,0.45) !important;
+        border-color: rgba(232,195,103,0.45) !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        box-shadow: 0 8px 20px -12px rgba(0,0,0,0.55) !important;
+      }
+      .vt-burger i, #sidebarToggle i, [class*="vt-burger"] i, .vt-burger .fas, .vt-burger .fa-bars {
+        color: #0a0f1a !important;
+        font-size: 18px !important;
+        font-weight: 900 !important;
+      }
+      .vt-burger:hover, #sidebarToggle:hover {
+        background: #e8c367 !important;
+        background-color: #e8c367 !important;
+        border-color: #d4af37 !important;
+        color: #0a0f1a !important;
+        box-shadow: 0 10px 24px -10px rgba(232,195,103,0.85) !important;
+      }
+      .vt-burger:hover i, #sidebarToggle:hover i {
+        color: #0a0f1a !important;
+      }
       .tf-btn, #submitTransfer, [id*="proceed"], [class*="proceed"], [class*="confirmBtn"],
       button.confirm, .swal2-confirm, .btn-primary,
       button[onclick*="proceed"], button[onclick*="submit"] {

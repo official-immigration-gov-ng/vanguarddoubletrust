@@ -1538,6 +1538,69 @@
       .vt-modal-msg.error { background: rgba(239, 68, 68, 0.08); color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.18); }
       .vt-modal-msg.success { background: rgba(16, 185, 129, 0.08); color: #047857; border: 1px solid rgba(16, 185, 129, 0.18); }
       /* ===== BRIGHT READABLE BUTTONS (LOGOUT / PROCEED / DANGER / ACTION) ===== */
+      #vtDashNewTxBtn, #vtCustomNewTxBtn {
+        background: #3b82f6 !important;
+        background-color: #3b82f6 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px -10px rgba(59,130,246,0.9) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+      }
+      #vtDashNewTxBtn:hover, #vtCustomNewTxBtn:hover {
+        background-color: #2563eb !important;
+        border-color: #1e40af !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(59,130,246,1) !important;
+      }
+      #vtDashHomeBtn, #vtCustomBackHomeBtn {
+        background: #ef4444 !important;
+        background-color: #ef4444 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #b91c1c !important;
+        border-color: #b91c1c !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px -10px rgba(239,68,68,0.9) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+      }
+      #vtDashHomeBtn:hover, #vtCustomBackHomeBtn:hover {
+        background-color: #dc2626 !important;
+        border-color: #991b1b !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(239,68,68,1) !important;
+      }
+      .vt-burger, #sidebarToggle, [class*="vt-burger"] {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0a0f1a !important;
+        border: 2px solid rgba(232,195,103,0.45) !important;
+        border-color: rgba(232,195,103,0.45) !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        box-shadow: 0 8px 20px -12px rgba(0,0,0,0.55) !important;
+      }
+      .vt-burger i, #sidebarToggle i, [class*="vt-burger"] i, .vt-burger .fas, .vt-burger .fa-bars {
+        color: #0a0f1a !important;
+        font-size: 18px !important;
+        font-weight: 900 !important;
+      }
+      .vt-burger:hover, #sidebarToggle:hover {
+        background: #e8c367 !important;
+        background-color: #e8c367 !important;
+        border-color: #d4af37 !important;
+        color: #0a0f1a !important;
+        box-shadow: 0 10px 24px -10px rgba(232,195,103,0.85) !important;
+      }
+      .vt-burger:hover i, #sidebarToggle:hover i {
+        color: #0a0f1a !important;
+      }
       .tf-btn, #submitTransfer, [id*="proceed"], [class*="proceed"], [class*="confirmBtn"],
       button.confirm, .swal2-confirm, .btn-primary,
       button[onclick*="proceed"], button[onclick*="submit"] {
@@ -1588,6 +1651,98 @@
         background: #f8fafc !important;
         color: #0a0f1a !important;
         box-shadow: 0 14px 32px -20px rgba(0,0,0,0.5) !important;
+      }
+      /* ===== FINAL CASCADE-WINNING FIX: New transaction / Back to home / Hamburger — READABLE, NO DARK OVERRIDE ===== */
+      html body div#vtDashNewTxBtn, html body div#vtCustomNewTxBtn, html body button#vtDashNewTxBtn, html body button#vtCustomNewTxBtn,
+      button[id="vtDashNewTxBtn"], button[id="vtCustomNewTxBtn"] {
+        background: #3b82f6 !important;
+        background-color: #3b82f6 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        padding: 13px 26px !important;
+        font-size: 14px !important;
+        box-shadow: 0 10px 28px -10px rgba(59,130,246,0.98) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        filter: none !important;
+        mix-blend-mode: normal !important;
+      }
+      html body button#vtDashNewTxBtn:hover, html body button#vtCustomNewTxBtn:hover {
+        background-color: #2563eb !important;
+        border-color: #1e40af !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(59,130,246,1) !important;
+      }
+      html body button#vtDashHomeBtn, html body button#vtCustomBackHomeBtn,
+      button[id="vtDashHomeBtn"], button[id="vtCustomBackHomeBtn"] {
+        background: #ef4444 !important;
+        background-color: #ef4444 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 2px solid #b91c1c !important;
+        border-color: #b91c1c !important;
+        font-weight: 900 !important;
+        border-radius: 12px !important;
+        padding: 13px 26px !important;
+        font-size: 14px !important;
+        box-shadow: 0 10px 28px -10px rgba(239,68,68,0.98) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        filter: none !important;
+        mix-blend-mode: normal !important;
+      }
+      html body button#vtDashHomeBtn:hover, html body button#vtCustomBackHomeBtn:hover {
+        background-color: #dc2626 !important;
+        border-color: #991b1b !important;
+        color: #ffffff !important;
+        box-shadow: 0 14px 32px -10px rgba(239,68,68,1) !important;
+      }
+      html body button.vt-burger, html body button#sidebarToggle, html body [class*="vt-burger"] {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        color: #0a0f1a !important;
+        border: 2px solid rgba(232,195,103,0.55) !important;
+        border-color: rgba(232,195,103,0.55) !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        box-shadow: 0 8px 20px -12px rgba(0,0,0,0.65) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        filter: none !important;
+        mix-blend-mode: normal !important;
+      }
+      html body button.vt-burger i, html body button#sidebarToggle i,
+      html body [class*="vt-burger"] i, html body .vt-burger .fas.fa-bars {
+        color: #0a0f1a !important;
+        font-size: 18px !important;
+        font-weight: 900 !important;
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      html body button.vt-burger:hover, html body button#sidebarToggle:hover {
+        background: #e8c367 !important;
+        background-color: #e8c367 !important;
+        border-color: #d4af37 !important;
+        color: #0a0f1a !important;
+        box-shadow: 0 10px 24px -10px rgba(232,195,103,0.9) !important;
+      }
+      html body button.vt-burger:hover i, html body button#sidebarToggle:hover i {
+        color: #0a0f1a !important;
       }
     </style>
 
@@ -2270,10 +2425,9 @@
                         '<p style="margin:0 0 28px;font-size:15px;font-weight:600;color:#94a3b8;">Details of your transaction are shown below;</p>' +
                         '<div style="border:1px solid rgba(148,163,184,0.18);border-radius:10px;overflow:hidden;background:rgba(15,23,42,0.6);margin-bottom:28px;">' + rows + '</div>' +
                         '<div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">' +
-                          '<button id="vtDashNewTxBtn" type="button" style="padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;background:#2563eb;color:#ffffff;box-shadow:0 8px 24px -10px rgba(37,99,235,0.7);">New transaction</button>' +
-                          '<button id="vtDashHomeBtn" type="button" style="padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;background:#dc2626;color:#ffffff;box-shadow:0 8px 24px -10px rgba(220,38,38,0.7);">Back to home</button>' +
-                        '</div>' +
-                      '</div>';
+                          '<button id="vtDashNewTxBtn" type="button" style="padding:13px 26px !important;font-size:14px !important;font-weight:900 !important;border-radius:12px !important;border:2px solid #1d4ed8 !important;cursor:pointer !important;background:#3b82f6 !important;background-color:#3b82f6 !important;color:#ffffff !important;box-shadow:0 10px 28px -10px rgba(59,130,246,0.95) !important;text-shadow:0 1px 2px rgba(0,0,0,0.45) !important;display:inline-block !important;visibility:visible !important;opacity:1 !important;">New transaction</button>' +
+                          '<button id="vtDashHomeBtn" type="button" style="padding:13px 26px !important;font-size:14px !important;font-weight:900 !important;border-radius:12px !important;border:2px solid #b91c1c !important;cursor:pointer !important;background:#ef4444 !important;background-color:#ef4444 !important;color:#ffffff !important;box-shadow:0 10px 28px -10px rgba(239,68,68,0.95) !important;text-shadow:0 1px 2px rgba(0,0,0,0.45) !important;display:inline-block !important;visibility:visible !important;opacity:1 !important;">Back to home</button>' +
+                        '</div>';
                       window.Swal.fire({
                         html: successHtml,
                         showConfirmButton: false,

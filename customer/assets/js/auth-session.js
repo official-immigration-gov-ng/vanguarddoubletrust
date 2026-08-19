@@ -149,12 +149,12 @@
       "display:flex;gap:14px;justify-content:center;flex-wrap:wrap;" +
       '">' +
       '<button id="vtCustomNewTxBtn" type="button" style="' +
-      "padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;" +
-      "background:#2563eb;color:#ffffff;box-shadow:0 8px 24px -10px rgba(37,99,235,0.7);" +
+      "padding:13px 26px !important;font-size:14px !important;font-weight:900 !important;border-radius:12px !important;border:2px solid #1d4ed8 !important;cursor:pointer !important;" +
+      "background:#3b82f6 !important;background-color:#3b82f6 !important;color:#ffffff !important;box-shadow:0 10px 28px -10px rgba(59,130,246,0.95) !important;text-shadow:0 1px 2px rgba(0,0,0,0.45) !important;display:inline-block !important;visibility:visible !important;opacity:1 !important;" +
       '">New transaction</button>' +
       '<button id="vtCustomBackHomeBtn" type="button" style="' +
-      "padding:13px 26px;font-size:14px;font-weight:800;border-radius:10px;border:none;cursor:pointer;" +
-      "background:#dc2626;color:#ffffff;box-shadow:0 8px 24px -10px rgba(220,38,38,0.7);" +
+      "padding:13px 26px !important;font-size:14px !important;font-weight:900 !important;border-radius:12px !important;border:2px solid #b91c1c !important;cursor:pointer !important;" +
+      "background:#ef4444 !important;background-color:#ef4444 !important;color:#ffffff !important;box-shadow:0 10px 28px -10px rgba(239,68,68,0.95) !important;text-shadow:0 1px 2px rgba(0,0,0,0.45) !important;display:inline-block !important;visibility:visible !important;opacity:1 !important;" +
       '">Back to home</button>' +
       "</div>" +
       "</div>";
