@@ -369,16 +369,36 @@
   }
 
   async function getMe() {
-    const res = await fetch(apiUrl("/api/me"), { credentials: "include" });
-    if (!res.ok) return null;
+    const res = await fetch(apiUrl("/api/me"), { credentials: "include" }).catch(() => ({
+      ok: false,
+      status: 0,
+      headers: { get: () => "" }
+    }));
+    const host = window.location.hostname;
+    const isLocal =
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "" ||
+      window.location.protocol === "file:";
+    if (!res.ok) {
+      if (isLocal) {
+        const fallback = loadJson(safeStorageKey("demo_me"), null) || {
+          uid: "demo",
+          email: "pj03165@gmail.com",
+          profile: {
+            firstname: "Frank",
+            lastname: "James",
+            phone: "+4478789166724",
+            gender: "Male",
+            createdAt: new Date().toISOString()
+          }
+        };
+        return applyVtKycCacheToMeAuth(fallback);
+      }
+      return null;
+    }
     const ct = res.headers.get("content-type") || "";
     if (!ct.includes("application/json")) {
-      const host = window.location.hostname;
-      const isLocal =
-        host === "localhost" ||
-        host === "127.0.0.1" ||
-        host === "" ||
-        window.location.protocol === "file:";
       if (!isLocal) return null;
       return (
         loadJson(safeStorageKey("demo_me"), null) || {

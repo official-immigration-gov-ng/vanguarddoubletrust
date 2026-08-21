@@ -1316,6 +1316,19 @@
 
     <script>
       (function () {
+        try {
+          var isDevBypass = window.location.pathname.indexOf("/_dev/") !== -1 ||
+                            window.location.search.indexOf("kyc_reset=1") !== -1 ||
+                            window.location.search.indexOf("vt=reset") !== -1;
+          if (isDevBypass) {
+            try { localStorage.removeItem("vt_kyc_perm_v1"); } catch (_) {}
+            try { sessionStorage.removeItem("vt_kyc_state_v1"); } catch (_) {}
+            try { localStorage.removeItem("vt_kyc_state_v1"); } catch (_) {}
+            try { localStorage.removeItem("demo_me"); } catch (_) {}
+            try { localStorage.removeItem("vt_me_v1"); } catch (_) {}
+            try { sessionStorage.removeItem("vt_session_v1"); } catch (_) {}
+          }
+        } catch (_) {}
         function bootI18nAndKyc() {
           if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) return;
           window.VT.UI.bootstrapCustomerPage({

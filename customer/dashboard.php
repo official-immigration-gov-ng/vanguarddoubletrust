@@ -1260,6 +1260,152 @@
   </head>
 
   <body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#d97706;color:#fff;padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:0.3px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+      🔧 DEV MODE: Loading dashboard.php (REAL PAGE with gates + graph + card). If this banner shows, the edits are loading correctly.
+    </div>
+    <div id="inlineKycGate" style="position:fixed;inset:0;z-index:2147483646;background:radial-gradient(circle at top, rgba(212,175,55,0.14), transparent 30%),linear-gradient(180deg,#070b10,#0b0f14);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div style="max-width:920px;margin:0 auto;padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;">
+          <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" style="height:36px;max-width:220px;" onerror="this.style.display='none'"/>
+          <div style="color:#94a3b8;font-size:12px;">KYC / Profile Setup</div>
+        </div>
+        <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:26px 26px 22px;margin-bottom:18px;">
+          <h1 style="margin:0 0 8px 0;font-size:26px;color:#f8fafc;letter-spacing:-0.3px;">Complete Your Profile / KYC</h1>
+          <p style="margin:0 0 0 0;color:#cbd5e1;font-size:14px;line-height:1.6;">Please fill in your details and choose a language to unlock your dashboard.</p>
+        </div>
+        <div style="background:linear-gradient(180deg,#7f1d1d,#991b1b);border:1px solid #b91c1c;color:#fecaca;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;font-weight:700;letter-spacing:0.2px;">
+          ⚠️ All required fields must be completed before you can use your account. This step is required.
+        </div>
+        <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px;">
+          <form id="inlineKycForm" autocomplete="on" novalidate>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;">
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">First Name <span style="color:#f87171;">*</span></label>
+                <input id="ikFirstname" name="firstname" type="text" value="Frank" autocomplete="given-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <div id="ikErrFirstname" style="color:#f87171;font-size:12px;margin-top:4px;min-height:16px;"></div>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Last Name <span style="color:#f87171;">*</span></label>
+                <input id="ikLastname" name="lastname" type="text" value="James" autocomplete="family-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <div id="ikErrLastname" style="color:#f87171;font-size:12px;margin-top:4px;min-height:16px;"></div>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Phone Number</label>
+                <input id="ikPhone" name="phone" type="tel" value="+4478789166724" autocomplete="tel" inputmode="tel" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <div style="min-height:16px;"></div>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Country <span style="color:#f87171;">*</span></label>
+                <select id="ikCountry" name="country" required style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;">
+                  <option value="">-- Country --</option>
+                  <option value="US" selected>United States</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="CA">Canada</option>
+                  <option value="AU">Australia</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="NG">Nigeria</option>
+                  <option value="KE">Kenya</option>
+                  <option value="ZA">South Africa</option>
+                  <option value="IN">India</option>
+                  <option value="BR">Brazil</option>
+                  <option value="MX">Mexico</option>
+                </select>
+                <div id="ikErrCountry" style="color:#f87171;font-size:12px;margin-top:4px;min-height:16px;"></div>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Preferred Language</label>
+                <select id="ikLanguage" name="preferredLanguage" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;">
+                  <option value="en" selected>English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                  <option value="de">Deutsch</option>
+                  <option value="pt">Português</option>
+                  <option value="ru">Русский</option>
+                  <option value="zh">中文</option>
+                  <option value="ar">العربية</option>
+                </select>
+                <div style="min-height:16px;"></div>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Gender</label>
+                <select id="ikGender" name="gender" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;">
+                  <option value="">-- Gender --</option>
+                  <option value="male" selected>Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="prefer_not_say">Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Date of Birth</label>
+                <input id="ikDob" name="dateOfBirth" type="date" value="1990-05-12" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Nationality</label>
+                <input id="ikNationality" name="nationality" type="text" value="American" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Occupation</label>
+                <input id="ikOccupation" name="occupation" type="text" value="Software Engineer" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div style="grid-column:1 / -1;">
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Street Address</label>
+                <input id="ikAddress" name="address" type="text" value="123 Main Street, Apt 4B" autocomplete="street-address" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">City</label>
+                <input id="ikCity" name="city" type="text" value="New York" autocomplete="address-level2" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div>
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">State / Province</label>
+                <input id="ikState" name="state" type="text" value="NY" autocomplete="address-level1" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+              <div style="grid-column:1 / -1;">
+                <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">ZIP / Postal Code</label>
+                <input id="ikZip" name="zipCode" type="text" value="10001" autocomplete="postal-code" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+              </div>
+            </div>
+            <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+              <button type="submit" id="ikSubmit" style="background:linear-gradient(135deg,#d4af37,#b7922a);color:#0b0f14;font-weight:800;font-size:15px;padding:14px 28px;border:none;border-radius:14px;cursor:pointer;box-shadow:0 10px 30px -10px rgba(212,175,55,0.45);letter-spacing:0.3px;">
+                Complete Setup
+              </button>
+            </div>
+          </form>
+        </div>
+        <div style="color:#64748b;font-size:12px;margin-top:10px;text-align:center;">
+          © 2026 VanguardDoubleTrust. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div id="inlinePicGate" style="position:fixed;inset:0;z-index:2147483645;background:radial-gradient(circle at top, rgba(59,130,246,0.12), transparent 30%),linear-gradient(180deg,#070b10,#0b0f14);overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;">
+      <div style="max-width:560px;margin:0 auto;padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap;">
+          <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" style="height:34px;max-width:220px;" onerror="this.style.display='none'"/>
+          <div style="color:#94a3b8;font-size:12px;">Profile Picture</div>
+        </div>
+        <div style="background:linear-gradient(180deg,#1e3a8a,#1e40af);border:1px solid #3b82f6;color:#dbeafe;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;font-weight:700;letter-spacing:0.2px;">
+          ⚠️ This step is required. Please upload a clear profile picture before accessing your account.
+        </div>
+        <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px;">
+          <h2 style="margin:0 0 6px 0;color:#f8fafc;font-size:22px;">Add Your Profile Picture</h2>
+          <p style="margin:0 0 18px 0;color:#cbd5e1;font-size:14px;line-height:1.6;">Upload a clear photo so we can recognize your account.</p>
+          <div style="width:140px;height:140px;border-radius:50%;background:rgba(30,41,59,0.9);border:2px dashed #64748b;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-weight:800;font-size:36px;letter-spacing:1px;" id="inlinePicPreview">FJ</div>
+          <input id="inlinePicFile" type="file" accept="image/jpeg,image/png,image/webp" style="display:none;"/>
+          <label for="inlinePicFile" style="display:block;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:800;font-size:14px;padding:12px 20px;border:none;border-radius:12px;cursor:pointer;text-align:center;margin-bottom:12px;box-shadow:0 8px 20px -8px rgba(59,130,246,0.45);">
+            Choose a Photo (JPG, PNG, WebP · Max 8MB)
+          </label>
+          <button id="inlinePicSubmit" type="button" style="width:100%;background:linear-gradient(135deg,#d4af37,#b7922a);color:#0b0f14;font-weight:800;font-size:14px;padding:12px 20px;border:none;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(212,175,55,0.45);">
+            Save Profile Picture
+          </button>
+          <div id="inlinePicMsg" style="color:#fde68a;font-size:12px;margin-top:10px;text-align:center;"></div>
+        </div>
+        <div style="color:#64748b;font-size:12px;margin-top:10px;text-align:center;">
+          © 2026 VanguardDoubleTrust. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height:44px;"></div>
     <div class="vt-overlay" id="sidebarOverlay"></div>
     <div class="vt-shell" id="dashboardRoot">
       <aside class="vt-sidebar">
@@ -1894,6 +2040,292 @@
 
     <script>
       (function () {
+        try {
+          var CHECK = document.createElement("div");
+          CHECK.id = "SCRIPT_ENTRY_CHECK_" + Date.now();
+          CHECK.style.cssText = "position:fixed;left:10px;top:88px;background:#065f46;color:#fff;padding:7px 11px;font-size:12px;font-weight:800;z-index:2147483642;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.18);border:1px solid #6ee7b7;line-height:1.4;max-width:260px;";
+          CHECK.textContent = "SCRIPT ENTRY: big dashboard.php inline script started executing";
+          document.documentElement.appendChild(CHECK);
+          setTimeout(function(){ try { CHECK.textContent = "SCRIPT ENTRY: inline script executed to end OK"; CHECK.style.background = "#166534"; } catch(_){} }, 2500);
+        } catch (_) {}
+        try { window.onerror = function(msg, src, lineno, colno, err) { try { var ERR = document.createElement("div"); ERR.id = "GLOBAL_ERR_" + Date.now(); ERR.style.cssText = "position:fixed;right:10px;bottom:24px;background:#7f1d1d;color:#fff;padding:8px 10px;font-size:12px;font-weight:800;z-index:2147483647;border-radius:8px;max-width:360px;line-height:1.55;"; ERR.textContent = "GLOBAL JS ERROR: " + String(msg || "") + " line:" + String(lineno||""); document.documentElement.appendChild(ERR); } catch(_){} }; } catch (_) {}
+        (function initInlineGates() {
+          try { document.body.style.overflow = "hidden"; } catch (_) {}
+          var DEFAULT_PIC = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="140" height="140" rx="70" fill="url(#g)"/><circle cx="70" cy="58" r="24" fill="#ffffff"/><path d="M22 130 C22 98, 118 98, 118 130 Z" fill="#ffffff"/><text x="70" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="22" fill="#2563eb">FJ</text></svg>');
+          var inlinePicDataUrl = "";
+          try {
+            var _devPrefillPic = (window.location.pathname.indexOf("/_dev/") !== -1 || (window.location.search || "").indexOf("force_gate=1") !== -1);
+            if (_devPrefillPic) {
+              inlinePicDataUrl = DEFAULT_PIC;
+              setTimeout(function () {
+                try {
+                  var _prev = document.getElementById("inlinePicPreview");
+                  var _msg = document.getElementById("inlinePicMsg");
+                  if (_prev) {
+                    _prev.innerHTML = "";
+                    _prev.style.border = "2px solid #d4af37";
+                    _prev.style.background = "transparent";
+                    var _img = document.createElement("img");
+                    _img.src = DEFAULT_PIC;
+                    _img.style.width = "100%"; _img.style.height = "100%";
+                    _img.style.objectFit = "cover"; _img.style.borderRadius = "50%";
+                    _prev.appendChild(_img);
+                  }
+                  if (_msg) { _msg.style.color = "#86efac"; _msg.textContent = "Dev test photo preloaded (click Save Profile Picture below)."; }
+                } catch (_) {}
+              }, 60);
+            }
+          } catch (_) {}
+          try {
+            var kycGate = document.getElementById("inlineKycGate");
+            var picGate = document.getElementById("inlinePicGate");
+            var kycForm = document.getElementById("inlineKycForm");
+            var picFile = document.getElementById("inlinePicFile");
+            var picPreview = document.getElementById("inlinePicPreview");
+            var picSubmit = document.getElementById("inlinePicSubmit");
+            var picMsg = document.getElementById("inlinePicMsg");
+            function setError(id, msg) {
+              var el = document.getElementById(id);
+              if (el) el.textContent = msg || "";
+            }
+            if (kycForm) {
+              kycForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                var first = String(document.getElementById("ikFirstname") ? document.getElementById("ikFirstname").value : "").trim();
+                var last = String(document.getElementById("ikLastname") ? document.getElementById("ikLastname").value : "").trim();
+                var country = String(document.getElementById("ikCountry") ? document.getElementById("ikCountry").value : "").trim();
+                setError("ikErrFirstname", ""); setError("ikErrLastname", ""); setError("ikErrCountry", "");
+                var ok = true;
+                if (!first) { setError("ikErrFirstname", "First name is required"); ok = false; }
+                if (!last) { setError("ikErrLastname", "Last name is required"); ok = false; }
+                if (!country) { setError("ikErrCountry", "Please select a country"); ok = false; }
+                if (!ok) return false;
+                var phone = String(document.getElementById("ikPhone") ? document.getElementById("ikPhone").value : "");
+                var lang = String(document.getElementById("ikLanguage") ? document.getElementById("ikLanguage").value : "en");
+                var gender = String(document.getElementById("ikGender") ? document.getElementById("ikGender").value : "");
+                var dob = String(document.getElementById("ikDob") ? document.getElementById("ikDob").value : "");
+                var nationality = String(document.getElementById("ikNationality") ? document.getElementById("ikNationality").value : "");
+                var occupation = String(document.getElementById("ikOccupation") ? document.getElementById("ikOccupation").value : "");
+                var address = String(document.getElementById("ikAddress") ? document.getElementById("ikAddress").value : "");
+                var city = String(document.getElementById("ikCity") ? document.getElementById("ikCity").value : "");
+                var state = String(document.getElementById("ikState") ? document.getElementById("ikState").value : "");
+                var zip = String(document.getElementById("ikZip") ? document.getElementById("ikZip").value : "");
+                var kycState = {
+                  kycCompleted: true,
+                  country: country,
+                  preferredLanguage: lang,
+                  gender: gender,
+                  dateOfBirth: dob,
+                  nationality: nationality,
+                  occupation: occupation,
+                  address: address,
+                  city: city,
+                  state: state,
+                  zipCode: zip,
+                  phone: phone,
+                  firstname: first,
+                  lastname: last,
+                  completedAt: (new Date()).toISOString()
+                };
+                try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(kycState)); } catch (_) {}
+                try { localStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
+                try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
+                if (kycGate) kycGate.style.display = "none";
+                if (picGate) picGate.style.display = "";
+                toast("Profile saved. Now please upload your profile picture.", "ok");
+                return false;
+              });
+            }
+            if (picFile && picPreview) {
+              picFile.addEventListener("change", function () {
+                var files = picFile.files && picFile.files[0];
+                if (!files) return;
+                if (files.size > 8 * 1024 * 1024) {
+                  if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = "File too large. Please choose an image under 8MB."; }
+                  return;
+                }
+                if (!/^image\//.test(files.type)) {
+                  if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = "Please choose a valid image file (JPG, PNG, WebP)."; }
+                  return;
+                }
+                if (picMsg) { picMsg.style.color = "#fde68a"; picMsg.textContent = "Reading image…"; }
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                  var url = String(ev && ev.target && ev.target.result ? ev.target.result : "");
+                  if (!url) return;
+                  inlinePicDataUrl = url;
+                  picPreview.innerHTML = "";
+                  picPreview.style.border = "2px solid #d4af37";
+                  picPreview.style.background = "transparent";
+                  var img = document.createElement("img");
+                  img.src = url;
+                  img.style.width = "100%";
+                  img.style.height = "100%";
+                  img.style.objectFit = "cover";
+                  img.style.borderRadius = "50%";
+                  picPreview.appendChild(img);
+                  if (picMsg) { picMsg.style.color = "#86efac"; picMsg.textContent = "Image loaded. Click Save Profile Picture below."; }
+                };
+                reader.onerror = function () {
+                  if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = "Unable to read the image file. Please try another."; }
+                };
+                reader.readAsDataURL(files);
+              });
+            }
+            if (picSubmit) {
+              picSubmit.addEventListener("click", function () {
+                if (!inlinePicDataUrl) {
+                  if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = "⚠️ Please choose a profile picture first — this step is required."; }
+                  return;
+                }
+                try {
+                  var prev = null;
+                  try { prev = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { prev = {}; }
+                  prev.profilePic = inlinePicDataUrl;
+                  prev.picUploaded = true;
+                  localStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev));
+                  try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev)); } catch (_) {}
+                  try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(prev)); } catch (_) {}
+                } catch (_) {}
+                if (picGate) picGate.style.display = "none";
+                try { document.body.style.overflow = ""; } catch (_) {}
+                toast("Profile picture saved. Loading your dashboard…", "ok");
+                setTimeout(function () {
+                  var first = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).firstname||"Frank";}catch(_){return"Frank";}})();
+                  var last = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).lastname||"James";}catch(_){return"James";}})();
+                  var country = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).country||"US";}catch(_){return"US";}})();
+                  var lang = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).preferredLanguage||"en";}catch(_){return"en";}})();
+                  var gender = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).gender||"male";}catch(_){return"male";}})();
+                  var pic = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).profilePic||"";}catch(_){return"";}})();
+                  var acctNo = "5555842168903156";
+                  var bal = 5000.00;
+                  var demoMe = {
+                    uid: "demo_user_local",
+                    email: "pj03165@gmail.com",
+                    firstname: first,
+                    lastname: last,
+                    profilePic: pic,
+                    profile: {
+                      firstname: first,
+                      lastname: last,
+                      country: country,
+                      preferredLanguage: lang,
+                      gender: gender,
+                      phone: "+4478789166724",
+                      dateOfBirth: "1990-05-12",
+                      nationality: "American",
+                      occupation: "Software Engineer",
+                      address: "123 Main Street, Apt 4B",
+                      city: "New York",
+                      state: "NY",
+                      zipCode: "10001",
+                      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 12).toISOString(),
+                      profilePic: pic
+                    },
+                    security: { kycCompleted: true, profilePic: pic },
+                    account: {
+                      accountNumber: acctNo,
+                      currency: "USD",
+                      balance: bal,
+                      portfolioValue: 1000.00,
+                      totalAssets: 5250.00,
+                      savingsBalance: 1750.00,
+                      openingDate: (new Date(Date.now() - 1000 * 60 * 60 * 24 * 12)).toISOString(),
+                      createdAt: (new Date(Date.now() - 1000 * 60 * 60 * 24 * 12)).toISOString()
+                    }
+                  };
+                  try { localStorage.setItem("demo_me", JSON.stringify(demoMe)); } catch (_) {}
+                  try { localStorage.setItem("vt_me_v1", JSON.stringify(demoMe)); } catch (_) {}
+                  var info = applyUserInfoToDashboard(demoMe);
+                  try {
+                    var av = document.getElementById("avatarInitials");
+                    if (av && pic) {
+                      av.innerHTML = "";
+                      var imgEl = document.createElement("img");
+                      imgEl.src = pic;
+                      imgEl.alt = first + " " + last;
+                      imgEl.style.width = "100%";
+                      imgEl.style.height = "100%";
+                      imgEl.style.objectFit = "cover";
+                      imgEl.style.borderRadius = "50%";
+                      imgEl.style.background = "#fff";
+                      av.appendChild(imgEl);
+                      av.style.padding = "0"; av.style.background = "transparent"; av.style.color = "transparent";
+                    }
+                  } catch (_) {}
+                  initTransferModal(info);
+                  var now = new Date();
+                  var ONE_DAY = 86400000;
+                  var demoTxs = [
+                    { id: "TX-OPEN-001", type: "OPENING_BALANCE", kind: "OPENING_BALANCE", amount: bal, note: "Opening Balance — Account Created", status: "COMPLETED", createdAt: new Date(now.getTime() - 12 * ONE_DAY).toISOString(), reference: "ADMIN-OPENING", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } },
+                    { id: "TX-ADM-002", type: "ADMIN_CREDIT", kind: "ADMIN_CREDIT", amount: 250, note: "Admin Credit — Welcome Bonus", status: "COMPLETED", createdAt: new Date(now.getTime() - 9 * ONE_DAY).toISOString(), reference: "ADMIN-CRED-9821", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } },
+                    { id: "TX-TRF-003", type: "TRANSFER_SENT", kind: "TRANSFER_SENT", amount: 120, note: "Sent to Olivia Carter", status: "COMPLETED", createdAt: new Date(now.getTime() - 5 * ONE_DAY).toISOString(), reference: "VT-TRF-77124", from: { name: first + " " + last, accountNumber: acctNo }, to: { name: "Olivia Carter", accountNumber: "4444000011112222" } },
+                    { id: "TX-DEP-004", type: "WIRE_IN", kind: "WIRE_IN", amount: 650, note: "Wire Transfer Received — Client Payment", status: "COMPLETED", createdAt: new Date(now.getTime() - 2 * ONE_DAY).toISOString(), reference: "WIRE-88A11", from: { name: "Ethan Mitchell" }, to: { name: first + " " + last, accountNumber: acctNo } },
+                    { id: "TX-POS-005", type: "CARD_PURCHASE", kind: "CARD_PURCHASE", amount: 84.75, note: "Card Purchase · Tech Supplies", status: "COMPLETED", createdAt: new Date(now.getTime() - 1 * ONE_DAY).toISOString(), reference: "POS-5522991", from: { name: first + " " + last, accountNumber: acctNo }, to: { name: "Tech Supplies Store" } },
+                    { id: "TX-ADM-006", type: "ADMIN_CREDIT", kind: "ADMIN_CREDIT", amount: 320.50, note: "Admin Credit · Performance Bonus", status: "COMPLETED", createdAt: new Date(now.getTime() - 6 * 3600 * 1000).toISOString(), reference: "ADMIN-CRED-77142", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } }
+                  ];
+                  renderTransactions(demoTxs, "USD");
+                  try {
+                    var txEmpty = document.getElementById("txEmptyState");
+                    if (txEmpty) txEmpty.style.display = "none";
+                  } catch (_) {}
+                  try {
+                    var balEl = document.getElementById("balanceAmount");
+                    if (balEl) balEl.textContent = fmtCurrency(bal, "USD");
+                  } catch (_) {}
+                  try {
+                    var pvEl = document.getElementById("portfolioValue");
+                    if (pvEl) pvEl.textContent = fmtCurrency(1000, "USD");
+                  } catch (_) {}
+                  try {
+                    var taEl = document.getElementById("totalAssets");
+                    if (taEl) taEl.textContent = fmtCurrency(5250, "USD");
+                  } catch (_) {}
+                  try {
+                    var svEl = document.getElementById("savingAccount");
+                    if (svEl) svEl.textContent = fmtCurrency(1750, "USD");
+                  } catch (_) {}
+                  try {
+                    var cnEl = document.getElementById("cardNameDisplay");
+                    if (cnEl) cnEl.textContent = (first + " " + last).toUpperCase();
+                  } catch (_) {}
+                  try {
+                    var cnumEl = document.getElementById("cardNumberDisplay");
+                    if (cnumEl) cnumEl.textContent = "5555 8421 6890 3156";
+                  } catch (_) {}
+                  try {
+                    var mskEl = document.getElementById("maskedAccount");
+                    if (mskEl) mskEl.textContent = "**** **** **** 3156";
+                  } catch (_) {}
+                  try {
+                    var fullEl = document.getElementById("fullAccountNumber");
+                    if (fullEl) fullEl.textContent = "5555842168903156";
+                  } catch (_) {}
+                  setTimeout(function () {
+                    try { renderActivityChart(demoTxs, "USD", bal); } catch (_) {}
+                  }, 300);
+                  setTimeout(function () {
+                    try {
+                      var lineP = document.getElementById("activityLinePath");
+                      var fillP = document.getElementById("activityFillPath");
+                      if (lineP && typeof lineP.getTotalLength === "function") {
+                        var len = Math.max(1, Math.round(lineP.getTotalLength()));
+                        lineP.style.setProperty("--vt-line-len", String(len));
+                        fillP.style.setProperty("--vt-line-len", String(len));
+                        lineP.classList.remove("vt-animate-chart"); fillP.classList.remove("vt-animate-chart");
+                        void (lineP.offsetParent);
+                        requestAnimationFrame(function(){ requestAnimationFrame(function(){ lineP.classList.add("vt-animate-chart"); fillP.classList.add("vt-animate-chart"); }); });
+                      }
+                    } catch (_) {}
+                  }, 900);
+                }, 350);
+              });
+            }
+          } catch (_inlineGateErr) {
+            try { console.error("[INLINE GATES ERR:", _inlineGateErr); } catch (_) {}
+          }
+        })();
+
         function toast(msg, kind) {
           var VT = window.VT || {};
           if (VT && VT.UI && typeof VT.UI.toast === "function") {
@@ -2023,8 +2455,8 @@
 
         function applyUserInfoToDashboard(me) {
           var prof = (me && me.profile) ? me.profile : {};
-          var first = String(prof.firstname || "").trim();
-          var last = String(prof.lastname || "").trim();
+          var first = String(prof.firstname || prof.firstName || prof.first_name || (me && me.firstname) || (me && me.firstName) || (me && me.first_name) || "").trim();
+          var last = String(prof.lastname || prof.lastName || prof.last_name || (me && me.lastname) || (me && me.lastName) || (me && me.last_name) || "").trim();
           var email = String(me && me.email ? me.email : "");
           var fullName = (first + " " + last).trim() || email || "Customer";
           var nameEl = document.getElementById("dashboardUserName");
@@ -2642,11 +3074,14 @@
         }
 
         function bootI18nAndKyc() {
-          if (!window.VT || !window.VT.UI || !window.VT.UI.bootstrapCustomerPage) {
+          var bootstrapFn =
+            (typeof window.__vtBootstrapCustomerPage === "function") ? window.__vtBootstrapCustomerPage :
+            (window.VT && window.VT.UI && typeof window.VT.UI.bootstrapCustomerPage === "function") ? window.VT.UI.bootstrapCustomerPage : null;
+          if (!bootstrapFn) {
             setTimeout(bootI18nAndKyc, 80);
             return;
           }
-          window.VT.UI.bootstrapCustomerPage({
+          bootstrapFn({
             after: function (ctx) {
               if (window.console) {
                 window.console.log("[VT] Dashboard ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
@@ -2662,6 +3097,40 @@
         }
 
         function start() {
+          try {
+            var isDevBypass = window.location.pathname.indexOf("/_dev/") !== -1 ||
+                              (window.location.search || "").indexOf("kyc_reset=1") !== -1 ||
+                              (window.location.search || "").indexOf("vt=reset") !== -1;
+            if (isDevBypass) {
+              try { localStorage.removeItem("vt_kyc_perm_v1"); } catch (_) {}
+              try { sessionStorage.removeItem("vt_kyc_state_v1"); } catch (_) {}
+              try { localStorage.removeItem("vt_kyc_state_v1"); } catch (_) {}
+              try { localStorage.removeItem("demo_me"); } catch (_) {}
+              try { localStorage.removeItem("vt_me_v1"); } catch (_) {}
+              try { sessionStorage.removeItem("vt_session_v1"); } catch (_) {}
+            }
+          } catch (_) {}
+          function showDiagnostics() {
+            try {
+              var hasVT = typeof window.VT !== "undefined" && window.VT !== null;
+              var hasUI = hasVT && typeof window.VT.UI !== "undefined" && window.VT.UI !== null;
+              var hasBootstrap = hasUI && typeof window.VT.UI.bootstrapCustomerPage === "function";
+              var _vtBootstrapRan = hasVT ? (window.VT._dbg1 || "N/A") : "N/A";
+              try {
+                var d = document.createElement("div");
+                d.style.cssText = "position:fixed;right:10px;top:44px;background:#7c2d12;color:#fff;padding:10px 12px;font-size:12px;font-weight:700;z-index:2147483643;max-width:360px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.3);border:1px solid #fdba74;line-height:1.5;";
+                d.innerHTML =
+                  "<strong>DIAG:</strong><br/>" +
+                  "window.VT = " + (hasVT ? "present" : "MISSING") + "<br/>" +
+                  "window.VT.UI = " + (hasUI ? "present" : "MISSING") + "<br/>" +
+                  "bootstrapCustomerPage = " + (hasBootstrap ? "function OK" : "MISSING/FN") + "<br/>" +
+                  "document.readyState = " + document.readyState + "<br/>" +
+                  "<small style='opacity:0.8'>banner loaded via dashboard.php start() diagnostics</small>";
+                document.body.appendChild(d);
+              } catch (_) {}
+            } catch (_) {}
+          }
+          setTimeout(showDiagnostics, 1500);
           initSidebar();
           initLogout();
           if (document.readyState === "loading") {

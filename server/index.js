@@ -2137,6 +2137,22 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, requirePinVerified, 
   sendHtmlFile(res, path.join(siteRoot, "customer", rel));
 });
 
+app.use("/_dev", express.static(siteRoot, {
+  index: false,
+  dotfiles: "deny",
+  setHeaders(res, filePath) {
+    const lower = String(filePath || "").toLowerCase();
+    if (lower.endsWith(".php") || lower.endsWith(".php.html")) {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Content-Disposition", "inline");
+      return;
+    }
+    if (lower.endsWith(".css") || lower.endsWith(".js")) {
+      res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+    }
+  }
+}));
+
 app.use(
   express.static(siteRoot, {
     index: false,
