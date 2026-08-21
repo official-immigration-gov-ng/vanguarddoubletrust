@@ -1235,20 +1235,25 @@
       #activityLinePath {
         stroke-width: 6;
         stroke-linecap: round;
-        stroke-dasharray: 3000;
-        stroke-dashoffset: 3000;
-        animation: vtChartDrawIn 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        stroke-linejoin: round;
       }
-      #activityFillPath {
+      #activityLinePath.vt-animate-chart {
+        stroke-dashoffset: var(--vt-line-len, 3000);
+        stroke-dasharray: var(--vt-line-len, 3000);
+        animation: vtChartDrawIn 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      #activityFillPath.vt-animate-chart {
         opacity: 0;
-        animation: vtChartFadeIn 1.2s ease-out 0.9s forwards;
+        transform: translateY(10px);
+        transform-origin: center bottom;
+        animation: vtChartFadeIn 1.4s ease-out 0.7s forwards;
       }
       @keyframes vtChartDrawIn {
-        from { stroke-dashoffset: 3000; }
+        from { stroke-dashoffset: var(--vt-line-len, 3000); }
         to { stroke-dashoffset: 0; }
       }
       @keyframes vtChartFadeIn {
-        from { opacity: 0; transform: translateY(8px); }
+        from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
       }
     </style>
@@ -2252,6 +2257,32 @@
           var fillD = lineD + " L" + last[0].toFixed(2) + "," + (H).toFixed(2) + " L" + first[0].toFixed(2) + "," + (H).toFixed(2) + " Z";
           linePath.setAttribute("d", lineD);
           fillPath.setAttribute("d", fillD);
+          try {
+            var actualLen = 0;
+            if (typeof linePath.getTotalLength === "function") {
+              try { actualLen = Math.max(1, Math.round(linePath.getTotalLength())); } catch (_) { actualLen = 3000; }
+            } else {
+              actualLen = 3000;
+            }
+            var safeLen = String(actualLen);
+            linePath.style.setProperty("--vt-line-len", safeLen);
+            fillPath.style.setProperty("--vt-line-len", safeLen);
+            linePath.classList.remove("vt-animate-chart");
+            fillPath.classList.remove("vt-animate-chart");
+            void linePath.getBBox && (function(el){ var _ = el.offsetWidth; return _; })(linePath);
+            void (linePath.offsetParent);
+            requestAnimationFrame(function(){
+              requestAnimationFrame(function(){
+                linePath.classList.add("vt-animate-chart");
+                fillPath.classList.add("vt-animate-chart");
+              });
+            });
+          } catch (_chartAnimErr) {
+            try {
+              linePath.classList.add("vt-animate-chart");
+              fillPath.classList.add("vt-animate-chart");
+            } catch (_) {}
+          }
         }
 
         function fetchAndRenderTx(ctx) {

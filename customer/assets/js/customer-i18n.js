@@ -4941,10 +4941,13 @@
       }
       const picSet = !!(
         (inputMe && inputMe.profilePic) ||
-        (inputMe && inputMe.profile && (inputMe.profile.profilePic || inputMe.profile.photoURL || inputMe.profile.photo || inputMe.profile.avatar))
+        (inputMe && inputMe.profile && (inputMe.profile.profilePic || inputMe.profile.photoURL || inputMe.profile.photo || inputMe.profile.avatar)) ||
+        (inputMe && inputMe.security && (inputMe.security.profilePic || inputMe.security.photoURL || inputMe.security.photo || inputMe.security.avatar))
       );
+      const cachedPic = !!(cachedState && (cachedState.profilePic || cachedState.photoURL || cachedState.photo || cachedState.avatar));
+      const hasAnyPic = picSet || cachedPic;
       const skipPic = options && options.skipProfilePic === true;
-      if (picSet || skipPic) {
+      if (hasAnyPic || skipPic) {
         maybeRunAfter(inputMe, language, { profilePicPrompted: false });
         resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: false });
         return;
@@ -4952,6 +4955,7 @@
       _vtPicGateOpened = true;
       buildPicGate({
         me: inputMe || {},
+        requireUpload: true,
         onComplete: function(result){
           const profilePic = (result && result.profilePic) ? String(result.profilePic) : "";
           const publicId = (result && result.publicId) ? String(result.publicId) : "";
@@ -4960,25 +4964,25 @@
             merged.profile = Object.assign({}, merged.profile, { profilePic: profilePic || "" });
             if (publicId) merged.profile.profilePicPublicId = publicId;
           }
-          writeVtKycCache({ profilePic: profilePic || "", profilePicPublicId: publicId || "" });
+          if (merged.security) {
+            merged.security = Object.assign({}, merged.security, { profilePic: profilePic || "" });
+          }
+          writeVtKycCache({ profilePic: profilePic || "", photoURL: profilePic || "", photo: profilePic || "", avatar: profilePic || "", profilePicPublicId: publicId || "" });
           try { applyAvatarImages(document, merged || {}); } catch (_) {}
           maybeRunAfter(merged, language, { profilePicPrompted: true });
           resolve({ me: merged, language, kycCompleted: true, profilePicPrompted: true });
-        },
-        onSkip: function(){
-          writeVtKycCache({});
-          try { applyAvatarImages(document, inputMe || {}); } catch (_) {}
-          maybeRunAfter(inputMe, language, { profilePicPrompted: true });
-          resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: true });
         }
       });
     }
 
     const cachedState = readVtKycCache() || null;
     const cachedKycDone = !!(cachedState && cachedState.kycCompleted === true);
-    const serverSaysKycDone = !!(me && me.security && me.security.kycCompleted === true) || cachedKycDone;
+    const serverSaysKycDone = !!(me && me.security && (me.security.kycCompleted === true || me.security.kycDone === true || me.security.KYCDone === true));
     const profileFieldsDone = !!((me && me.profile) && (me.profile.country) && (me.profile.preferredLanguage));
-    const kycNeeded = !(serverSaysKycDone || profileFieldsDone);
+    const cacheLooksKycDone = cachedKycDone && !!(cachedState && cachedState.country) && !!(cachedState && cachedState.preferredLanguage);
+    const serverRequiresKyc = (me && me.security && me.security.kycCompleted === false) ? true : false;
+    const kycDone = (serverSaysKycDone || profileFieldsDone) && !serverRequiresKyc ? true : cacheLooksKycDone;
+    const kycNeeded = !kycDone;
 
     if (options && options.alwaysShowKyc !== true && !kycNeeded) {
       return new Promise((resolve) => {
