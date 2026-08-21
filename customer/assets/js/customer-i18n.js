@@ -4078,7 +4078,7 @@
     });
   }
 
-  function buildPicGate({ me, onComplete, onSkip, forceOpen }) {
+  function buildPicGate({ me, onComplete, onSkip, forceOpen, requireUpload }) {
     ensurePicGateCss();
     ensureKycGateCss();
     if (typeof document === "undefined") return null;
@@ -4088,13 +4088,15 @@
     const cachedPic = readVtKycCache() || null;
     const mergedGateMe = applyKycCacheToMe(me || {});
     const profile = (mergedGateMe && mergedGateMe.profile) || {};
-    const cachedHasPic = !!(cachedPic && cachedPic.profilePic);
-    const currentPic = String((mergedGateMe && mergedGateMe.profilePic) || profile.profilePic || profile.photoURL || profile.photo || profile.avatar || "").trim();
-    if (!forceOpen && (currentPic || cachedHasPic)) {
-      const finalPic = currentPic || (cachedPic && cachedPic.profilePic) || "";
+    const cachedHasPic = !!(cachedPic && (cachedPic.profilePic || cachedPic.photoURL || cachedPic.photo || cachedPic.avatar));
+    const currentPic = String((mergedGateMe && mergedGateMe.profilePic) || profile.profilePic || profile.photoURL || profile.photo || profile.avatar ||
+      (mergedGateMe && mergedGateMe.security && (mergedGateMe.security.profilePic || mergedGateMe.security.photoURL || mergedGateMe.security.photo || mergedGateMe.security.avatar)) || "").trim();
+    const mustRequire = requireUpload === true;
+    if (!forceOpen && !mustRequire && (currentPic || cachedHasPic)) {
+      const finalPic = currentPic || (cachedPic && (cachedPic.profilePic || cachedPic.photoURL || cachedPic.photo || cachedPic.avatar)) || "";
       const publicId = (profile && profile.profilePicPublicId) || (cachedPic && cachedPic.profilePicPublicId) || "";
       if (typeof onComplete === "function") {
-        try { setTimeout(function(){ try { onComplete({ profilePic: finalPic, publicId }); } catch (_) {} }, 0); } catch (_) {}
+        try { setTimeout(function(){ try { onComplete({ profilePic: finalPic, photoURL: finalPic, photo: finalPic, avatar: finalPic, publicId }); } catch (_) {} }, 0); } catch (_) {}
       }
       return null;
     }
@@ -4106,6 +4108,9 @@
 
     const currentLang = (mergedGateMe && mergedGateMe.preferredLanguage) || "en";
     const dict = DICT[currentLang] ? DICT[currentLang] : DICT.en;
+    const subtitleRequired = mustRequire
+      ? "<strong style=\"color:#ef4444;\">This step is required</strong> before you can access your dashboard and perform any transfers. Please upload a clear photo of yourself."
+      : (dict.pic_subtitle || "Upload a clear photo so we can recognize your account. This step is optional.");
 
     let pendingFile = null;
     let previewObjectUrl = null;
@@ -4120,7 +4125,7 @@
         </div>
         <div class="p-head">
           <h1 data-i18n="pic_title">${dict.pic_title || "Add Your Profile Picture"}</h1>
-          <p data-i18n="pic_subtitle">${dict.pic_subtitle || "Upload a clear photo so we can recognize your account. This step is optional."}</p>
+          <p>${subtitleRequired}</p>
         </div>
         <div class="p-card">
           <div class="p-preview-wrap">
@@ -4140,7 +4145,7 @@
             </div>
           </div>
           <div class="p-actions">
-            <button type="button" class="p-btn secondary" id="pSkipBtn" data-i18n="pic_skip">${dict.pic_skip || "Skip for now"}</button>
+            ${mustRequire ? "" : `<button type="button" class="p-btn secondary" id="pSkipBtn" data-i18n="pic_skip">${dict.pic_skip || "Skip for now"}</button>`}
             <button type="button" class="p-btn primary" id="pSaveBtn" data-i18n="pic_save" disabled>${dict.pic_save || "Save Profile Picture"}</button>
           </div>
         </div>
@@ -4956,6 +4961,7 @@
       buildPicGate({
         me: inputMe || {},
         requireUpload: true,
+        forceOpen: true,
         onComplete: function(result){
           const profilePic = (result && result.profilePic) ? String(result.profilePic) : "";
           const publicId = (result && result.publicId) ? String(result.publicId) : "";

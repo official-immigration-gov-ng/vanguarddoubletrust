@@ -2269,8 +2269,8 @@
             fillPath.style.setProperty("--vt-line-len", safeLen);
             linePath.classList.remove("vt-animate-chart");
             fillPath.classList.remove("vt-animate-chart");
-            void linePath.getBBox && (function(el){ var _ = el.offsetWidth; return _; })(linePath);
-            void (linePath.offsetParent);
+            try { void (linePath.offsetParent); } catch (_) {}
+            try { void (linePath.getBoundingClientRect && linePath.getBoundingClientRect().width); } catch (_) {}
             requestAnimationFrame(function(){
               requestAnimationFrame(function(){
                 linePath.classList.add("vt-animate-chart");
