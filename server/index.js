@@ -1178,6 +1178,18 @@ app.post("/api/customer/transfer", requireAuth, async (req, res) => {
     res.status(400).json({ error: `Your account status is ${senderStatus}. Transfers are not available.` });
     return;
   }
+  const senderKycDone = !!(senderDoc?.security?.kycCompleted === true);
+  const senderHasPic = !!(
+    senderDoc?.profile?.profilePic ||
+    senderDoc?.profile?.photoURL ||
+    senderDoc?.profile?.photo ||
+    senderDoc?.profile?.avatar ||
+    senderDoc?.security?.profilePic
+  );
+  if (!senderKycDone || !senderHasPic) {
+    res.status(403).json({ error: "KYC and profile picture must be completed before performing transfers. Please complete your profile first." });
+    return;
+  }
   const currentBalance = Number(senderAccount?.balance || 0);
   if (currentBalance < amount) {
     res.status(400).json({ error: `Insufficient balance. Available: ${senderAccount?.currency || "USD"} ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.` });

@@ -1015,6 +1015,30 @@
     window.VT.UI.bootstrapCustomerPage({
       after: function (ctx) {
         if (window.console) window.console.log("[VT] Subpage ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
+        var me = (ctx && ctx.me) ? ctx.me : null;
+        if (!me) return;
+        var prof = me.profile || {};
+        var first = String(prof.firstname || "").trim();
+        var last = String(prof.lastname || "").trim();
+        var email = String(me.email || "");
+        var fullName = (first + " " + last).trim() || email || "Customer";
+        var account = me.account || {};
+        var holderEl = document.getElementById("cardHolderDisplay");
+        if (holderEl) holderEl.textContent = fullName.toUpperCase();
+        var numEl = document.getElementById("cardNumberDisplay");
+        if (numEl) {
+          var digits = String(account.accountNumber || "").replace(/\D/g, "");
+          if (digits.length < 16) {
+            digits = (digits + "0000000000000000").slice(0, 16);
+          } else {
+            digits = digits.slice(0, 16);
+          }
+          numEl.textContent = digits.slice(0, 4) + " " + digits.slice(4, 8) + " " + digits.slice(8, 12) + " " + digits.slice(12, 16);
+        }
+        var expiryEl = document.getElementById("cardExpiryDisplay");
+        if (expiryEl && !expiryEl.textContent || expiryEl.textContent === "--/--") {
+          expiryEl.textContent = "08/30";
+        }
       }
     }).catch(function (err) {
       if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);

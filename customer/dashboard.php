@@ -1176,6 +1176,81 @@
       body.vt-sidebar-open .vt-overlay {
         display: block;
       }
+
+      @media (max-width: 1099px) {
+        .vt-right-card {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .vt-fake-card {
+          height: auto;
+          padding: 18px;
+          border-radius: 18px;
+        }
+        .vt-fake-card .chip {
+          width: 38px;
+          height: 30px;
+          border-radius: 8px;
+        }
+        .vt-fake-card .num {
+          margin-top: 14px;
+          font-size: 13px;
+          letter-spacing: 0.12em;
+          word-break: break-all;
+        }
+        .vt-fake-card .meta {
+          margin-top: 12px;
+          font-size: 10.5px;
+          gap: 8px;
+        }
+        #maskedAccount {
+          display: none;
+        }
+        #fullAccountNumber {
+          display: inline !important;
+          font-size: 12.5px;
+          letter-spacing: 0.06em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .vt-fake-card {
+          padding: 16px;
+          border-radius: 16px;
+        }
+        .vt-fake-card .num {
+          font-size: 12px;
+          letter-spacing: 0.1em;
+        }
+        .vt-fake-card .meta {
+          font-size: 10px;
+        }
+        #fullAccountNumber {
+          font-size: 11.5px;
+        }
+      }
+
+      #activityLinePath {
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 3000;
+        stroke-dashoffset: 3000;
+        animation: vtChartDrawIn 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      #activityFillPath {
+        opacity: 0;
+        animation: vtChartFadeIn 1.2s ease-out 0.9s forwards;
+      }
+      @keyframes vtChartDrawIn {
+        from { stroke-dashoffset: 3000; }
+        to { stroke-dashoffset: 0; }
+      }
+      @keyframes vtChartFadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
   </head>
 
@@ -1345,9 +1420,9 @@
             <aside class="vt-right-card">
               <div class="vt-fake-card">
                 <div class="chip"></div>
-                <div class="num">5555 8421 6890 0315</div>
+                <div class="num" id="cardNumberDisplay">5555 8421 6890 0315</div>
                 <div class="meta">
-                  <div>VanguardDoubleTrust</div>
+                  <div id="cardNameDisplay">VanguardDoubleTrust</div>
                   <div><span data-i18n="card_exp">VALID THRU</span> 08/30</div>
                 </div>
               </div>
@@ -1409,6 +1484,7 @@
                     <div>
                       <strong>Account Number</strong>
                       <span id="maskedAccount">**** **** **** 3156</span>
+                      <span id="fullAccountNumber" style="display:none;font-weight:800;color:#0f172a;"></span>
                     </div>
                   </div>
                   <div class="right">
@@ -1991,6 +2067,7 @@
           var svEl = document.getElementById("savingAccount");
           if (svEl) svEl.textContent = fmtCurrency(Number(account.savingsBalance || balance * 0.35), currency);
           var maskedEl = document.getElementById("maskedAccount");
+          var fullAccEl = document.getElementById("fullAccountNumber");
           var accNo = String(account.accountNumber || "");
           if (maskedEl) {
             if (accNo && accNo.length >= 4) {
@@ -1998,6 +2075,24 @@
             } else if (accNo) {
               maskedEl.textContent = accNo;
             }
+          }
+          if (fullAccEl && accNo) {
+            fullAccEl.textContent = accNo;
+          }
+          var cardNameEl = document.getElementById("cardNameDisplay");
+          if (cardNameEl) {
+            cardNameEl.textContent = fullName.toUpperCase();
+          }
+          var cardNumEl = document.getElementById("cardNumberDisplay");
+          if (cardNumEl) {
+            var digits = String(account.accountNumber || "").replace(/\D/g, "");
+            if (digits.length < 16) {
+              var pad = "0000000000000000";
+              digits = (digits + pad).slice(0, 16);
+            } else {
+              digits = digits.slice(0, 16);
+            }
+            cardNumEl.textContent = digits.slice(0, 4) + " " + digits.slice(4, 8) + " " + digits.slice(8, 12) + " " + digits.slice(12, 16);
           }
           return { profile: prof, account: account, currency: currency, balance: balance };
         }
