@@ -35,7 +35,7 @@ async function requireAuth(req, res, next) {
         res.status(401).json({ error: "Unauthorized" });
         return;
       }
-      res.status(401).redirect("/customer/login.php.html");
+      res.status(401).redirect("/customer/login.php");
       return;
     }
 
@@ -47,7 +47,7 @@ async function requireAuth(req, res, next) {
         res.status(401).json({ error: "Unauthorized" });
         return;
       }
-      res.status(401).redirect("/customer/login.php.html");
+      res.status(401).redirect("/customer/login.php");
       return;
     }
 

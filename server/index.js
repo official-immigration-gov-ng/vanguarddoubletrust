@@ -369,6 +369,52 @@ function requirePinVerified(req, res, next) {
   res.redirect("/customer/verify-pin.php");
 }
 
+function hasKycCompleted(req) {
+  const p = req.user?.profile || {};
+  const s = req.user?.security || {};
+  return Boolean(
+    s?.kycCompleted === true ||
+    s?.KYCDone === true ||
+    s?.kycDone === true ||
+    p?.kycCompleted === true ||
+    p?.KYCDone === true ||
+    p?.kycDone === true ||
+    (Boolean(p?.country) && Boolean(p?.preferredLanguage) && Boolean(p?.firstname) && Boolean(p?.lastname))
+  );
+}
+
+function hasProfilePic(req) {
+  const p = req.user?.profile || {};
+  const s = req.user?.security || {};
+  return Boolean(
+    p?.profilePic || p?.photoURL || p?.photo || p?.avatar ||
+    s?.profilePic || s?.photoURL || s?.photo || s?.avatar
+  );
+}
+
+function requireKycAndProfilePic(req, res, next) {
+  if (!req.user) {
+    next();
+    return;
+  }
+  if (hasKycCompleted(req) && hasProfilePic(req)) {
+    next();
+    return;
+  }
+  if (String(req.path || "").startsWith("/api/")) {
+    res.status(403).json({
+      error: "Onboarding incomplete.",
+      onboarding: {
+        required: true,
+        kycCompleted: hasKycCompleted(req),
+        profilePicUploaded: hasProfilePic(req)
+      }
+    });
+    return;
+  }
+  res.redirect("/customer/dashboard.php#onboarding");
+}
+
 function adminCredentials() {
   return {
     email: String(process.env.ADMIN_EMAIL || "").trim().toLowerCase(),
@@ -516,6 +562,8 @@ app.get("/api/me", requireAuth, async (req, res) => {
     prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar ||
     sec?.profilePic || sec?.photoURL || sec?.photo || sec?.avatar || ""
   );
+  const kycDone = hasKycCompleted(req);
+  const picDone = hasProfilePic(req);
   res.json({
     uid: freshUser.uid,
     email: freshUser.email || null,
@@ -529,7 +577,12 @@ app.get("/api/me", requireAuth, async (req, res) => {
     avatar: finalPicUrl,
     createdAt: freshUser.createdAt || null,
     updatedAt: freshUser.updatedAt || null,
-    pinVerified: isPinVerified(req)
+    pinVerified: isPinVerified(req),
+    onboarding: {
+      required: !(kycDone && picDone),
+      kycCompleted: kycDone,
+      profilePicUploaded: picDone
+    }
   });
 });
 
@@ -2084,11 +2137,19 @@ app.get("/customer/login", (req, res) => {
   res.redirect("/customer/login.php");
 });
 
+app.get("/customer/login.php", (req, res) => {
+  sendPage(res, "customer/login.php");
+});
+
+app.get("/customer/register.php", (req, res) => {
+  sendPage(res, "customer/register.php");
+});
+
 app.get("/customer/verify-pin", requireAuth, (req, res) => {
   res.redirect("/customer/verify-pin.php");
 });
 
-app.get("/customer/verify-pin.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
   sendPage(res, "customer/verify-pin.php");
 });
 
@@ -2104,12 +2165,16 @@ app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) =
   sendPage(res, "customer/dashboard.php");
 });
 
-app.get("/customer/dashboard.php.html", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/dashboard.php.html", requireAuth, (req, res) => {
   res.redirect(301, "/customer/dashboard.php");
 });
 
-app.get("/customer/dashboard", requireAuth, requirePinVerified, (req, res) => {
-  res.redirect("/customer/dashboard.php");
+app.get("/customer/dashboard", requireAuth, (req, res) => {
+  if (isPinVerified(req)) {
+    res.redirect("/customer/dashboard.php");
+    return;
+  }
+  res.redirect("/customer/verify-pin.php");
 });
 
 app.get("/customer/myprofile.php", requireAuth, requirePinVerified, (req, res) => {
@@ -2144,7 +2209,7 @@ app.get("/customer/password.php", requireAuth, requirePinVerified, (req, res) =>
   sendPage(res, "customer/password.php");
 });
 
-app.get(/^\/customer\/([A-Za-z0-9_-]+\.php\.html)$/, requireAuth, requirePinVerified, (req, res, next) => {
+app.get(/^\/customer\/([A-Za-z0-9_-]+\.php\.html)$/, (req, res, next) => {
   const rel = req.params?.[0];
   if (!rel) { next(); return; }
   const canonical = rel.slice(0, -".html".length);
@@ -2156,13 +2221,31 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php\.html)$/, requireAuth, requirePinVeri
   sendPage(res, "customer/" + rel);
 });
 
-app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, requirePinVerified, (req, res, next) => {
+app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => {
   const rel = req.params?.[0];
   if (!rel) {
     next();
     return;
   }
-  sendPage(res, "customer/" + rel);
+  if (rel === "login.php" || rel === "register.php") {
+    next();
+    return;
+  }
+  const absPath = resolvePageFile("customer/" + rel);
+  const isOrphanPhpHtml = !fs.existsSync(path.join(siteRoot, "customer/" + rel)) && fs.existsSync(absPath);
+  if (isOrphanPhpHtml) {
+    sendPage(res, "customer/" + rel);
+    return;
+  }
+  if (rel === "verify-pin.php") {
+    sendPage(res, "customer/" + rel);
+    return;
+  }
+  if (isPinVerified(req)) {
+    sendPage(res, "customer/" + rel);
+    return;
+  }
+  res.redirect("/customer/verify-pin.php");
 });
 
 app.use("/_dev", express.static(siteRoot, {
