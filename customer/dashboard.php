@@ -2191,6 +2191,7 @@
                 try { document.body.style.overflow = ""; } catch (_) {}
                 toast("Profile picture saved. Loading your dashboard…", "ok");
                 setTimeout(function () {
+                  try {
                   var first = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).firstname||"Frank";}catch(_){return"Frank";}})();
                   var last = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).lastname||"James";}catch(_){return"James";}})();
                   var country = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).country||"US";}catch(_){return"US";}})();
@@ -2199,6 +2200,11 @@
                   var pic = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).profilePic||"";}catch(_){return"";}})();
                   var acctNo = "5555842168903156";
                   var bal = 5000.00;
+                  var _fmt = (typeof window.__vt_fmtCurrency === "function") ? window.__vt_fmtCurrency : fmtCurrency;
+                  var _apply = (typeof window.__vt_applyUserInfoToDashboard === "function") ? window.__vt_applyUserInfoToDashboard : applyUserInfoToDashboard;
+                  var _renderTx = (typeof window.__vt_renderTransactions === "function") ? window.__vt_renderTransactions : renderTransactions;
+                  var _renderChart = (typeof window.__vt_renderActivityChart === "function") ? window.__vt_renderActivityChart : renderActivityChart;
+                  var _initTransfer = (typeof window.__vt_initTransferModal === "function") ? window.__vt_initTransferModal : initTransferModal;
                   var demoMe = {
                     uid: "demo_user_local",
                     email: "pj03165@gmail.com",
@@ -2236,7 +2242,7 @@
                   };
                   try { localStorage.setItem("demo_me", JSON.stringify(demoMe)); } catch (_) {}
                   try { localStorage.setItem("vt_me_v1", JSON.stringify(demoMe)); } catch (_) {}
-                  var info = applyUserInfoToDashboard(demoMe);
+                  var info = _apply(demoMe);
                   try {
                     var av = document.getElementById("avatarInitials");
                     if (av && pic) {
@@ -2253,7 +2259,7 @@
                       av.style.padding = "0"; av.style.background = "transparent"; av.style.color = "transparent";
                     }
                   } catch (_) {}
-                  initTransferModal(info);
+                  try { _initTransfer(info); } catch (_) {}
                   var now = new Date();
                   var ONE_DAY = 86400000;
                   var demoTxs = [
@@ -2264,26 +2270,33 @@
                     { id: "TX-POS-005", type: "CARD_PURCHASE", kind: "CARD_PURCHASE", amount: 84.75, note: "Card Purchase · Tech Supplies", status: "COMPLETED", createdAt: new Date(now.getTime() - 1 * ONE_DAY).toISOString(), reference: "POS-5522991", from: { name: first + " " + last, accountNumber: acctNo }, to: { name: "Tech Supplies Store" } },
                     { id: "TX-ADM-006", type: "ADMIN_CREDIT", kind: "ADMIN_CREDIT", amount: 320.50, note: "Admin Credit · Performance Bonus", status: "COMPLETED", createdAt: new Date(now.getTime() - 6 * 3600 * 1000).toISOString(), reference: "ADMIN-CRED-77142", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } }
                   ];
-                  renderTransactions(demoTxs, "USD");
+                  try { _renderTx(demoTxs, "USD"); } catch (_) {
+                    try {
+                      var txDiag = document.createElement("div");
+                      txDiag.style.cssText = "position:fixed;left:10px;bottom:10px;background:#92400e;color:#fff;padding:8px 12px;z-index:2147483644;font-size:12px;font-weight:700;border-radius:8px;max-width:380px;";
+                      txDiag.textContent = "TX RENDER ERR: " + String(_ && _.message || _);
+                      document.documentElement.appendChild(txDiag);
+                    } catch (_){}
+                  }
                   try {
                     var txEmpty = document.getElementById("txEmptyState");
                     if (txEmpty) txEmpty.style.display = "none";
                   } catch (_) {}
                   try {
                     var balEl = document.getElementById("balanceAmount");
-                    if (balEl) balEl.textContent = fmtCurrency(bal, "USD");
+                    if (balEl) balEl.textContent = _fmt(bal, "USD");
                   } catch (_) {}
                   try {
                     var pvEl = document.getElementById("portfolioValue");
-                    if (pvEl) pvEl.textContent = fmtCurrency(1000, "USD");
+                    if (pvEl) pvEl.textContent = _fmt(1000, "USD");
                   } catch (_) {}
                   try {
                     var taEl = document.getElementById("totalAssets");
-                    if (taEl) taEl.textContent = fmtCurrency(5250, "USD");
+                    if (taEl) taEl.textContent = _fmt(5250, "USD");
                   } catch (_) {}
                   try {
                     var svEl = document.getElementById("savingAccount");
-                    if (svEl) svEl.textContent = fmtCurrency(1750, "USD");
+                    if (svEl) svEl.textContent = _fmt(1750, "USD");
                   } catch (_) {}
                   try {
                     var cnEl = document.getElementById("cardNameDisplay");
@@ -2302,7 +2315,7 @@
                     if (fullEl) fullEl.textContent = "5555842168903156";
                   } catch (_) {}
                   setTimeout(function () {
-                    try { renderActivityChart(demoTxs, "USD", bal); } catch (_) {}
+                    try { _renderChart(demoTxs, "USD", bal); } catch (_) {}
                   }, 300);
                   setTimeout(function () {
                     try {
@@ -2318,6 +2331,15 @@
                       }
                     } catch (_) {}
                   }, 900);
+                  } catch (__populateErr) {
+                    try {
+                      var __dbg = document.createElement("div");
+                      __dbg.style.cssText = "position:fixed;left:50%;top:110px;transform:translateX(-50%);background:#991b1b;color:#fff;padding:10px 14px;z-index:2147483646;font-size:12px;font-weight:800;border-radius:10px;max-width:480px;line-height:1.6;box-shadow:0 10px 30px rgba(0,0,0,0.4);border:1px solid #f87171;";
+                      __dbg.textContent = "POPULATE ERR: " + String(__populateErr && __populateErr.message || __populateErr) + " :: " + String(__populateErr && __populateErr.stack || "").slice(0, 380);
+                      document.documentElement.appendChild(__dbg);
+                      console.error("POPULATE ERR:", __populateErr);
+                    } catch (_) {}
+                  }
                 }, 350);
               });
             }
@@ -3133,6 +3155,16 @@
           setTimeout(showDiagnostics, 1500);
           initSidebar();
           initLogout();
+          try {
+            window.__vt_toast = toast;
+            window.__vt_fmtCurrency = fmtCurrency;
+            window.__vt_applyUserInfoToDashboard = applyUserInfoToDashboard;
+            window.__vt_renderTransactions = renderTransactions;
+            window.__vt_renderActivityChart = renderActivityChart;
+            window.__vt_initTransferModal = initTransferModal;
+          } catch (__expErr) {
+            try { console.error("Expose helpers err:", __expErr); } catch (_) {}
+          }
           if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", bootI18nAndKyc);
           } else {

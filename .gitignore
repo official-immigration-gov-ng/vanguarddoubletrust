@@ -5,3 +5,4 @@ server/serviceAccount.json
 npm-debug.log
 yarn-error.log
 .vercel/
+server_stderr.log
