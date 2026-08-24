@@ -64,6 +64,7 @@ async function requireAuth(req, res, next) {
       uid,
       email,
       profile: doc?.profile || null,
+      security: doc?.security || null,
       account: doc?.account || null,
       createdAt: doc?.createdAt || null,
       updatedAt: doc?.updatedAt || null

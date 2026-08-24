@@ -1260,9 +1260,19 @@
   </head>
 
   <body>
-    <div style="position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#d97706;color:#fff;padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:0.3px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
+    <div id="vtDevBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#d97706;color:#fff;padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:0.3px;box-shadow:0 4px 16px rgba(0,0,0,0.12);">
       🔧 DEV MODE: Loading dashboard.php (REAL PAGE with gates + graph + card). If this banner shows, the edits are loading correctly.
     </div>
+    <script>
+      (function () {
+        try {
+          if ((window.location.search || "").indexOf("vt_diag=1") !== -1) {
+            var b = document.getElementById("vtDevBanner");
+            if (b) b.style.display = "";
+          }
+        } catch (_) {}
+      })();
+    </script>
     <div id="inlineKycGate" style="position:fixed;inset:0;z-index:2147483646;background:radial-gradient(circle at top, rgba(212,175,55,0.14), transparent 30%),linear-gradient(180deg,#070b10,#0b0f14);overflow-y:auto;-webkit-overflow-scrolling:touch;">
       <div style="max-width:920px;margin:0 auto;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;">
@@ -2050,7 +2060,6 @@
         } catch (_) {}
         try { window.onerror = function(msg, src, lineno, colno, err) { try { var ERR = document.createElement("div"); ERR.id = "GLOBAL_ERR_" + Date.now(); ERR.style.cssText = "position:fixed;right:10px;bottom:24px;background:#7f1d1d;color:#fff;padding:8px 10px;font-size:12px;font-weight:800;z-index:2147483647;border-radius:8px;max-width:360px;line-height:1.55;"; ERR.textContent = "GLOBAL JS ERROR: " + String(msg || "") + " line:" + String(lineno||""); document.documentElement.appendChild(ERR); } catch(_){} }; } catch (_) {}
         (function initInlineGates() {
-          try { document.body.style.overflow = "hidden"; } catch (_) {}
           var DEFAULT_PIC = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="140" height="140" rx="70" fill="url(#g)"/><circle cx="70" cy="58" r="24" fill="#ffffff"/><path d="M22 130 C22 98, 118 98, 118 130 Z" fill="#ffffff"/><text x="70" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="22" fill="#2563eb">FJ</text></svg>');
           var inlinePicDataUrl = "";
           try {
@@ -2128,6 +2137,7 @@
                 var submitBtn = document.getElementById("ikSubmit");
                 var originalBtnText = submitBtn ? submitBtn.textContent : "";
                 if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Saving…"; }
+                var saveError = null;
                 try {
                   var submitKycFn =
                     (window.VT && window.VT.UI && typeof window.VT.UI.submitKycToServer === "function") ?
@@ -2135,13 +2145,11 @@
                   if (submitKycFn) {
                     await submitKycFn(payload);
                   } else {
-                    try {
-                      await fetchJson("/api/customer/kyc", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                      });
-                    } catch (_apiFallback) {}
+                    await fetchJson("/api/customer/kyc", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(payload)
+                    });
                   }
                   var kycState = Object.assign({ kycCompleted: true, completedAt: (new Date()).toISOString() }, payload);
                   try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(kycState)); } catch (_) {}
@@ -2149,11 +2157,17 @@
                   try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
                   if (kycGate) kycGate.style.display = "none";
                   if (picGate) picGate.style.display = "";
+                  try { document.body.style.overflow = "hidden"; } catch (_) {}
                   toast("Profile saved. Now please upload your profile picture.", "ok");
                 } catch (err) {
+                  saveError = err;
                   toast(String(err && err.message ? err.message : "Unable to save. Please try again."), "error");
                 } finally {
                   if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalBtnText || "Complete Setup"; }
+                  if (saveError) {
+                    if (kycGate) kycGate.style.display = "";
+                    if (picGate) picGate.style.display = "none";
+                  }
                 }
                 return false;
               });
@@ -2210,36 +2224,32 @@
                   if (uploadFn) {
                     result = await uploadFn(inlinePicDataUrl);
                   } else {
-                    try {
-                      result = await fetchJson("/api/upload/config", { method: "GET" }).catch(() => ({}));
-                      if (result && result.enabled && result.cloudName && result.uploadPreset) {
-                        var fd = new FormData();
-                        fd.append("upload_preset", result.uploadPreset);
-                        if (result.folder) fd.append("folder", result.folder);
-                        fd.append("file", inlinePicDataUrl);
-                        var up = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(result.cloudName) + "/auto/upload", {
-                          method: "POST",
-                          body: fd
-                        }).then(function (r) { return r.json(); });
-                        if (up && up.secure_url) {
-                          result = await fetchJson("/api/customer/profile-pic", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ secure_url: up.secure_url, public_id: up.public_id || "", width: up.width || 0, height: up.height || 0, format: up.format || "png", bytes: up.bytes || 0 })
-                          });
-                        } else {
-                          throw new Error("Upload failed.");
-                        }
-                      } else {
-                        var base64pic = String(inlinePicDataUrl || "").slice(0, 5 * 1024 * 1024);
+                    result = await fetchJson("/api/upload/config", { method: "GET" }).catch(() => ({}));
+                    if (result && result.enabled && result.cloudName && result.uploadPreset) {
+                      var fd = new FormData();
+                      fd.append("upload_preset", result.uploadPreset);
+                      if (result.folder) fd.append("folder", result.folder);
+                      fd.append("file", inlinePicDataUrl);
+                      var up = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(result.cloudName) + "/auto/upload", {
+                        method: "POST",
+                        body: fd
+                      }).then(function (r) { return r.json(); });
+                      if (up && up.secure_url) {
                         result = await fetchJson("/api/customer/profile-pic", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ secure_url: base64pic })
+                          body: JSON.stringify({ secure_url: up.secure_url, public_id: up.public_id || "", width: up.width || 0, height: up.height || 0, format: up.format || "png", bytes: up.bytes || 0 })
                         });
+                      } else {
+                        throw new Error(String(up && up.error && up.error.message ? up.error.message : "Upload failed."));
                       }
-                    } catch (_localFallback) {
-                      throw _localFallback;
+                    } else {
+                      var base64pic = String(inlinePicDataUrl || "").slice(0, 5 * 1024 * 1024);
+                      result = await fetchJson("/api/customer/profile-pic", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ secure_url: base64pic })
+                      });
                     }
                   }
                   try {
@@ -3056,6 +3066,7 @@
           } catch (_) {}
           function showDiagnostics() {
             try {
+              if ((window.location.search || "").indexOf("vt_diag=1") === -1) return;
               var hasVT = typeof window.VT !== "undefined" && window.VT !== null;
               var hasUI = hasVT && typeof window.VT.UI !== "undefined" && window.VT.UI !== null;
               var hasBootstrap = hasUI && typeof window.VT.UI.bootstrapCustomerPage === "function";
