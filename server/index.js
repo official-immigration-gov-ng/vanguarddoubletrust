@@ -2041,6 +2041,25 @@ function sendHtmlFile(res, absPath) {
   }
 }
 
+function resolvePageFile(relFromSiteRoot) {
+  const candidate = path.join(siteRoot, relFromSiteRoot);
+  if (relFromSiteRoot.endsWith(".php.html")) {
+    const phpSibling = candidate.slice(0, -".html".length);
+    if (fs.existsSync(phpSibling)) return phpSibling;
+  }
+  if (fs.existsSync(candidate)) return candidate;
+  if (relFromSiteRoot.endsWith(".php")) {
+    const htmlSibling = candidate + ".html";
+    if (fs.existsSync(htmlSibling)) return htmlSibling;
+  }
+  return candidate;
+}
+
+function sendPage(res, relFromSiteRoot) {
+  const resolved = resolvePageFile(relFromSiteRoot);
+  sendHtmlFile(res, resolved);
+}
+
 app.get("/admin", (req, res) => {
   res.redirect(isAdminAuthenticated(req) ? "/admin/dashboard.html" : "/admin/login.html");
 });
@@ -2062,70 +2081,79 @@ app.get("/admin/dashboard.html", requireAdminAuth, (req, res) => {
 });
 
 app.get("/customer/login", (req, res) => {
-  res.redirect("/customer/login.php.html");
+  res.redirect("/customer/login.php");
 });
 
 app.get("/customer/verify-pin", requireAuth, (req, res) => {
   res.redirect("/customer/verify-pin.php");
 });
 
-app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "verify-pin.php"));
+app.get("/customer/verify-pin.php", requireAuth, requirePinVerified, (req, res) => {
+  sendPage(res, "customer/verify-pin.php");
 });
 
 app.get("/customer/account.html", requireAuth, requirePinVerified, (req, res) => {
-  res.type("html");
-  res.sendFile(path.join(siteRoot, "customer", "account.html"));
+  sendPage(res, "customer/account.html");
 });
 
 app.get("/customer/accountdetails.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "accountdetails.php"));
+  sendPage(res, "customer/accountdetails.php");
 });
 
 app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) => {
-  res.type("html");
-  res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
+  sendPage(res, "customer/dashboard.php");
 });
 
 app.get("/customer/dashboard.php.html", requireAuth, requirePinVerified, (req, res) => {
-  res.type("html");
-  res.sendFile(path.join(siteRoot, "customer", "dashboard.php.html"));
+  res.redirect(301, "/customer/dashboard.php");
 });
 
 app.get("/customer/dashboard", requireAuth, requirePinVerified, (req, res) => {
-  res.redirect("/customer/dashboard.php.html");
+  res.redirect("/customer/dashboard.php");
 });
 
 app.get("/customer/myprofile.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "myprofile.php"));
+  sendPage(res, "customer/myprofile.php");
 });
 
 app.get("/customer/statement.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "statement.php"));
+  sendPage(res, "customer/statement.php");
 });
 
 app.get("/customer/stocks.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "stocks.php"));
+  sendPage(res, "customer/stocks.php");
 });
 
 app.get("/customer/international.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "international.php"));
+  sendPage(res, "customer/international.php");
 });
 
 app.get("/customer/transferhistory.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "transferhistory.php"));
+  sendPage(res, "customer/transferhistory.php");
 });
 
 app.get("/customer/card.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "card.php"));
+  sendPage(res, "customer/card.php");
 });
 
 app.get("/customer/pin.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "pin.php"));
+  sendPage(res, "customer/pin.php");
 });
 
 app.get("/customer/password.php", requireAuth, requirePinVerified, (req, res) => {
-  sendHtmlFile(res, path.join(siteRoot, "customer", "password.php"));
+  sendPage(res, "customer/password.php");
+});
+
+app.get(/^\/customer\/([A-Za-z0-9_-]+\.php\.html)$/, requireAuth, requirePinVerified, (req, res, next) => {
+  const rel = req.params?.[0];
+  if (!rel) { next(); return; }
+  const canonical = rel.slice(0, -".html".length);
+  const phpExists = fs.existsSync(path.join(siteRoot, "customer", canonical));
+  if (phpExists) {
+    res.redirect(301, "/customer/" + canonical);
+    return;
+  }
+  sendPage(res, "customer/" + rel);
 });
 
 app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, requirePinVerified, (req, res, next) => {
@@ -2134,7 +2162,7 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, requirePinVerified, 
     next();
     return;
   }
-  sendHtmlFile(res, path.join(siteRoot, "customer", rel));
+  sendPage(res, "customer/" + rel);
 });
 
 app.use("/_dev", express.static(siteRoot, {
@@ -2177,7 +2205,7 @@ app.use((req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
-  res.status(404).sendFile(path.join(siteRoot, "index.php.html"));
+  sendPage(res, "index.php.html");
 });
 
 const port = Number(process.env.PORT || 3000);
