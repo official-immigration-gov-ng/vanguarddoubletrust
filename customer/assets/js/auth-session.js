@@ -2514,6 +2514,151 @@
     })();
   }
 
+  async function bootstrapCustomerPage(opts) {
+    const o = (typeof opts === "object" && opts) ? opts : {};
+    const after = typeof o.after === "function" ? o.after : null;
+    const me = await getMe();
+    if (!me) {
+      window.location.href = "/customer/login.php";
+      throw new Error("Not authenticated");
+    }
+    const onboarding = (me && typeof me.onboarding === "object" && me.onboarding) ? me.onboarding : {
+      required: false,
+      kycCompleted: true,
+      profilePicUploaded: true
+    };
+    const lang = String(me?.preferredLanguage || me?.profile?.preferredLanguage || "en").toLowerCase();
+    const ctx = {
+      me: me,
+      onboarding: onboarding,
+      kycCompleted: Boolean(onboarding.kycCompleted || me?.security?.kycCompleted || me?.profile?.kycCompleted),
+      profilePic: me?.profilePic || me?.photoURL || me?.profile?.profilePic || me?.profile?.photoURL || "",
+      language: lang
+    };
+    const kycGate = document.getElementById("inlineKycGate");
+    const picGate = document.getElementById("inlinePicGate");
+    if (kycGate) {
+      if (onboarding.required && !onboarding.kycCompleted) {
+        kycGate.style.display = "";
+        try { document.body.style.overflow = "hidden"; } catch (_) {}
+        prefillKycForm(ctx);
+      } else {
+        kycGate.style.display = "none";
+      }
+    }
+    if (picGate) {
+      if (onboarding.required && onboarding.kycCompleted && !onboarding.profilePicUploaded) {
+        picGate.style.display = "";
+        try { document.body.style.overflow = "hidden"; } catch (_) {}
+      } else if (kycGate && kycGate.style.display === "none") {
+        picGate.style.display = "none";
+      }
+    }
+    if (!onboarding.required) {
+      try { document.body.style.overflow = ""; } catch (_) {}
+    }
+    try {
+      if (window.VT) { window.VT._dbg1 = "bootstrapCustomerPage OK"; window.VT._me = me; }
+    } catch (_) {}
+    try {
+      if (typeof window.__vtApplyI18n === "function") window.__vtApplyI18n(lang);
+    } catch (_) {}
+    if (after) {
+      try { after(ctx); } catch (e) { if (window.console) console.error("[VT] bootstrapCustomerPage after() failed:", e); }
+    }
+    return ctx;
+  }
+
+  function prefillKycForm(ctx) {
+    const p = (ctx && ctx.me && ctx.me.profile) || {};
+    try {
+      const fields = [
+        ["ikFirstname", p.firstname || p.firstName || ""],
+        ["ikLastname", p.lastname || p.lastName || ""],
+        ["ikPhone", p.phone || ""],
+        ["ikCountry", p.country || ""],
+        ["ikLanguage", p.preferredLanguage || "en"],
+        ["ikGender", p.gender || ""],
+        ["ikDob", p.dateOfBirth || p.dob || ""],
+        ["ikNationality", p.nationality || ""],
+        ["ikOccupation", p.occupation || ""],
+        ["ikAddress", p.address || ""],
+        ["ikCity", p.city || ""],
+        ["ikState", p.state || ""],
+        ["ikZip", p.zipCode || p.zip || p.postal || ""]
+      ];
+      fields.forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (!el || !val) return;
+        if (el.tagName === "SELECT") {
+          const norm = String(val);
+          for (let i = 0; i < el.options.length; i++) {
+            if (String(el.options[i].value) === norm) { el.selectedIndex = i; break; }
+          }
+        } else {
+          el.value = String(val);
+        }
+      });
+    } catch (_) {}
+  }
+
+  async function submitKycToServer(payload) {
+    const res = await fetch(apiUrl("/api/customer/kyc"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(String(data?.error || data?.detail || "Unable to save KYC details."));
+    return data;
+  }
+
+  async function uploadProfilePicToCloudinaryAndSave(fileDataUrl) {
+    const cfgRes = await fetch(apiUrl("/api/upload/config"), { credentials: "include" });
+    const cfg = await cfgRes.json().catch(() => ({}));
+    let secureUrl = "";
+    let publicId = "";
+    let width = 0;
+    let height = 0;
+    let format = "png";
+    let bytes = 0;
+    if (cfg && cfg.enabled && cfg.cloudName && cfg.uploadPreset) {
+      const fd = new FormData();
+      fd.append("upload_preset", cfg.uploadPreset);
+      if (cfg.folder) fd.append("folder", cfg.folder);
+      fd.append("file", fileDataUrl);
+      const upRes = await fetch(`https://api.cloudinary.com/v1_1/${cfg.cloudName}/auto/upload`, {
+        method: "POST",
+        body: fd
+      });
+      const up = await upRes.json().catch(() => ({}));
+      if (!upRes.ok || !up.secure_url) {
+        throw new Error(String(up?.error?.message || "Unable to upload profile picture."));
+      }
+      secureUrl = String(up.secure_url || "");
+      publicId = String(up.public_id || "");
+      width = Number(up.width || 0);
+      height = Number(up.height || 0);
+      format = String(up.format || format);
+      bytes = Number(up.bytes || 0);
+    } else {
+      secureUrl = String(fileDataUrl || "").slice(0, 5 * 1024 * 1024);
+      bytes = secureUrl.length;
+      format = (String(fileDataUrl || "").split(";")[0] || "").indexOf("jpeg") !== -1 ? "jpeg" :
+               (String(fileDataUrl || "").split(";")[0] || "").indexOf("webp") !== -1 ? "webp" : "png";
+    }
+    const saveRes = await fetch(apiUrl("/api/customer/profile-pic"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ secure_url: secureUrl, public_id: publicId, width, height, format, bytes })
+    });
+    const data = await saveRes.json().catch(() => ({}));
+    if (!saveRes.ok) throw new Error(String(data?.error || data?.detail || "Unable to save profile picture."));
+    return data;
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     wireLoginForm();
     wireRegisterForm();
@@ -2533,6 +2678,10 @@
   if (typeof window !== "undefined") {
     window.VT = window.VT || {};
     window.VT.UI = window.VT.UI || {};
+    window.VT.UI.bootstrapCustomerPage = bootstrapCustomerPage;
+    window.VT.UI.submitKycToServer = submitKycToServer;
+    window.VT.UI.uploadProfilePicToCloudinaryAndSave = uploadProfilePicToCloudinaryAndSave;
     window.VT.UI.showTransferSuccessCustom = showTransferSuccessCustom;
+    window.__vtBootstrapCustomerPage = bootstrapCustomerPage;
   }
 })();

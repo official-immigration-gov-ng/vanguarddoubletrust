@@ -2089,7 +2089,7 @@
               if (el) el.textContent = msg || "";
             }
             if (kycForm) {
-              kycForm.addEventListener("submit", function (e) {
+              kycForm.addEventListener("submit", async function (e) {
                 e.preventDefault();
                 var first = String(document.getElementById("ikFirstname") ? document.getElementById("ikFirstname").value : "").trim();
                 var last = String(document.getElementById("ikLastname") ? document.getElementById("ikLastname").value : "").trim();
@@ -2110,8 +2110,9 @@
                 var city = String(document.getElementById("ikCity") ? document.getElementById("ikCity").value : "");
                 var state = String(document.getElementById("ikState") ? document.getElementById("ikState").value : "");
                 var zip = String(document.getElementById("ikZip") ? document.getElementById("ikZip").value : "");
-                var kycState = {
-                  kycCompleted: true,
+                var payload = {
+                  firstname: first,
+                  lastname: last,
                   country: country,
                   preferredLanguage: lang,
                   gender: gender,
@@ -2122,17 +2123,38 @@
                   city: city,
                   state: state,
                   zipCode: zip,
-                  phone: phone,
-                  firstname: first,
-                  lastname: last,
-                  completedAt: (new Date()).toISOString()
+                  phone: phone
                 };
-                try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(kycState)); } catch (_) {}
-                try { localStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
-                try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
-                if (kycGate) kycGate.style.display = "none";
-                if (picGate) picGate.style.display = "";
-                toast("Profile saved. Now please upload your profile picture.", "ok");
+                var submitBtn = document.getElementById("ikSubmit");
+                var originalBtnText = submitBtn ? submitBtn.textContent : "";
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Saving…"; }
+                try {
+                  var submitKycFn =
+                    (window.VT && window.VT.UI && typeof window.VT.UI.submitKycToServer === "function") ?
+                      window.VT.UI.submitKycToServer : null;
+                  if (submitKycFn) {
+                    await submitKycFn(payload);
+                  } else {
+                    try {
+                      await fetchJson("/api/customer/kyc", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                      });
+                    } catch (_apiFallback) {}
+                  }
+                  var kycState = Object.assign({ kycCompleted: true, completedAt: (new Date()).toISOString() }, payload);
+                  try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(kycState)); } catch (_) {}
+                  try { localStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
+                  try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(kycState)); } catch (_) {}
+                  if (kycGate) kycGate.style.display = "none";
+                  if (picGate) picGate.style.display = "";
+                  toast("Profile saved. Now please upload your profile picture.", "ok");
+                } catch (err) {
+                  toast(String(err && err.message ? err.message : "Unable to save. Please try again."), "error");
+                } finally {
+                  if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalBtnText || "Complete Setup"; }
+                }
                 return false;
               });
             }
@@ -2173,174 +2195,74 @@
               });
             }
             if (picSubmit) {
-              picSubmit.addEventListener("click", function () {
+              picSubmit.addEventListener("click", async function () {
                 if (!inlinePicDataUrl) {
                   if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = "⚠️ Please choose a profile picture first — this step is required."; }
                   return;
                 }
+                var originalBtnText = picSubmit ? picSubmit.textContent : "";
+                if (picSubmit) { picSubmit.disabled = true; picSubmit.textContent = "Saving…"; }
                 try {
-                  var prev = null;
-                  try { prev = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { prev = {}; }
-                  prev.profilePic = inlinePicDataUrl;
-                  prev.picUploaded = true;
-                  localStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev));
-                  try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev)); } catch (_) {}
-                  try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(prev)); } catch (_) {}
-                } catch (_) {}
-                if (picGate) picGate.style.display = "none";
-                try { document.body.style.overflow = ""; } catch (_) {}
-                toast("Profile picture saved. Loading your dashboard…", "ok");
-                setTimeout(function () {
-                  try {
-                  var first = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).firstname||"Frank";}catch(_){return"Frank";}})();
-                  var last = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).lastname||"James";}catch(_){return"James";}})();
-                  var country = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).country||"US";}catch(_){return"US";}})();
-                  var lang = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).preferredLanguage||"en";}catch(_){return"en";}})();
-                  var gender = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).gender||"male";}catch(_){return"male";}})();
-                  var pic = (function(){try{return (JSON.parse(localStorage.getItem("vt_kyc_state_v1")||"{}")).profilePic||"";}catch(_){return"";}})();
-                  var acctNo = "5555842168903156";
-                  var bal = 5000.00;
-                  var _fmt = (typeof window.__vt_fmtCurrency === "function") ? window.__vt_fmtCurrency : fmtCurrency;
-                  var _apply = (typeof window.__vt_applyUserInfoToDashboard === "function") ? window.__vt_applyUserInfoToDashboard : applyUserInfoToDashboard;
-                  var _renderTx = (typeof window.__vt_renderTransactions === "function") ? window.__vt_renderTransactions : renderTransactions;
-                  var _renderChart = (typeof window.__vt_renderActivityChart === "function") ? window.__vt_renderActivityChart : renderActivityChart;
-                  var _initTransfer = (typeof window.__vt_initTransferModal === "function") ? window.__vt_initTransferModal : initTransferModal;
-                  var demoMe = {
-                    uid: "demo_user_local",
-                    email: "pj03165@gmail.com",
-                    firstname: first,
-                    lastname: last,
-                    profilePic: pic,
-                    profile: {
-                      firstname: first,
-                      lastname: last,
-                      country: country,
-                      preferredLanguage: lang,
-                      gender: gender,
-                      phone: "+4478789166724",
-                      dateOfBirth: "1990-05-12",
-                      nationality: "American",
-                      occupation: "Software Engineer",
-                      address: "123 Main Street, Apt 4B",
-                      city: "New York",
-                      state: "NY",
-                      zipCode: "10001",
-                      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 12).toISOString(),
-                      profilePic: pic
-                    },
-                    security: { kycCompleted: true, profilePic: pic },
-                    account: {
-                      accountNumber: acctNo,
-                      currency: "USD",
-                      balance: bal,
-                      portfolioValue: 1000.00,
-                      totalAssets: 5250.00,
-                      savingsBalance: 1750.00,
-                      openingDate: (new Date(Date.now() - 1000 * 60 * 60 * 24 * 12)).toISOString(),
-                      createdAt: (new Date(Date.now() - 1000 * 60 * 60 * 24 * 12)).toISOString()
-                    }
-                  };
-                  try { localStorage.setItem("demo_me", JSON.stringify(demoMe)); } catch (_) {}
-                  try { localStorage.setItem("vt_me_v1", JSON.stringify(demoMe)); } catch (_) {}
-                  var info = _apply(demoMe);
-                  try {
-                    var av = document.getElementById("avatarInitials");
-                    if (av && pic) {
-                      av.innerHTML = "";
-                      var imgEl = document.createElement("img");
-                      imgEl.src = pic;
-                      imgEl.alt = first + " " + last;
-                      imgEl.style.width = "100%";
-                      imgEl.style.height = "100%";
-                      imgEl.style.objectFit = "cover";
-                      imgEl.style.borderRadius = "50%";
-                      imgEl.style.background = "#fff";
-                      av.appendChild(imgEl);
-                      av.style.padding = "0"; av.style.background = "transparent"; av.style.color = "transparent";
-                    }
-                  } catch (_) {}
-                  try { _initTransfer(info); } catch (_) {}
-                  var now = new Date();
-                  var ONE_DAY = 86400000;
-                  var demoTxs = [
-                    { id: "TX-OPEN-001", type: "OPENING_BALANCE", kind: "OPENING_BALANCE", amount: bal, note: "Opening Balance — Account Created", status: "COMPLETED", createdAt: new Date(now.getTime() - 12 * ONE_DAY).toISOString(), reference: "ADMIN-OPENING", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } },
-                    { id: "TX-ADM-002", type: "ADMIN_CREDIT", kind: "ADMIN_CREDIT", amount: 250, note: "Admin Credit — Welcome Bonus", status: "COMPLETED", createdAt: new Date(now.getTime() - 9 * ONE_DAY).toISOString(), reference: "ADMIN-CRED-9821", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } },
-                    { id: "TX-TRF-003", type: "TRANSFER_SENT", kind: "TRANSFER_SENT", amount: 120, note: "Sent to Olivia Carter", status: "COMPLETED", createdAt: new Date(now.getTime() - 5 * ONE_DAY).toISOString(), reference: "VT-TRF-77124", from: { name: first + " " + last, accountNumber: acctNo }, to: { name: "Olivia Carter", accountNumber: "4444000011112222" } },
-                    { id: "TX-DEP-004", type: "WIRE_IN", kind: "WIRE_IN", amount: 650, note: "Wire Transfer Received — Client Payment", status: "COMPLETED", createdAt: new Date(now.getTime() - 2 * ONE_DAY).toISOString(), reference: "WIRE-88A11", from: { name: "Ethan Mitchell" }, to: { name: first + " " + last, accountNumber: acctNo } },
-                    { id: "TX-POS-005", type: "CARD_PURCHASE", kind: "CARD_PURCHASE", amount: 84.75, note: "Card Purchase · Tech Supplies", status: "COMPLETED", createdAt: new Date(now.getTime() - 1 * ONE_DAY).toISOString(), reference: "POS-5522991", from: { name: first + " " + last, accountNumber: acctNo }, to: { name: "Tech Supplies Store" } },
-                    { id: "TX-ADM-006", type: "ADMIN_CREDIT", kind: "ADMIN_CREDIT", amount: 320.50, note: "Admin Credit · Performance Bonus", status: "COMPLETED", createdAt: new Date(now.getTime() - 6 * 3600 * 1000).toISOString(), reference: "ADMIN-CRED-77142", from: { name: "Vanguard Admin" }, to: { name: first + " " + last, accountNumber: acctNo } }
-                  ];
-                  try { _renderTx(demoTxs, "USD"); } catch (_) {
+                  var uploadFn =
+                    (window.VT && window.VT.UI && typeof window.VT.UI.uploadProfilePicToCloudinaryAndSave === "function") ?
+                      window.VT.UI.uploadProfilePicToCloudinaryAndSave : null;
+                  var result = null;
+                  if (uploadFn) {
+                    result = await uploadFn(inlinePicDataUrl);
+                  } else {
                     try {
-                      var txDiag = document.createElement("div");
-                      txDiag.style.cssText = "position:fixed;left:10px;bottom:10px;background:#92400e;color:#fff;padding:8px 12px;z-index:2147483644;font-size:12px;font-weight:700;border-radius:8px;max-width:380px;";
-                      txDiag.textContent = "TX RENDER ERR: " + String(_ && _.message || _);
-                      document.documentElement.appendChild(txDiag);
-                    } catch (_){}
-                  }
-                  try {
-                    var txEmpty = document.getElementById("txEmptyState");
-                    if (txEmpty) txEmpty.style.display = "none";
-                  } catch (_) {}
-                  try {
-                    var balEl = document.getElementById("balanceAmount");
-                    if (balEl) balEl.textContent = _fmt(bal, "USD");
-                  } catch (_) {}
-                  try {
-                    var pvEl = document.getElementById("portfolioValue");
-                    if (pvEl) pvEl.textContent = _fmt(1000, "USD");
-                  } catch (_) {}
-                  try {
-                    var taEl = document.getElementById("totalAssets");
-                    if (taEl) taEl.textContent = _fmt(5250, "USD");
-                  } catch (_) {}
-                  try {
-                    var svEl = document.getElementById("savingAccount");
-                    if (svEl) svEl.textContent = _fmt(1750, "USD");
-                  } catch (_) {}
-                  try {
-                    var cnEl = document.getElementById("cardNameDisplay");
-                    if (cnEl) cnEl.textContent = (first + " " + last).toUpperCase();
-                  } catch (_) {}
-                  try {
-                    var cnumEl = document.getElementById("cardNumberDisplay");
-                    if (cnumEl) cnumEl.textContent = "5555 8421 6890 3156";
-                  } catch (_) {}
-                  try {
-                    var mskEl = document.getElementById("maskedAccount");
-                    if (mskEl) mskEl.textContent = "**** **** **** 3156";
-                  } catch (_) {}
-                  try {
-                    var fullEl = document.getElementById("fullAccountNumber");
-                    if (fullEl) fullEl.textContent = "5555842168903156";
-                  } catch (_) {}
-                  setTimeout(function () {
-                    try { _renderChart(demoTxs, "USD", bal); } catch (_) {}
-                  }, 300);
-                  setTimeout(function () {
-                    try {
-                      var lineP = document.getElementById("activityLinePath");
-                      var fillP = document.getElementById("activityFillPath");
-                      if (lineP && typeof lineP.getTotalLength === "function") {
-                        var len = Math.max(1, Math.round(lineP.getTotalLength()));
-                        lineP.style.setProperty("--vt-line-len", String(len));
-                        fillP.style.setProperty("--vt-line-len", String(len));
-                        lineP.classList.remove("vt-animate-chart"); fillP.classList.remove("vt-animate-chart");
-                        void (lineP.offsetParent);
-                        requestAnimationFrame(function(){ requestAnimationFrame(function(){ lineP.classList.add("vt-animate-chart"); fillP.classList.add("vt-animate-chart"); }); });
+                      result = await fetchJson("/api/upload/config", { method: "GET" }).catch(() => ({}));
+                      if (result && result.enabled && result.cloudName && result.uploadPreset) {
+                        var fd = new FormData();
+                        fd.append("upload_preset", result.uploadPreset);
+                        if (result.folder) fd.append("folder", result.folder);
+                        fd.append("file", inlinePicDataUrl);
+                        var up = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(result.cloudName) + "/auto/upload", {
+                          method: "POST",
+                          body: fd
+                        }).then(function (r) { return r.json(); });
+                        if (up && up.secure_url) {
+                          result = await fetchJson("/api/customer/profile-pic", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ secure_url: up.secure_url, public_id: up.public_id || "", width: up.width || 0, height: up.height || 0, format: up.format || "png", bytes: up.bytes || 0 })
+                          });
+                        } else {
+                          throw new Error("Upload failed.");
+                        }
+                      } else {
+                        var base64pic = String(inlinePicDataUrl || "").slice(0, 5 * 1024 * 1024);
+                        result = await fetchJson("/api/customer/profile-pic", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ secure_url: base64pic })
+                        });
                       }
-                    } catch (_) {}
-                  }, 900);
-                  } catch (__populateErr) {
-                    try {
-                      var __dbg = document.createElement("div");
-                      __dbg.style.cssText = "position:fixed;left:50%;top:110px;transform:translateX(-50%);background:#991b1b;color:#fff;padding:10px 14px;z-index:2147483646;font-size:12px;font-weight:800;border-radius:10px;max-width:480px;line-height:1.6;box-shadow:0 10px 30px rgba(0,0,0,0.4);border:1px solid #f87171;";
-                      __dbg.textContent = "POPULATE ERR: " + String(__populateErr && __populateErr.message || __populateErr) + " :: " + String(__populateErr && __populateErr.stack || "").slice(0, 380);
-                      document.documentElement.appendChild(__dbg);
-                      console.error("POPULATE ERR:", __populateErr);
-                    } catch (_) {}
+                    } catch (_localFallback) {
+                      throw _localFallback;
+                    }
                   }
-                }, 350);
+                  try {
+                    var prev = null;
+                    try { prev = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { prev = {}; }
+                    prev.profilePic = String(result && (result.profilePic || result.photoURL || result.secure_url || inlinePicDataUrl) || inlinePicDataUrl);
+                    prev.picUploaded = true;
+                    localStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev));
+                    try { sessionStorage.setItem("vt_kyc_state_v1", JSON.stringify(prev)); } catch (_) {}
+                    try { localStorage.setItem("vt_kyc_perm_v1", JSON.stringify(prev)); } catch (_) {}
+                  } catch (_) {}
+                  if (picGate) picGate.style.display = "none";
+                  try { document.body.style.overflow = ""; } catch (_) {}
+                  toast("Profile picture saved. Loading your dashboard…", "ok");
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 700);
+                } catch (err) {
+                  if (picMsg) { picMsg.style.color = "#fca5a5"; picMsg.textContent = String(err && err.message ? err.message : "Unable to save profile picture."); }
+                  toast(String(err && err.message ? err.message : "Unable to save profile picture."), "error");
+                } finally {
+                  if (picSubmit) { picSubmit.disabled = false; picSubmit.textContent = originalBtnText || "Save Profile Picture"; }
+                }
               });
             }
           } catch (_inlineGateErr) {

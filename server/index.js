@@ -1111,7 +1111,7 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   });
 });
 
-app.get("/api/customer/transactions", requireAuth, async (req, res) => {
+app.get("/api/customer/transactions", requireAuth, requireKycAndProfilePic, async (req, res) => {
   try {
     const uid = req.user.uid;
     const rawLimit = Number(req.query?.limit || 20);
@@ -1186,7 +1186,7 @@ app.get("/api/customer/lookup-account", requireAuth, async (req, res) => {
   }
 });
 
-app.post("/api/customer/transfer", requireAuth, async (req, res) => {
+app.post("/api/customer/transfer", requireAuth, requireKycAndProfilePic, async (req, res) => {
   const b = req.body || {};
   const uid = req.user.uid;
   const toAccountNumber = String(b.toAccountNumber || b.to || "").trim();
@@ -2153,20 +2153,16 @@ app.get("/customer/verify-pin.php", requireAuth, (req, res) => {
   sendPage(res, "customer/verify-pin.php");
 });
 
-app.get("/customer/account.html", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/account.html", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/account.html");
 });
 
-app.get("/customer/accountdetails.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/accountdetails.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/accountdetails.php");
 });
 
 app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) => {
   sendPage(res, "customer/dashboard.php");
-});
-
-app.get("/customer/dashboard.php.html", requireAuth, (req, res) => {
-  res.redirect(301, "/customer/dashboard.php");
 });
 
 app.get("/customer/dashboard", requireAuth, (req, res) => {
@@ -2177,35 +2173,35 @@ app.get("/customer/dashboard", requireAuth, (req, res) => {
   res.redirect("/customer/verify-pin.php");
 });
 
-app.get("/customer/myprofile.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/myprofile.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/myprofile.php");
 });
 
-app.get("/customer/statement.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/statement.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/statement.php");
 });
 
-app.get("/customer/stocks.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/stocks.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/stocks.php");
 });
 
-app.get("/customer/international.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/international.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/international.php");
 });
 
-app.get("/customer/transferhistory.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/transferhistory.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/transferhistory.php");
 });
 
-app.get("/customer/card.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/card.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/card.php");
 });
 
-app.get("/customer/pin.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/pin.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/pin.php");
 });
 
-app.get("/customer/password.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/password.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/password.php");
 });
 
@@ -2241,11 +2237,23 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => 
     sendPage(res, "customer/" + rel);
     return;
   }
-  if (isPinVerified(req)) {
-    sendPage(res, "customer/" + rel);
+  if (rel === "dashboard.php") {
+    if (isPinVerified(req)) {
+      sendPage(res, "customer/" + rel);
+    } else {
+      res.redirect("/customer/verify-pin.php");
+    }
     return;
   }
-  res.redirect("/customer/verify-pin.php");
+  if (!isPinVerified(req)) {
+    res.redirect("/customer/verify-pin.php");
+    return;
+  }
+  if (!hasKycCompleted(req) || !hasProfilePic(req)) {
+    res.redirect("/customer/dashboard.php#onboarding");
+    return;
+  }
+  sendPage(res, "customer/" + rel);
 });
 
 app.use("/_dev", express.static(siteRoot, {
