@@ -404,12 +404,21 @@ function hasProfilePic(reqOrUser) {
   return Boolean(pic && pic !== "");
 }
 
+function onboardingIsRequired(reqOrUser) {
+  const u = getUserFromReqOrUser(reqOrUser);
+  const ob = u && typeof u.onboarding === "object" ? u.onboarding : null;
+  if (ob && typeof ob.required === "boolean") {
+    return ob.required;
+  }
+  return !(hasKycCompleted(u) && hasProfilePic(u));
+}
+
 function requireKycAndProfilePic(req, res, next) {
   if (!req.user) {
     next();
     return;
   }
-  if (hasKycCompleted(req) && hasProfilePic(req)) {
+  if (!onboardingIsRequired(req)) {
     next();
     return;
   }
@@ -486,7 +495,7 @@ async function ensureUserDoc(uid, email) {
       createdAt: nowIso,
       updatedAt: nowIso,
       profile: { preferredLanguage: "en" },
-      security: {},
+      security: { twoFactorEnabled: true },
       account: {
         accountNumber: generateAccountNumber(),
         status: "ACTIVE",
@@ -495,7 +504,8 @@ async function ensureUserDoc(uid, email) {
         lastLogin: nowIso,
         currency: "USD",
         balance: 4365423
-      }
+      },
+      onboarding: { required: true }
     },
     { merge: true }
   );
@@ -544,6 +554,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
 
   const sec = freshUser?.security || {};
   const prof = freshUser?.profile || {};
+  const ob = freshUser?.onboarding || {};
   const kycCompleted = hasKycCompleted(freshUser);
   const picDone = hasProfilePic(freshUser);
 
@@ -592,8 +603,13 @@ app.get("/api/me", requireAuth, async (req, res) => {
     accountPinHashSet: Boolean(sec?.accountPinHash)
   });
 
+  const persistedOnboardingRequired = (typeof ob?.required === "boolean") ? ob.required : null;
+  const onboardingRequired = (persistedOnboardingRequired != null)
+    ? persistedOnboardingRequired
+    : !(kycCompleted && picDone);
+
   const onboardingInfo = {
-    required: !(kycCompleted && picDone),
+    required: onboardingRequired,
     kycCompleted: kycCompleted,
     profilePicUploaded: picDone
   };
@@ -664,6 +680,20 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
   await ensureUserDoc(uid, req.user.email);
   const nowIso = new Date().toISOString();
 
+  const existingSnap = await (async () => {
+    try {
+      const db = getFirestore();
+      const s = await db.collection("users").doc(String(uid)).get().catch(() => null);
+      if (s && s.exists) return s.data() || {};
+    } catch (_) {}
+    return {};
+  })();
+  const existingProfForCheck = existingSnap.profile || req.user?.profile || {};
+  const existingSecForCheck = existingSnap.security || req.user?.security || {};
+  const picDoneForCheck = Boolean(secureUrl) || hasProfilePic({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
+  const kycDoneForCheck = hasKycCompleted({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
+  const onboardingRequiredForSave = !(kycDoneForCheck && picDoneForCheck);
+
   const updates = {
     updatedAt: nowIso,
     profile: {
@@ -687,7 +717,8 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
     profilePic: secureUrl,
     photoURL: secureUrl,
     photo: secureUrl,
-    avatar: secureUrl
+    avatar: secureUrl,
+    onboarding: { required: onboardingRequiredForSave }
   };
 
   try {
@@ -700,6 +731,9 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
     const fullUser = { uid, profile: dbProf, security: dbSec, ...dbData };
     const kycDone = hasKycCompleted(fullUser);
     const picDone = hasProfilePic(fullUser);
+    const finalOnboardingRequired = (dbData?.onboarding && typeof dbData.onboarding.required === "boolean")
+      ? dbData.onboarding.required
+      : !(kycDone && picDone);
 
     res.status(200).json({
       ok: true,
@@ -715,7 +749,7 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
       kycDone: kycDone,
       KYCDone: kycDone,
       onboarding: {
-        required: !(kycDone && picDone),
+        required: finalOnboardingRequired,
         kycCompleted: kycDone,
         profilePicUploaded: picDone
       },
@@ -846,6 +880,8 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     KYCDoneAt: nowIso
   });
 
+  const onboardingRequired = !(hasKycCompleted({ profile: userProfileUpdate, security: userSecurityUpdate, ...existingSnapshot }) && hasProfilePic({ profile: userProfileUpdate, security: userSecurityUpdate, ...existingSnapshot }));
+
   const updates = {
     updatedAt: nowIso,
     profile: userProfileUpdate,
@@ -854,7 +890,8 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     preferredLanguage: langCode,
     firstname: finalFirstName,
     lastname: finalLastName,
-    kycCompleted: true
+    kycCompleted: true,
+    onboarding: { required: onboardingRequired }
   };
 
   let dbSnapshot = null;
@@ -880,13 +917,16 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   );
   const kycDoneFinal = hasKycCompleted(fullRefreshedUser);
   const picDoneFinal = hasProfilePic(fullRefreshedUser);
+  const finalOnboardingRequired = (dbSnapshot?.onboarding && typeof dbSnapshot.onboarding.required === "boolean")
+    ? dbSnapshot.onboarding.required
+    : !(kycDoneFinal && picDoneFinal);
 
   res.status(200).json({
     ok: true,
     preferredLanguage: langCode,
     profilePic: picUrl,
     onboarding: {
-      required: !(kycDoneFinal && picDoneFinal),
+      required: finalOnboardingRequired,
       kycCompleted: kycDoneFinal,
       profilePicUploaded: picDoneFinal
     },
@@ -1096,6 +1136,10 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     newProfile.kycDone = true;
   }
 
+  const kycForOnboarding = hasKycCompleted({ profile: newProfile, security: newSecurity, ...existingSnapshot });
+  const picForOnboarding = hasProfilePic({ profile: newProfile, security: newSecurity, ...existingSnapshot });
+  const obRequiredForSave = !(kycForOnboarding && picForOnboarding);
+
   const updates = {
     updatedAt: nowIso,
     profile: newProfile,
@@ -1106,7 +1150,8 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     lastname: newProfile.lastname || "",
     profilePic: newProfile.profilePic || "",
     photoURL: newProfile.photoURL || "",
-    kycCompleted: Boolean(newSecurity.kycCompleted || newProfile.kycCompleted)
+    kycCompleted: Boolean(newSecurity.kycCompleted || newProfile.kycCompleted),
+    onboarding: { required: obRequiredForSave }
   };
 
   let refreshedSnap = null;
@@ -1122,12 +1167,17 @@ app.put("/api/profile", requireAuth, async (req, res) => {
 
   const fsProf = (refreshedSnap && refreshedSnap.profile) || newProfile || {};
   const fsSec = (refreshedSnap && refreshedSnap.security) || newSecurity || {};
+  const fsOb = (refreshedSnap && refreshedSnap.onboarding) || {};
   const fullRefUser = { uid, profile: fsProf, security: fsSec, ...refreshedSnap };
   const picUrl = String(
     fsProf.profilePic || fsProf.photoURL || fsProf.photo || fsProf.avatar ||
     fsSec.profilePic || fsSec.photoURL || fsSec.photo || fsSec.avatar || ""
   );
   const kycCompleted = hasKycCompleted(fullRefUser);
+  const picCompleted = hasProfilePic(fullRefUser);
+  const persistedOb = typeof fsOb.required === "boolean" ? fsOb.required : null;
+  const obRequiredFinal = (persistedOb != null) ? persistedOb : !(kycCompleted && picCompleted);
+
   res.json({
     ok: true,
     profilePic: picUrl,
@@ -1137,6 +1187,11 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     kycCompleted,
     kycDone: kycCompleted,
     KYCDone: kycCompleted,
+    onboarding: {
+      required: obRequiredFinal,
+      kycCompleted: kycCompleted,
+      profilePicUploaded: picCompleted
+    },
     profile: Object.assign({}, fsProf || {}, {
       kycCompleted,
       kycDone: kycCompleted,
@@ -1503,6 +1558,18 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
     const pinHashSet = Boolean(security?.accountPinHash);
     const transferPinHashSet = Boolean(security?.transferPinHash);
 
+    const finalPicUrl = String(
+      profile.profilePic || profile.photoURL || profile.photo || profile.avatar ||
+      security.profilePic || security.photoURL || security.photo || security.avatar ||
+      data.profilePic || data.photoURL || data.photo || data.avatar || ""
+    ).trim();
+
+    const ob = typeof data.onboarding === "object" && data.onboarding ? data.onboarding : {};
+    const kycCompleted = hasKycCompleted({ profile, security, ...data });
+    const picDone = hasProfilePic({ profile, security, ...data });
+    const persistedObRequired = typeof ob.required === "boolean" ? ob.required : null;
+    const obRequired = (persistedObRequired != null) ? persistedObRequired : !(kycCompleted && picDone);
+
     res.json({
       ok: true,
       user: {
@@ -1511,9 +1578,9 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
         createdAt: data.createdAt || null,
         updatedAt: data.updatedAt || null,
         profile: {
-          firstname: profile.firstname || data.firstname || "",
-          lastname: profile.lastname || data.lastname || "",
-          phone: profile.phone || data.phone || "",
+          firstname: profile.firstname || profile.firstName || data.firstname || data.firstName || "",
+          lastname: profile.lastname || profile.lastName || data.lastname || data.lastName || "",
+          phone: profile.phone || profile.phoneNumber || data.phone || data.phoneNumber || "",
           address: profile.address || data.address || "",
           gender: profile.gender || data.gender || "",
           dateOfBirth: profile.dateOfBirth || profile.dob || data.dateOfBirth || data.dob || "",
@@ -1521,9 +1588,18 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
           nationality: profile.nationality || data.nationality || "",
           city: profile.city || data.city || "",
           state: profile.state || data.state || "",
-          zipCode: profile.zipCode || profile.zip || data.zipCode || data.zip || "",
+          zipCode: profile.zipCode || profile.zip || profile.postal || data.zipCode || data.zip || data.postal || "",
           country: profile.country || data.country || "",
-          profilePic: profile.profilePic || profile.photoURL || profile.avatar || data.profilePic || data.photoURL || data.avatar || ""
+          profilePic: finalPicUrl,
+          photoURL: finalPicUrl,
+          photo: finalPicUrl,
+          avatar: finalPicUrl,
+          profilePicPublicId: profile.profilePicPublicId || security.profilePicPublicId || data.profilePicPublicId || null,
+          preferredLanguage: profile.preferredLanguage || profile.language || data.preferredLanguage || "en",
+          kycCompleted: kycCompleted,
+          kycDone: kycCompleted,
+          KYCDone: kycCompleted,
+          kycCompletedAt: profile.kycCompletedAt || profile.KYCDoneAt || profile.kycDoneAt || security.kycCompletedAt || data.kycCompletedAt || null
         },
         account: {
           accountNumber: account.accountNumber || "",
@@ -1543,7 +1619,19 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
           transferPinHashSet: transferPinHashSet,
           twoFactorEnabled: Boolean(security?.twoFactorEnabled !== false),
           lastPinChangeAt: security?.lastPinChangeAt || null,
-          lastPasswordChangeAt: security?.lastPasswordChangeAt || null
+          lastPasswordChangeAt: security?.lastPasswordChangeAt || null,
+          kycCompleted: kycCompleted,
+          kycDone: kycCompleted,
+          KYCDone: kycCompleted,
+          profilePic: finalPicUrl,
+          photoURL: finalPicUrl,
+          photo: finalPicUrl,
+          avatar: finalPicUrl
+        },
+        onboarding: {
+          required: obRequired,
+          kycCompleted: kycCompleted,
+          profilePicUploaded: picDone
         },
         auth: authRecord,
         transactions
@@ -1746,7 +1834,8 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
               lastLogin: nowIso,
               currency: "USD",
               balance: startingBalance
-            }
+            },
+            onboarding: { required: true }
           },
           { merge: true }
         );
@@ -2356,7 +2445,7 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => 
     res.redirect("/customer/verify-pin.php");
     return;
   }
-  if (!hasKycCompleted(req) || !hasProfilePic(req)) {
+  if (onboardingIsRequired(req)) {
     res.redirect("/customer/dashboard.php#onboarding");
     return;
   }

@@ -150,9 +150,17 @@
     const totalTx = txs.length;
     const lastSignIn = auth.lastSignInTime || acc.lastLogin || acc.openingDate || u.createdAt;
 
+    const profilePicUrl = String(
+      prof.profilePic || prof.photoURL || prof.photo || prof.avatar || ""
+    ).trim();
+    const profilePicHtml = profilePicUrl
+      ? `<img src="${escapeHtml(profilePicUrl)}" alt="Profile" style="max-width:120px;max-height:120px;border-radius:12px;border:1px solid rgba(219,234,254,0.2);display:block;" onerror="this.style.display='none'" />`
+      : "";
+
     const profileHtml = `
       <div class="review-panel">
         <h4>Profile / KYC</h4>
+        ${profilePicUrl ? kv("Profile Photo", profilePicHtml) : kv("Profile Photo", "—")}
         ${kv("First name", escapeHtml(prof.firstname || ""))}
         ${kv("Last name", escapeHtml(prof.lastname || ""))}
         ${kv("Email", escapeHtml(u.email || ""))}
