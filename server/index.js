@@ -2131,6 +2131,64 @@ app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
   }
 });
 
+app.post("/api/admin/clear-users", requireAdminAuth, async (req, res) => {
+  try {
+    const db = getFirestore();
+    const auth = getAuth();
+
+    const usersSnap = await db.collection("users").get();
+    let deletedCount = 0;
+
+    for (const userDoc of usersSnap.docs) {
+      const uid = userDoc.id;
+      try {
+        await auth.deleteUser(uid);
+      } catch (_) {}
+
+      try {
+        const txSnap = await userDoc.ref.collection("transactions").get();
+        let batch = db.batch();
+        let count = 0;
+        for (const doc of txSnap.docs) {
+          batch.delete(doc.ref);
+          count++;
+          if (count >= 400) {
+            await batch.commit();
+            batch = db.batch();
+            count = 0;
+          }
+        }
+        if (count > 0) await batch.commit();
+      } catch (_) {}
+
+      try {
+        const globalTx = await db.collection("transactions").where("uid", "==", uid).get();
+        let batch = db.batch();
+        let count = 0;
+        for (const doc of globalTx.docs) {
+          batch.delete(doc.ref);
+          count++;
+          if (count >= 400) {
+            await batch.commit();
+            batch = db.batch();
+            count = 0;
+          }
+        }
+        if (count > 0) await batch.commit();
+      } catch (_) {}
+
+      await userDoc.ref.delete().catch(() => {});
+      deletedCount++;
+    }
+
+    console.log(`[ADMIN] Bulk cleared ${deletedCount} user accounts by ${req.admin?.email || "admin"}`);
+    res.json({ ok: true, message: `Successfully cleared ${deletedCount} old customer account(s).`, deletedCount });
+  } catch (e) {
+    const normalized = normalizeFirebaseAdminError(e, "Unable to clear customer accounts.");
+    res.status(normalized.status).json({ error: normalized.error });
+  }
+});
+
 function sendHtmlFile(res, absPath) {
   try {
     const html = fs.readFileSync(absPath, "utf8");

@@ -444,10 +444,36 @@
     const searchInput = document.getElementById("adminUserSearch");
     const logoutBtn = document.getElementById("adminLogoutBtn");
     const createBtn = document.getElementById("adminCreateUserBtn");
+    const clearAllBtn = document.getElementById("adminClearAllUsersBtn");
     const closeBtn = document.getElementById("adminCreateCloseBtn");
     const generateBtn = document.getElementById("adminGenerateBtn");
     const submitBtn = document.getElementById("adminCreateSubmitBtn");
     let state = { users: [] };
+
+    clearAllBtn?.addEventListener("click", async () => {
+      const confirmed = window.confirm(
+        "PERMANENTLY CLEAR ALL OLD CUSTOMER ACCOUNTS?\n\n" +
+        "This will delete ALL registered/generated customer accounts, their Firebase logins, and transaction records.\n\n" +
+        "This action cannot be undone.\n\n" +
+        "Click OK to clear all old customer accounts."
+      );
+      if (!confirmed) return;
+
+      clearAllBtn.disabled = true;
+      clearAllBtn.textContent = "Clearing...";
+      flash("");
+
+      try {
+        const data = await api("/api/admin/clear-users", { method: "POST" });
+        flash(data?.message || "All old customer accounts cleared successfully.");
+        await loadUsers();
+      } catch (error) {
+        flash(error?.message || "Unable to clear customer accounts.", true);
+      } finally {
+        clearAllBtn.disabled = false;
+        clearAllBtn.textContent = "Clear Old Accounts";
+      }
+    });
 
     logoutBtn?.addEventListener("click", async () => {
       try {
