@@ -580,7 +580,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
   });
 
   const finalSecurity = Object.assign({}, sec || {}, {
-    twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
+    twoFactorEnabled: Boolean(sec?.twoFactorEnabled !== false),
     kycCompleted: kycCompleted,
     kycDone: kycCompleted,
     KYCDone: kycCompleted,
@@ -1511,18 +1511,19 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
         createdAt: data.createdAt || null,
         updatedAt: data.updatedAt || null,
         profile: {
-          firstname: profile.firstname || "",
-          lastname: profile.lastname || "",
-          phone: profile.phone || "",
-          address: profile.address || "",
-          gender: profile.gender || "",
-          dateOfBirth: profile.dateOfBirth || "",
-          occupation: profile.occupation || "",
-          nationality: profile.nationality || "",
-          city: profile.city || "",
-          state: profile.state || "",
-          zipCode: profile.zipCode || "",
-          country: profile.country || ""
+          firstname: profile.firstname || data.firstname || "",
+          lastname: profile.lastname || data.lastname || "",
+          phone: profile.phone || data.phone || "",
+          address: profile.address || data.address || "",
+          gender: profile.gender || data.gender || "",
+          dateOfBirth: profile.dateOfBirth || profile.dob || data.dateOfBirth || data.dob || "",
+          occupation: profile.occupation || data.occupation || "",
+          nationality: profile.nationality || data.nationality || "",
+          city: profile.city || data.city || "",
+          state: profile.state || data.state || "",
+          zipCode: profile.zipCode || profile.zip || data.zipCode || data.zip || "",
+          country: profile.country || data.country || "",
+          profilePic: profile.profilePic || profile.photoURL || profile.avatar || data.profilePic || data.photoURL || data.avatar || ""
         },
         account: {
           accountNumber: account.accountNumber || "",
@@ -1540,7 +1541,7 @@ app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
         security: {
           accountPinHashSet: pinHashSet,
           transferPinHashSet: transferPinHashSet,
-          twoFactorEnabled: Boolean(security?.twoFactorEnabled || false),
+          twoFactorEnabled: Boolean(security?.twoFactorEnabled !== false),
           lastPinChangeAt: security?.lastPinChangeAt || null,
           lastPasswordChangeAt: security?.lastPasswordChangeAt || null
         },
@@ -1734,7 +1735,8 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
             },
             security: {
               accountPinHash: sha256Hex(accountPin),
-              transferPinHash: sha256Hex(transferCode)
+              transferPinHash: sha256Hex(transferCode),
+              twoFactorEnabled: true
             },
             account: {
               accountNumber,
