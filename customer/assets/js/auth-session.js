@@ -2536,7 +2536,14 @@
       sec.profilePic || sec.photoURL || ""
     ).trim();
     const picDone = Boolean(picUrl && picUrl !== "");
-    const onboardingRequired = !(kycDone && picDone);
+
+    let onboardingRequired;
+    const persistedOb = me?.onboarding;
+    if (persistedOb && typeof persistedOb.required === "boolean") {
+      onboardingRequired = persistedOb.required;
+    } else {
+      onboardingRequired = !(kycDone && picDone);
+    }
     const onboarding = {
       required: onboardingRequired,
       kycCompleted: kycDone,
@@ -2549,6 +2556,9 @@
       onboarding: onboarding,
       kycCompleted: kycDone,
       profilePic: picUrl,
+      photoURL: picUrl,
+      picUploaded: picDone,
+      profilePicUploaded: picDone,
       language: lang
     };
     const kycGate = document.getElementById("inlineKycGate");

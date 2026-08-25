@@ -535,6 +535,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
           account: accountObj,
           profile: profileObj,
           security: securityObj,
+          onboarding: typeof dbData.onboarding === "object" && dbData.onboarding ? dbData.onboarding : (req.user && req.user.onboarding) || null,
           country: profileObj.country || dbData.country || null,
           preferredLanguage: profileObj.preferredLanguage || dbData.preferredLanguage || "en",
           firstname: profileObj.firstname || dbData.firstname || "",
@@ -692,7 +693,12 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
   const existingSecForCheck = existingSnap.security || req.user?.security || {};
   const picDoneForCheck = Boolean(secureUrl) || hasProfilePic({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
   const kycDoneForCheck = hasKycCompleted({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
-  const onboardingRequiredForSave = !(kycDoneForCheck && picDoneForCheck);
+  const heuristicObRequired = !(kycDoneForCheck && picDoneForCheck);
+  const existingOb = (existingSnap && typeof existingSnap.onboarding === "object" && existingSnap.onboarding) ? existingSnap.onboarding : {};
+  const existingObRequired = typeof existingOb.required === "boolean" ? existingOb.required : null;
+  const onboardingRequiredForSave = (existingObRequired === false)
+    ? false
+    : (existingObRequired != null ? existingObRequired : heuristicObRequired);
 
   const updates = {
     updatedAt: nowIso,
@@ -731,9 +737,12 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
     const fullUser = { uid, profile: dbProf, security: dbSec, ...dbData };
     const kycDone = hasKycCompleted(fullUser);
     const picDone = hasProfilePic(fullUser);
-    const finalOnboardingRequired = (dbData?.onboarding && typeof dbData.onboarding.required === "boolean")
+    const persistedObReq = (dbData?.onboarding && typeof dbData.onboarding.required === "boolean")
       ? dbData.onboarding.required
-      : !(kycDone && picDone);
+      : null;
+    const finalOnboardingRequired = (persistedObReq === false)
+      ? false
+      : (persistedObReq != null ? persistedObReq : !(kycDone && picDone));
 
     res.status(200).json({
       ok: true,
@@ -882,6 +891,12 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
 
   const onboardingRequired = !(hasKycCompleted({ profile: userProfileUpdate, security: userSecurityUpdate, ...existingSnapshot }) && hasProfilePic({ profile: userProfileUpdate, security: userSecurityUpdate, ...existingSnapshot }));
 
+  const existingOnboarding = (existingSnapshot && typeof existingSnapshot.onboarding === "object" && existingSnapshot.onboarding) ? existingSnapshot.onboarding : {};
+  const existingObRequired = typeof existingOnboarding.required === "boolean" ? existingOnboarding.required : null;
+  const finalOnboardingRequiredForSave = (existingObRequired === false)
+    ? false
+    : (existingObRequired != null ? existingObRequired : onboardingRequired);
+
   const updates = {
     updatedAt: nowIso,
     profile: userProfileUpdate,
@@ -891,7 +906,7 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     firstname: finalFirstName,
     lastname: finalLastName,
     kycCompleted: true,
-    onboarding: { required: onboardingRequired }
+    onboarding: { required: finalOnboardingRequiredForSave }
   };
 
   let dbSnapshot = null;
@@ -917,9 +932,12 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   );
   const kycDoneFinal = hasKycCompleted(fullRefreshedUser);
   const picDoneFinal = hasProfilePic(fullRefreshedUser);
-  const finalOnboardingRequired = (dbSnapshot?.onboarding && typeof dbSnapshot.onboarding.required === "boolean")
+  const persistedObFinal = (dbSnapshot?.onboarding && typeof dbSnapshot.onboarding.required === "boolean")
     ? dbSnapshot.onboarding.required
-    : !(kycDoneFinal && picDoneFinal);
+    : null;
+  const finalOnboardingRequired = (persistedObFinal === false)
+    ? false
+    : (persistedObFinal != null ? persistedObFinal : !(kycDoneFinal && picDoneFinal));
 
   res.status(200).json({
     ok: true,
@@ -1138,7 +1156,12 @@ app.put("/api/profile", requireAuth, async (req, res) => {
 
   const kycForOnboarding = hasKycCompleted({ profile: newProfile, security: newSecurity, ...existingSnapshot });
   const picForOnboarding = hasProfilePic({ profile: newProfile, security: newSecurity, ...existingSnapshot });
-  const obRequiredForSave = !(kycForOnboarding && picForOnboarding);
+  const heuristicOb = !(kycForOnboarding && picForOnboarding);
+  const existingObForSave = (existingSnapshot && typeof existingSnapshot.onboarding === "object" && existingSnapshot.onboarding) ? existingSnapshot.onboarding : {};
+  const existingObReq = typeof existingObForSave.required === "boolean" ? existingObForSave.required : null;
+  const obRequiredForSave = (existingObReq === false)
+    ? false
+    : (existingObReq != null ? existingObReq : heuristicOb);
 
   const updates = {
     updatedAt: nowIso,
@@ -1176,7 +1199,9 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   const kycCompleted = hasKycCompleted(fullRefUser);
   const picCompleted = hasProfilePic(fullRefUser);
   const persistedOb = typeof fsOb.required === "boolean" ? fsOb.required : null;
-  const obRequiredFinal = (persistedOb != null) ? persistedOb : !(kycCompleted && picCompleted);
+  const obRequiredFinal = (persistedOb === false)
+    ? false
+    : ((persistedOb != null) ? persistedOb : !(kycCompleted && picCompleted));
 
   res.json({
     ok: true,
@@ -2357,16 +2382,20 @@ app.get("/customer/accountdetails.php", requireAuth, requirePinVerified, require
   sendPage(res, "customer/accountdetails.php");
 });
 
-app.get("/customer/dashboard.php", requireAuth, requirePinVerified, (req, res) => {
+app.get("/customer/dashboard.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {
   sendPage(res, "customer/dashboard.php");
 });
 
 app.get("/customer/dashboard", requireAuth, (req, res) => {
-  if (isPinVerified(req)) {
-    res.redirect("/customer/dashboard.php");
+  if (!isPinVerified(req)) {
+    res.redirect("/customer/verify-pin.php");
     return;
   }
-  res.redirect("/customer/verify-pin.php");
+  if (onboardingIsRequired(req)) {
+    res.redirect("/customer/dashboard.php#onboarding");
+    return;
+  }
+  res.redirect("/customer/dashboard.php");
 });
 
 app.get("/customer/myprofile.php", requireAuth, requirePinVerified, requireKycAndProfilePic, (req, res) => {

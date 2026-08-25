@@ -4965,9 +4965,43 @@
     function maybeRunAfter(finalMe, finalLanguage, extras) {
       if (options && typeof options.after === "function") {
         try {
+          var fm = finalMe || {};
+          var fmProf = fm.profile || {};
+          var fmSec = fm.security || {};
+          var fmOnboarding = fm.onboarding || {};
+          var profilePicUrl = String(
+            fm.profilePic || fm.photoURL || fm.photo || fm.avatar ||
+            fmProf.profilePic || fmProf.photoURL || fmProf.photo || fmProf.avatar ||
+            fmSec.profilePic || fmSec.photoURL || fmSec.photo || fmSec.avatar ||
+            ""
+          ).trim();
+          var cachedStateHere = null;
+          try { cachedStateHere = readVtKycCache() || null; } catch (_) { cachedStateHere = null; }
+          var cachedPicUrl = String(
+            (cachedStateHere && (cachedStateHere.profilePic || cachedStateHere.photoURL || cachedStateHere.photo || cachedStateHere.avatar)) ||
+            ""
+          ).trim();
+          var hasAnyPic = !!(profilePicUrl || cachedPicUrl);
+          var serverPicUploaded = !!(
+            (fmOnboarding && fmOnboarding.profilePicUploaded === true) ||
+            (fmOnboarding && fmOnboarding.profilePicUploaded === 1) ||
+            (fmOnboarding && fmOnboarding.profilePicUploaded === "1") ||
+            (fmOnboarding && fmOnboarding.profilePicUploaded === "true")
+          );
+          var picUploadedFinal = hasAnyPic || serverPicUploaded;
           options.after(Object.assign(
-            { me: finalMe, language: finalLanguage, kycCompleted: true },
-            extras || {}
+            {
+              me: finalMe,
+              language: finalLanguage,
+              kycCompleted: true,
+              picUploaded: picUploadedFinal,
+              profilePicUploaded: picUploadedFinal,
+              profilePic: profilePicUrl || cachedPicUrl || "",
+              photoURL: profilePicUrl || cachedPicUrl || ""
+            },
+            extras || {},
+            (extras && typeof extras.picUploaded === "boolean") ? { picUploaded: extras.picUploaded, profilePicUploaded: extras.picUploaded } : {},
+            (extras && typeof extras.profilePicUploaded === "boolean") ? { picUploaded: extras.profilePicUploaded, profilePicUploaded: extras.profilePicUploaded } : {}
           ));
         } catch (_) {}
       }

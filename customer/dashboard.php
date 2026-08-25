@@ -1273,7 +1273,7 @@
         } catch (_) {}
       })();
     </script>
-    <div id="inlineKycGate" style="position:fixed;inset:0;z-index:2147483646;background:radial-gradient(circle at top, rgba(212,175,55,0.14), transparent 30%),linear-gradient(180deg,#070b10,#0b0f14);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div id="inlineKycGate" style="display:none;position:fixed;inset:0;z-index:2147483646;background:radial-gradient(circle at top, rgba(212,175,55,0.14), transparent 30%),linear-gradient(180deg,#070b10,#0b0f14);overflow-y:auto;-webkit-overflow-scrolling:touch;">
       <div style="max-width:920px;margin:0 auto;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;">
           <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" style="height:36px;max-width:220px;" onerror="this.style.display='none'"/>
@@ -2050,14 +2050,6 @@
 
     <script>
       (function () {
-        try {
-          var CHECK = document.createElement("div");
-          CHECK.id = "SCRIPT_ENTRY_CHECK_" + Date.now();
-          CHECK.style.cssText = "position:fixed;left:10px;top:88px;background:#065f46;color:#fff;padding:7px 11px;font-size:12px;font-weight:800;z-index:2147483642;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.18);border:1px solid #6ee7b7;line-height:1.4;max-width:260px;";
-          CHECK.textContent = "SCRIPT ENTRY: big dashboard.php inline script started executing";
-          document.documentElement.appendChild(CHECK);
-          setTimeout(function(){ try { CHECK.textContent = "SCRIPT ENTRY: inline script executed to end OK"; CHECK.style.background = "#166534"; } catch(_){} }, 2500);
-        } catch (_) {}
         try { window.onerror = function(msg, src, lineno, colno, err) { try { var ERR = document.createElement("div"); ERR.id = "GLOBAL_ERR_" + Date.now(); ERR.style.cssText = "position:fixed;right:10px;bottom:24px;background:#7f1d1d;color:#fff;padding:8px 10px;font-size:12px;font-weight:800;z-index:2147483647;border-radius:8px;max-width:360px;line-height:1.55;"; ERR.textContent = "GLOBAL JS ERROR: " + String(msg || "") + " line:" + String(lineno||""); document.documentElement.appendChild(ERR); } catch(_){} }; } catch (_) {}
         (function initInlineGates() {
           var DEFAULT_PIC = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="140" height="140" rx="70" fill="url(#g)"/><circle cx="70" cy="58" r="24" fill="#ffffff"/><path d="M22 130 C22 98, 118 98, 118 130 Z" fill="#ffffff"/><text x="70" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="22" fill="#2563eb">FJ</text></svg>');
@@ -3036,18 +3028,35 @@
             return;
           }
           bootstrapFn({
-            after: function (ctx) {
-              if (window.console) {
-                window.console.log("[VT] Dashboard ready: language=" + (ctx && ctx.language) + ", kyc=" + (ctx && ctx.kycCompleted));
-              }
-              var me = (ctx && ctx.me) ? ctx.me : null;
-              var info = me ? applyUserInfoToDashboard(me) : { currency: "USD", balance: 0 };
-              initTransferModal(info);
-              fetchAndRenderTx(info);
-            }
-          }).catch(function (err) {
-            if (window.console) window.console.error("[VT] bootstrapCustomerPage failed:", err);
-          });
+  after: function (ctx) {
+
+    if (window.console) {
+      window.console.log(
+        "[VT] Dashboard ready: language=" +
+        (ctx && ctx.language) +
+        ", kyc=" +
+        (ctx && ctx.kycCompleted)
+      );
+    }
+
+    // IMPORTANT:
+    // Decide whether KYC must be shown based on the
+    // server/database response.
+    applyKycGate(ctx);
+
+    var me = (ctx && ctx.me) ? ctx.me : null;
+
+    var info = me
+      ? applyUserInfoToDashboard(me)
+      : {
+          currency: "USD",
+          balance: 0
+        };
+
+    initTransferModal(info);
+    fetchAndRenderTx(info);
+  }
+});
         }
 
         function start() {
@@ -3106,6 +3115,108 @@
         }
         start();
       })();
+
+      function applyKycGate(ctx) {
+  var kycGate = document.getElementById("inlineKycGate");
+  var picGate = document.getElementById("inlinePicGate");
+
+  if (!kycGate) return;
+
+  var completed = !!(
+    ctx &&
+    (
+      ctx.kycCompleted === true ||
+      ctx.kycCompleted === 1 ||
+      ctx.kycCompleted === "1" ||
+      ctx.kycCompleted === "true"
+    )
+  );
+
+  if (!completed && ctx && ctx.me && ctx.me.onboarding) {
+    var ob = ctx.me.onboarding;
+    if (ob.kycCompleted === true || ob.kycCompleted === 1 || ob.kycCompleted === "1" || ob.kycCompleted === "true") {
+      completed = true;
+    }
+  }
+  if (!completed && ctx && ctx.me && ctx.me.security) {
+    var sec = ctx.me.security;
+    if (sec.kycCompleted === true || sec.kycDone === true || sec.KYCDone === true) {
+      completed = true;
+    }
+  }
+  if (!completed && ctx && ctx.me && ctx.me.profile) {
+    var prof = ctx.me.profile;
+    if (prof.kycCompleted === true || prof.kycDone === true || prof.KYCDone === true) {
+      completed = true;
+    }
+  }
+
+  if (completed) {
+    kycGate.style.display = "none";
+
+    var picUploaded = false;
+    if (ctx) {
+      if (ctx.picUploaded === true || ctx.picUploaded === 1 || ctx.picUploaded === "1" || ctx.picUploaded === "true") {
+        picUploaded = true;
+      }
+      if (!picUploaded && (ctx.profilePicUploaded === true || ctx.profilePicUploaded === 1 || ctx.profilePicUploaded === "1" || ctx.profilePicUploaded === "true")) {
+        picUploaded = true;
+      }
+      if (!picUploaded && ctx.me && ctx.me.onboarding) {
+        var ob2 = ctx.me.onboarding;
+        if (ob2.profilePicUploaded === true || ob2.profilePicUploaded === 1 || ob2.profilePicUploaded === "1" || ob2.profilePicUploaded === "true") {
+          picUploaded = true;
+        }
+      }
+      if (!picUploaded) {
+        var meObj = ctx.me || {};
+        var meProf = meObj.profile || {};
+        var meSec = meObj.security || {};
+        var pUrl = String(
+          ctx.profilePic || ctx.photoURL || ctx.photo || ctx.avatar ||
+          meObj.profilePic || meObj.photoURL || meObj.photo || meObj.avatar ||
+          meProf.profilePic || meProf.photoURL || meProf.photo || meProf.avatar ||
+          meSec.profilePic || meSec.photoURL || meSec.photo || meSec.avatar || ""
+        ).trim();
+        if (pUrl && pUrl !== "") {
+          picUploaded = true;
+        } else {
+          try {
+            var cached = null;
+            try { cached = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { cached = {}; }
+            if (!cached || typeof cached !== "object") cached = {};
+            try {
+              var perm = JSON.parse(localStorage.getItem("vt_kyc_perm_v1") || "{}");
+              if (perm && typeof perm === "object") cached = Object.assign({}, perm, cached);
+            } catch (_) {}
+            var cachedUrl = String(
+              cached.profilePic || cached.photoURL || cached.photo || cached.avatar || ""
+            ).trim();
+            if (cachedUrl && cachedUrl !== "") {
+              picUploaded = true;
+            }
+          } catch (_) {}
+        }
+      }
+    }
+
+    if (picGate) {
+      picGate.style.display = picUploaded ? "none" : "";
+    }
+
+    document.body.style.overflow = picUploaded ? "" : "hidden";
+
+    return;
+  }
+
+  kycGate.style.display = "";
+  
+  if (picGate) {
+    picGate.style.display = "none";
+  }
+
+  document.body.style.overflow = "hidden";
+}
     </script>
   </body>
 </html>
