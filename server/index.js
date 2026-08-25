@@ -369,27 +369,39 @@ function requirePinVerified(req, res, next) {
   res.redirect("/customer/verify-pin.php");
 }
 
-function hasKycCompleted(req) {
-  const p = req.user?.profile || {};
-  const s = req.user?.security || {};
-  return Boolean(
-    s?.kycCompleted === true ||
-    s?.KYCDone === true ||
-    s?.kycDone === true ||
-    p?.kycCompleted === true ||
-    p?.KYCDone === true ||
-    p?.kycDone === true ||
-    (Boolean(p?.country) && Boolean(p?.preferredLanguage) && Boolean(p?.firstname) && Boolean(p?.lastname))
-  );
+function getUserFromReqOrUser(reqOrUser) {
+  if (!reqOrUser) return {};
+  if (reqOrUser.user && typeof reqOrUser.user === "object") return reqOrUser.user;
+  return reqOrUser;
 }
 
-function hasProfilePic(req) {
-  const p = req.user?.profile || {};
-  const s = req.user?.security || {};
-  return Boolean(
-    p?.profilePic || p?.photoURL || p?.photo || p?.avatar ||
-    s?.profilePic || s?.photoURL || s?.photo || s?.avatar
+function hasKycCompleted(reqOrUser) {
+  const u = getUserFromReqOrUser(reqOrUser);
+  const p = (u && typeof u.profile === "object" && u.profile) ? u.profile : {};
+  const s = (u && typeof u.security === "object" && u.security) ? u.security : {};
+  const directFlag = Boolean(
+    s?.kycCompleted === true || s?.KYCDone === true || s?.kycDone === true ||
+    p?.kycCompleted === true || p?.KYCDone === true || p?.kycDone === true ||
+    u?.kycCompleted === true || u?.KYCDone === true || u?.kycDone === true
   );
+  const first = String(p?.firstname || u?.firstname || "").trim();
+  const last = String(p?.lastname || u?.lastname || "").trim();
+  const country = String(p?.country || u?.country || "").trim();
+  const lang = String(p?.preferredLanguage || u?.preferredLanguage || "").trim();
+  const heuristic = Boolean(first && last && country && lang);
+  return Boolean(directFlag || heuristic);
+}
+
+function hasProfilePic(reqOrUser) {
+  const u = getUserFromReqOrUser(reqOrUser);
+  const p = (u && typeof u.profile === "object" && u.profile) ? u.profile : {};
+  const s = (u && typeof u.security === "object" && u.security) ? u.security : {};
+  const pic = String(
+    p?.profilePic || p?.photoURL || p?.photo || p?.avatar ||
+    s?.profilePic || s?.photoURL || s?.photo || s?.avatar ||
+    u?.profilePic || u?.photoURL || u?.photo || u?.avatar || ""
+  ).trim();
+  return Boolean(pic && pic !== "");
 }
 
 function requireKycAndProfilePic(req, res, next) {
@@ -509,13 +521,19 @@ app.get("/api/me", requireAuth, async (req, res) => {
         const securityObj = typeof dbData.security === "object" && dbData.security ? dbData.security : {};
         freshUser = Object.assign({}, req.user || {}, {
           uid: uid,
-          email: (req.user && req.user.email) || (profileObj && profileObj.email) || null,
+          email: (req.user && req.user.email) || (profileObj && profileObj.email) || dbData.email || null,
           account: accountObj,
           profile: profileObj,
           security: securityObj,
+          country: profileObj.country || dbData.country || null,
+          preferredLanguage: profileObj.preferredLanguage || dbData.preferredLanguage || "en",
+          firstname: profileObj.firstname || dbData.firstname || "",
+          lastname: profileObj.lastname || dbData.lastname || "",
+          profilePic: profileObj.profilePic || profileObj.photoURL || dbData.profilePic || dbData.photoURL || "",
           createdAt: dbData.createdAt || (req.user && req.user.createdAt) || null,
           updatedAt: dbData.updatedAt || (req.user && req.user.updatedAt) || null
         });
+        req.user = freshUser;
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -526,44 +544,60 @@ app.get("/api/me", requireAuth, async (req, res) => {
 
   const sec = freshUser?.security || {};
   const prof = freshUser?.profile || {};
-  const kycCompleted =
-    Boolean(sec?.kycCompleted) ||
-    Boolean(sec?.KYCDone) ||
-    Boolean(sec?.kycDone) ||
-    Boolean(prof?.kycCompleted) ||
-    Boolean(prof?.KYCDone) ||
-    Boolean(prof?.kycDone) ||
-    (Boolean(prof?.country) && Boolean(prof?.preferredLanguage));
+  const kycCompleted = hasKycCompleted(freshUser);
+  const picDone = hasProfilePic(freshUser);
 
-  const finalLang = String(prof?.preferredLanguage || prof?.language || sec?.preferredLanguage || "en");
+  const finalLang = String(prof?.preferredLanguage || prof?.language || sec?.preferredLanguage || freshUser?.preferredLanguage || "en");
+  const finalPicUrl = String(
+    prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar ||
+    sec?.profilePic || sec?.photoURL || sec?.photo || sec?.avatar ||
+    freshUser?.profilePic || freshUser?.photoURL || ""
+  );
+
   const finalProfile = Object.assign({}, prof || {}, {
-    preferredLanguage: prof?.preferredLanguage || finalLang,
-    kycCompleted: kycCompleted || Boolean(prof?.kycCompleted),
-    kycDone: Boolean(kycCompleted || prof?.kycDone || sec?.kycDone),
-    KYCDone: Boolean(kycCompleted || prof?.KYCDone || sec?.KYCDone),
-    kycCompletedAt: prof?.kycCompletedAt || prof?.KYCDoneAt || prof?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || sec?.kycDoneAt || null,
-    kycDoneAt: prof?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || sec?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || null,
-    KYCDoneAt: prof?.KYCDoneAt || prof?.kycCompletedAt || prof?.kycDoneAt || sec?.KYCDoneAt || sec?.kycCompletedAt || sec?.kycDoneAt || null
+    firstname: prof?.firstname || freshUser?.firstname || "",
+    lastname: prof?.lastname || freshUser?.lastname || "",
+    country: prof?.country || freshUser?.country || "",
+    preferredLanguage: finalLang,
+    phone: prof?.phone || freshUser?.phone || "",
+    dateOfBirth: prof?.dateOfBirth || prof?.dob || freshUser?.dateOfBirth || "",
+    gender: prof?.gender || freshUser?.gender || "",
+    address: prof?.address || freshUser?.address || "",
+    city: prof?.city || freshUser?.city || "",
+    state: prof?.state || freshUser?.state || "",
+    zipCode: prof?.zipCode || prof?.zip || prof?.postal || freshUser?.zipCode || "",
+    nationality: prof?.nationality || freshUser?.nationality || "",
+    occupation: prof?.occupation || freshUser?.occupation || "",
+    profilePic: finalPicUrl,
+    photoURL: finalPicUrl,
+    photo: finalPicUrl,
+    avatar: finalPicUrl,
+    profilePicPublicId: prof?.profilePicPublicId || sec?.profilePicPublicId || null,
+    kycCompleted: kycCompleted,
+    kycDone: kycCompleted,
+    KYCDone: kycCompleted,
+    kycCompletedAt: prof?.kycCompletedAt || prof?.KYCDoneAt || prof?.kycDoneAt || sec?.kycCompletedAt || null
   });
+
   const finalSecurity = Object.assign({}, sec || {}, {
     twoFactorEnabled: Boolean(sec?.twoFactorEnabled || false),
-    kycCompleted,
-    kycDone: Boolean(kycCompleted || sec?.kycDone || prof?.kycDone),
-    KYCDone: Boolean(kycCompleted || sec?.KYCDone || prof?.KYCDone),
-    kycCompletedAt: sec?.kycCompletedAt || sec?.KYCDoneAt || sec?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || prof?.kycDoneAt || null,
-    kycDoneAt: sec?.kycDoneAt || sec?.kycCompletedAt || sec?.KYCDoneAt || prof?.kycDoneAt || prof?.kycCompletedAt || prof?.KYCDoneAt || null,
-    KYCDoneAt: sec?.KYCDoneAt || sec?.kycCompletedAt || sec?.kycDoneAt || prof?.KYCDoneAt || prof?.kycCompletedAt || prof?.kycDoneAt || null,
+    kycCompleted: kycCompleted,
+    kycDone: kycCompleted,
+    KYCDone: kycCompleted,
+    kycCompletedAt: sec?.kycCompletedAt || prof?.kycCompletedAt || null,
+    profilePic: finalPicUrl,
+    photoURL: finalPicUrl,
+    photo: finalPicUrl,
+    avatar: finalPicUrl,
     accountPinHashSet: Boolean(sec?.accountPinHash)
   });
 
-  const finalPicUrl = String(
-    finalProfile?.profilePic || finalProfile?.photoURL || finalProfile?.photo || finalProfile?.avatar ||
-    finalSecurity?.profilePic || finalSecurity?.photoURL || finalSecurity?.photo || finalSecurity?.avatar ||
-    prof?.profilePic || prof?.photoURL || prof?.photo || prof?.avatar ||
-    sec?.profilePic || sec?.photoURL || sec?.photo || sec?.avatar || ""
-  );
-  const kycDone = hasKycCompleted(req);
-  const picDone = hasProfilePic(req);
+  const onboardingInfo = {
+    required: !(kycCompleted && picDone),
+    kycCompleted: kycCompleted,
+    profilePicUploaded: picDone
+  };
+
   res.json({
     uid: freshUser.uid,
     email: freshUser.email || null,
@@ -578,11 +612,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
     createdAt: freshUser.createdAt || null,
     updatedAt: freshUser.updatedAt || null,
     pinVerified: isPinVerified(req),
-    onboarding: {
-      required: !(kycDone && picDone),
-      kycCompleted: kycDone,
-      profilePicUploaded: picDone
-    }
+    onboarding: onboardingInfo
   });
 });
 
@@ -603,14 +633,17 @@ function isSafeCloudinaryUrl(secureUrl) {
   if (typeof secureUrl !== "string" || !secureUrl) return false;
   const trimmed = secureUrl.trim();
   if (!trimmed) return false;
-  if (trimmed.length > 8192) return false;
-  if (!CLOUDINARY_URL_PATTERN.test(trimmed)) return false;
-  try {
-    const u = new URL(trimmed);
-    return u.protocol === "https:";
-  } catch (e) {
-    return false;
+  if (trimmed.length > 2000000) return false;
+  if (/^data:image\/(png|jpeg|jpg|webp|gif|svg\+xml);base64,/i.test(trimmed)) return true;
+  if (/^https?:\/\//i.test(trimmed)) {
+    try {
+      const u = new URL(trimmed);
+      return u.protocol === "https:" || u.protocol === "http:";
+    } catch (e) {
+      return false;
+    }
   }
+  return false;
 }
 
 app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
@@ -633,65 +666,29 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
 
   const updates = {
     updatedAt: nowIso,
-    "profile.profilePic": secureUrl,
-    "profile.photoURL": secureUrl,
-    "profile.photo": secureUrl,
-    "profile.avatar": secureUrl,
-    "security.profilePic": secureUrl,
-    "security.photoURL": secureUrl,
-    "security.photo": secureUrl,
-    "security.avatar": secureUrl
+    profile: {
+      profilePic: secureUrl,
+      photoURL: secureUrl,
+      photo: secureUrl,
+      avatar: secureUrl,
+      ...(publicId ? { profilePicPublicId: publicId, photoURLPublicId: publicId, photoPublicId: publicId, avatarPublicId: publicId } : {}),
+      ...(width ? { profilePicWidth: width } : {}),
+      ...(height ? { profilePicHeight: height } : {}),
+      ...(format ? { profilePicFormat: format } : {}),
+      ...(bytes ? { profilePicBytes: bytes } : {})
+    },
+    security: {
+      profilePic: secureUrl,
+      photoURL: secureUrl,
+      photo: secureUrl,
+      avatar: secureUrl,
+      ...(publicId ? { profilePicPublicId: publicId } : {})
+    },
+    profilePic: secureUrl,
+    photoURL: secureUrl,
+    photo: secureUrl,
+    avatar: secureUrl
   };
-  if (publicId) {
-    updates["profile.profilePicPublicId"] = publicId;
-    updates["profile.photoURLPublicId"] = publicId;
-    updates["profile.photoPublicId"] = publicId;
-    updates["profile.avatarPublicId"] = publicId;
-    updates["security.profilePicPublicId"] = publicId;
-    updates["security.photoURLPublicId"] = publicId;
-    updates["security.photoPublicId"] = publicId;
-    updates["security.avatarPublicId"] = publicId;
-  }
-  if (width) {
-    updates["profile.profilePicWidth"] = width;
-    updates["profile.photoURLWidth"] = width;
-    updates["profile.photoWidth"] = width;
-    updates["profile.avatarWidth"] = width;
-    updates["security.profilePicWidth"] = width;
-    updates["security.photoURLWidth"] = width;
-    updates["security.photoWidth"] = width;
-    updates["security.avatarWidth"] = width;
-  }
-  if (height) {
-    updates["profile.profilePicHeight"] = height;
-    updates["profile.photoURLHeight"] = height;
-    updates["profile.photoHeight"] = height;
-    updates["profile.avatarHeight"] = height;
-    updates["security.profilePicHeight"] = height;
-    updates["security.photoURLHeight"] = height;
-    updates["security.photoHeight"] = height;
-    updates["security.avatarHeight"] = height;
-  }
-  if (format) {
-    updates["profile.profilePicFormat"] = format;
-    updates["profile.photoURLFormat"] = format;
-    updates["profile.photoFormat"] = format;
-    updates["profile.avatarFormat"] = format;
-    updates["security.profilePicFormat"] = format;
-    updates["security.photoURLFormat"] = format;
-    updates["security.photoFormat"] = format;
-    updates["security.avatarFormat"] = format;
-  }
-  if (bytes) {
-    updates["profile.profilePicBytes"] = bytes;
-    updates["profile.photoURLBytes"] = bytes;
-    updates["profile.photoBytes"] = bytes;
-    updates["profile.avatarBytes"] = bytes;
-    updates["security.profilePicBytes"] = bytes;
-    updates["security.photoURLBytes"] = bytes;
-    updates["security.photoBytes"] = bytes;
-    updates["security.avatarBytes"] = bytes;
-  }
 
   try {
     const db = getFirestore();
@@ -700,11 +697,10 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
     const dbData = refreshedSnap && refreshedSnap.exists ? (refreshedSnap.data() || {}) : null;
     const dbProf = (dbData && dbData.profile) || (req.user?.profile) || {};
     const dbSec = (dbData && dbData.security) || (req.user?.security) || {};
-    const kycDone = Boolean(
-      dbProf.kycCompleted || dbProf.KYCDone || dbProf.kycDone ||
-      dbSec.kycCompleted || dbSec.KYCDone || dbSec.kycDone ||
-      (dbProf.country && dbProf.preferredLanguage)
-    );
+    const fullUser = { uid, profile: dbProf, security: dbSec, ...dbData };
+    const kycDone = hasKycCompleted(fullUser);
+    const picDone = hasProfilePic(fullUser);
+
     res.status(200).json({
       ok: true,
       profilePic: secureUrl,
@@ -718,6 +714,11 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
       kycCompleted: kycDone,
       kycDone: kycDone,
       KYCDone: kycDone,
+      onboarding: {
+        required: !(kycDone && picDone),
+        kycCompleted: kycDone,
+        profilePicUploaded: picDone
+      },
       profile: Object.assign({}, dbProf || {}, {
         profilePic: secureUrl,
         photoURL: secureUrl,
@@ -791,22 +792,6 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   await ensureUserDoc(uid, req.user.email);
   const nowIso = new Date().toISOString();
 
-  const updates = {
-    updatedAt: nowIso,
-    "security.kycCompleted": true,
-    "security.KYCDone": true,
-    "security.kycDone": true,
-    "security.kycCompletedAt": nowIso,
-    "security.KYCDoneAt": nowIso,
-    "security.kycDoneAt": nowIso,
-    "profile.kycCompleted": true,
-    "profile.KYCDone": true,
-    "profile.kycDone": true,
-    "profile.kycCompletedAt": nowIso,
-    "profile.KYCDoneAt": nowIso,
-    "profile.kycDoneAt": nowIso
-  };
-
   const existingSnapshot = await (async () => {
     try {
       const db = getFirestore();
@@ -816,20 +801,61 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     return {};
   })();
   const existingProfile = typeof existingSnapshot?.profile === "object" && existingSnapshot.profile ? existingSnapshot.profile : {};
+  const existingSecurity = typeof existingSnapshot?.security === "object" && existingSnapshot.security ? existingSnapshot.security : {};
 
-  updates["profile.firstname"] = cleanString(b.firstname || existingProfile.firstname, 80) || cleanString(b.firstName || existingProfile.firstName || existingProfile.firstname, 80) || cleanString(existingProfile.firstname, 80);
-  updates["profile.lastname"] = cleanString(b.lastname || existingProfile.lastname, 80) || cleanString(b.lastName || existingProfile.lastName || existingProfile.lastname, 80) || cleanString(existingProfile.lastname, 80);
-  updates["profile.country"] = country;
-  updates["profile.preferredLanguage"] = langCode;
-  updates["profile.dateOfBirth"] = dateOfBirth;
-  updates["profile.gender"] = gender;
-  updates["profile.address"] = address;
-  updates["profile.city"] = city;
-  updates["profile.state"] = state;
-  updates["profile.zipCode"] = zipCode;
-  updates["profile.nationality"] = nationality;
-  updates["profile.occupation"] = occupation;
-  if (phone) updates["profile.phone"] = phone;
+  const finalFirstName = cleanString(b.firstname || b.firstName || existingProfile.firstname || existingProfile.firstName, 80) || cleanString(existingProfile.firstname, 80);
+  const finalLastName = cleanString(b.lastname || b.lastName || existingProfile.lastname || existingProfile.lastName, 80) || cleanString(existingProfile.lastname, 80);
+  const finalPhone = phone || existingProfile.phone || "";
+  const finalDob = dateOfBirth || existingProfile.dateOfBirth || existingProfile.dob || "";
+  const finalGender = gender || existingProfile.gender || "";
+  const finalAddress = address || existingProfile.address || "";
+  const finalCity = city || existingProfile.city || "";
+  const finalState = state || existingProfile.state || "";
+  const finalZip = zipCode || existingProfile.zipCode || existingProfile.zip || "";
+  const finalNationality = nationality || existingProfile.nationality || "";
+  const finalOccupation = occupation || existingProfile.occupation || "";
+
+  const userProfileUpdate = Object.assign({}, existingProfile, {
+    firstname: finalFirstName,
+    lastname: finalLastName,
+    country: country,
+    preferredLanguage: langCode,
+    phone: finalPhone,
+    dateOfBirth: finalDob,
+    gender: finalGender,
+    address: finalAddress,
+    city: finalCity,
+    state: finalState,
+    zipCode: finalZip,
+    nationality: finalNationality,
+    occupation: finalOccupation,
+    kycCompleted: true,
+    kycDone: true,
+    KYCDone: true,
+    kycCompletedAt: nowIso,
+    kycDoneAt: nowIso,
+    KYCDoneAt: nowIso
+  });
+
+  const userSecurityUpdate = Object.assign({}, existingSecurity, {
+    kycCompleted: true,
+    kycDone: true,
+    KYCDone: true,
+    kycCompletedAt: nowIso,
+    kycDoneAt: nowIso,
+    KYCDoneAt: nowIso
+  });
+
+  const updates = {
+    updatedAt: nowIso,
+    profile: userProfileUpdate,
+    security: userSecurityUpdate,
+    country: country,
+    preferredLanguage: langCode,
+    firstname: finalFirstName,
+    lastname: finalLastName,
+    kycCompleted: true
+  };
 
   let dbSnapshot = null;
   try {
@@ -843,43 +869,54 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
     return;
   }
 
-  const profSnapshot = ((dbSnapshot && dbSnapshot.profile) || (req.user?.profile) || {}) ;
-  const secSnapshot = ((dbSnapshot && dbSnapshot.security) || (req.user?.security) || {}) ;
+  const profSnapshot = ((dbSnapshot && dbSnapshot.profile) || userProfileUpdate) ;
+  const secSnapshot = ((dbSnapshot && dbSnapshot.security) || userSecurityUpdate) ;
+  const fullRefreshedUser = { uid, profile: profSnapshot, security: secSnapshot, ...dbSnapshot };
+
   const picUrl = String(
     profSnapshot.profilePic || profSnapshot.photoURL || profSnapshot.photo || profSnapshot.avatar ||
-    secSnapshot.profilePic || secSnapshot.photoURL || secSnapshot.photo || secSnapshot.avatar || ""
+    secSnapshot.profilePic || secSnapshot.photoURL || secSnapshot.photo || secSnapshot.avatar ||
+    existingProfile.profilePic || existingProfile.photoURL || ""
   );
+  const kycDoneFinal = hasKycCompleted(fullRefreshedUser);
+  const picDoneFinal = hasProfilePic(fullRefreshedUser);
+
   res.status(200).json({
     ok: true,
     preferredLanguage: langCode,
     profilePic: picUrl,
-    profile: {
-      firstname: (b.firstname || b.firstName || profSnapshot.firstname || profSnapshot.firstName || ""),
-      lastname: (b.lastname || b.lastName || profSnapshot.lastname || profSnapshot.lastName || ""),
-      country,
+    onboarding: {
+      required: !(kycDoneFinal && picDoneFinal),
+      kycCompleted: kycDoneFinal,
+      profilePicUploaded: picDoneFinal
+    },
+    profile: Object.assign({}, profSnapshot, {
+      firstname: finalFirstName,
+      lastname: finalLastName,
+      country: country,
       preferredLanguage: langCode,
-      dateOfBirth,
-      gender,
-      address,
-      city,
-      state,
-      zipCode,
-      nationality,
-      occupation,
-      phone,
+      dateOfBirth: finalDob,
+      gender: finalGender,
+      address: finalAddress,
+      city: finalCity,
+      state: finalState,
+      zipCode: finalZip,
+      nationality: finalNationality,
+      occupation: finalOccupation,
+      phone: finalPhone,
       profilePic: picUrl,
       photoURL: picUrl,
       photo: picUrl,
       avatar: picUrl,
-      profilePicPublicId: profSnapshot.profilePicPublicId || profSnapshot.photoURLPublicId || profSnapshot.photoPublicId || profSnapshot.avatarPublicId || null,
+      profilePicPublicId: profSnapshot.profilePicPublicId || null,
       kycCompleted: true,
       kycDone: true,
       KYCDone: true,
       kycCompletedAt: nowIso,
       kycDoneAt: nowIso,
       KYCDoneAt: nowIso
-    },
-    security: {
+    }),
+    security: Object.assign({}, secSnapshot, {
       kycCompleted: true,
       kycDone: true,
       KYCDone: true,
@@ -887,7 +924,7 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
       kycDoneAt: nowIso,
       KYCDoneAt: nowIso,
       twoFactorEnabled: Boolean(secSnapshot.twoFactorEnabled || false)
-    }
+    })
   });
 });
 
@@ -951,26 +988,38 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   const uid = req.user.uid;
   await ensureUserDoc(uid, req.user.email);
 
-  const updates = { updatedAt: new Date().toISOString() };
-  const prof = (req.user?.profile) || {};
+  const db = getFirestore();
+  const existingSnapshot = await (async () => {
+    try {
+      const snap = await db.collection("users").doc(String(uid)).get().catch(() => null);
+      if (snap && snap.exists) return snap.data() || {};
+    } catch (_) {}
+    return {};
+  })();
 
-  if (typeof firstname === "string") updates["profile.firstname"] = firstname.trim();
-  if (typeof lastname === "string") updates["profile.lastname"] = lastname.trim();
-  if (typeof phone === "string") updates["profile.phone"] = phone.trim();
-  if (typeof country === "string") updates["profile.country"] = country.trim();
-  if (typeof state === "string") updates["profile.state"] = state.trim();
-  if (typeof city === "string") updates["profile.city"] = city.trim();
-  if (typeof dob === "string" && dob.trim()) updates["profile.dob"] = dob.trim();
-  if (typeof dateOfBirth === "string" && dateOfBirth.trim()) updates["profile.dateOfBirth"] = dateOfBirth.trim();
-  if (typeof gender === "string") updates["profile.gender"] = gender.trim();
-  if (typeof acctype === "string") updates["profile.acctype"] = acctype.trim();
-  if (typeof brname === "string") updates["profile.brname"] = brname.trim();
-  if (typeof address === "string") updates["profile.address"] = address.trim();
-  if (typeof zipCode === "string" && zipCode.trim()) updates["profile.zipCode"] = zipCode.trim();
-  else if (typeof zip === "string" && zip.trim()) updates["profile.zipCode"] = zip.trim();
-  else if (typeof postal === "string" && postal.trim()) updates["profile.zipCode"] = postal.trim();
-  if (typeof nationality === "string" && nationality.trim()) updates["profile.nationality"] = nationality.trim();
-  if (typeof occupation === "string" && occupation.trim()) updates["profile.occupation"] = occupation.trim();
+  const prof = typeof existingSnapshot?.profile === "object" && existingSnapshot.profile ? existingSnapshot.profile : ((req.user?.profile) || {});
+  const sec = typeof existingSnapshot?.security === "object" && existingSnapshot.security ? existingSnapshot.security : ((req.user?.security) || {});
+
+  const newProfile = Object.assign({}, prof);
+  const newSecurity = Object.assign({}, sec);
+
+  if (typeof firstname === "string") newProfile.firstname = firstname.trim();
+  if (typeof lastname === "string") newProfile.lastname = lastname.trim();
+  if (typeof phone === "string") newProfile.phone = phone.trim();
+  if (typeof country === "string") newProfile.country = country.trim();
+  if (typeof state === "string") newProfile.state = state.trim();
+  if (typeof city === "string") newProfile.city = city.trim();
+  if (typeof dob === "string" && dob.trim()) newProfile.dateOfBirth = dob.trim();
+  if (typeof dateOfBirth === "string" && dateOfBirth.trim()) newProfile.dateOfBirth = dateOfBirth.trim();
+  if (typeof gender === "string") newProfile.gender = gender.trim();
+  if (typeof acctype === "string") newProfile.acctype = acctype.trim();
+  if (typeof brname === "string") newProfile.brname = brname.trim();
+  if (typeof address === "string") newProfile.address = address.trim();
+  if (typeof zipCode === "string" && zipCode.trim()) newProfile.zipCode = zipCode.trim();
+  else if (typeof zip === "string" && zip.trim()) newProfile.zipCode = zip.trim();
+  else if (typeof postal === "string" && postal.trim()) newProfile.zipCode = postal.trim();
+  if (typeof nationality === "string" && nationality.trim()) newProfile.nationality = nationality.trim();
+  if (typeof occupation === "string" && occupation.trim()) newProfile.occupation = occupation.trim();
 
   const rawPic =
     (typeof profilePic === "string" ? profilePic : "") ||
@@ -986,23 +1035,23 @@ app.put("/api/profile", requireAuth, async (req, res) => {
       typeof avatar !== "undefined") {
     const safe = rawPic.trim();
     if (safe === "") {
-      updates["profile.profilePic"] = "";
-      updates["profile.photoURL"] = "";
-      updates["profile.photo"] = "";
-      updates["profile.avatar"] = "";
-      updates["security.profilePic"] = "";
-      updates["security.photoURL"] = "";
-      updates["security.photo"] = "";
-      updates["security.avatar"] = "";
+      newProfile.profilePic = "";
+      newProfile.photoURL = "";
+      newProfile.photo = "";
+      newProfile.avatar = "";
+      newSecurity.profilePic = "";
+      newSecurity.photoURL = "";
+      newSecurity.photo = "";
+      newSecurity.avatar = "";
     } else if (isSafeCloudinaryUrl(safe)) {
-      updates["profile.profilePic"] = safe;
-      updates["profile.photoURL"] = safe;
-      updates["profile.photo"] = safe;
-      updates["profile.avatar"] = safe;
-      updates["security.profilePic"] = safe;
-      updates["security.photoURL"] = safe;
-      updates["security.photo"] = safe;
-      updates["security.avatar"] = safe;
+      newProfile.profilePic = safe;
+      newProfile.photoURL = safe;
+      newProfile.photo = safe;
+      newProfile.avatar = safe;
+      newSecurity.profilePic = safe;
+      newSecurity.photoURL = safe;
+      newSecurity.photo = safe;
+      newSecurity.avatar = safe;
     } else {
       res.status(400).json({ error: "Invalid profile picture URL. Please upload via Cloudinary first." });
       return;
@@ -1016,7 +1065,7 @@ app.put("/api/profile", requireAuth, async (req, res) => {
       const base = langCode.split("-")[0];
       langCode = allowedLangs.has(base) ? base : (prof?.preferredLanguage || "en");
     }
-    updates["profile.preferredLanguage"] = langCode;
+    newProfile.preferredLanguage = langCode;
   }
 
   if (typeof accountPin === "string" && accountPin.trim()) {
@@ -1025,7 +1074,7 @@ app.put("/api/profile", requireAuth, async (req, res) => {
       res.status(400).json({ error: "accountPin must be exactly 6 digits." });
       return;
     }
-    updates["security.accountPinHash"] = sha256Hex(v);
+    newSecurity.accountPinHash = sha256Hex(v);
   }
 
   if (typeof transferPin === "string" && transferPin.trim()) {
@@ -1034,31 +1083,32 @@ app.put("/api/profile", requireAuth, async (req, res) => {
       res.status(400).json({ error: "transferPin must be 6 digits or 8+ chars with uppercase, number, and special character." });
       return;
     }
-    updates["security.transferPinHash"] = sha256Hex(v);
+    newSecurity.transferPinHash = sha256Hex(v);
   }
 
-  const db = getFirestore();
   const nowIso = new Date().toISOString();
-  const finalCountry = ("profile.country" in updates && typeof updates["profile.country"] === "string")
-    ? updates["profile.country"]
-    : (typeof country === "string" ? country.trim() : "") || (prof?.country || "");
-  const finalLanguage = ("profile.preferredLanguage" in updates && typeof updates["profile.preferredLanguage"] === "string")
-    ? updates["profile.preferredLanguage"]
-    : (typeof preferredLanguage === "string" && preferredLanguage.trim() ? preferredLanguage.trim() : (prof?.preferredLanguage || ""));
-  if (finalCountry && finalLanguage) {
-    updates["security.kycCompleted"] = true;
-    updates["security.KYCDone"] = true;
-    updates["security.kycDone"] = true;
-    updates["security.kycCompletedAt"] = nowIso;
-    updates["security.KYCDoneAt"] = nowIso;
-    updates["security.kycDoneAt"] = nowIso;
-    updates["profile.kycCompleted"] = true;
-    updates["profile.KYCDone"] = true;
-    updates["profile.kycDone"] = true;
-    updates["profile.kycCompletedAt"] = nowIso;
-    updates["profile.KYCDoneAt"] = nowIso;
-    updates["profile.kycDoneAt"] = nowIso;
+  if (newProfile.country && newProfile.preferredLanguage && newProfile.firstname && newProfile.lastname) {
+    newSecurity.kycCompleted = true;
+    newSecurity.KYCDone = true;
+    newSecurity.kycDone = true;
+    newProfile.kycCompleted = true;
+    newProfile.KYCDone = true;
+    newProfile.kycDone = true;
   }
+
+  const updates = {
+    updatedAt: nowIso,
+    profile: newProfile,
+    security: newSecurity,
+    country: newProfile.country || "",
+    preferredLanguage: newProfile.preferredLanguage || "en",
+    firstname: newProfile.firstname || "",
+    lastname: newProfile.lastname || "",
+    profilePic: newProfile.profilePic || "",
+    photoURL: newProfile.photoURL || "",
+    kycCompleted: Boolean(newSecurity.kycCompleted || newProfile.kycCompleted)
+  };
+
   let refreshedSnap = null;
   try {
     await db.collection("users").doc(String(uid)).set(updates, { merge: true });
@@ -1070,17 +1120,14 @@ app.put("/api/profile", requireAuth, async (req, res) => {
     return;
   }
 
-  const fsProf = (refreshedSnap && refreshedSnap.profile) || prof || {};
-  const fsSec = (refreshedSnap && refreshedSnap.security) || (req.user?.security) || {};
+  const fsProf = (refreshedSnap && refreshedSnap.profile) || newProfile || {};
+  const fsSec = (refreshedSnap && refreshedSnap.security) || newSecurity || {};
+  const fullRefUser = { uid, profile: fsProf, security: fsSec, ...refreshedSnap };
   const picUrl = String(
     fsProf.profilePic || fsProf.photoURL || fsProf.photo || fsProf.avatar ||
     fsSec.profilePic || fsSec.photoURL || fsSec.photo || fsSec.avatar || ""
   );
-  const kycCompleted = Boolean(
-    fsProf.kycCompleted || fsProf.KYCDone || fsProf.kycDone ||
-    fsSec.kycCompleted || fsSec.KYCDone || fsSec.kycDone ||
-    (fsProf.country && fsProf.preferredLanguage)
-  );
+  const kycCompleted = hasKycCompleted(fullRefUser);
   res.json({
     ok: true,
     profilePic: picUrl,

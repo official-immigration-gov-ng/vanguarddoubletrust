@@ -4495,13 +4495,6 @@
   function buildKycGate({ me, onComplete }) {
     ensureKycGateCss();
     if (typeof document === "undefined") return null;
-    try {
-      var dbg = document.createElement("div");
-      dbg.id = "dbgBuildKycGate_" + (Math.random()+"").slice(2, 8);
-      dbg.style.cssText = "position:fixed;left:0;right:0;bottom:0;background:#b91c1c;color:#fff;padding:8px 12px;font-size:13px;font-weight:800;z-index:2147483646;text-align:center;letter-spacing:0.3px;box-shadow:0 -4px 14px rgba(0,0,0,0.18);border-top:2px solid #fde68a;";
-      dbg.textContent = "KYC DEBUG (buildKycGate): function was invoked. Should render gate above.";
-      document.body.appendChild(dbg);
-    } catch (_) {}
     const existing = document.getElementById("vtKycGate");
     if (existing) existing.remove();
 
@@ -4511,13 +4504,8 @@
     const profile = (mergedGateMe && mergedGateMe.profile) || {};
     const serverDone = !!(mergedGateMe && mergedGateMe.security && mergedGateMe.security.kycCompleted === true);
     const fieldsDone = !!(profile && profile.country && profile.preferredLanguage);
-    const kycIsDevMode = !!(typeof window !== "undefined" && window.location && (
-      String(window.location.pathname || "").indexOf("/_dev/") !== -1 ||
-      String(window.location.search || "").indexOf("force_gate=1") !== -1 ||
-      String(window.location.search || "").indexOf("vt=reset") !== -1
-    ));
     const serverSignalExplicitDone = !!(me && me.security && (me.security.kycCompleted === true || me.security.kycDone === true || me.security.KYCDone === true));
-    if (!kycIsDevMode && (cachedDone || serverDone || serverSignalExplicitDone || fieldsDone)) {
+    if (cachedDone || serverDone || serverSignalExplicitDone || fieldsDone) {
       const lang = (existingCached && existingCached.preferredLanguage) || (mergedGateMe && mergedGateMe.preferredLanguage) || (mergedGateMe && mergedGateMe.profile && mergedGateMe.profile.preferredLanguage) || "en";
       const retData = {
         ok: true,
@@ -4949,25 +4937,9 @@
   async function bootstrapCustomerPage(options) {
     if (typeof document === "undefined") return null;
     if (_vtBootstrapRan) {
-      try {
-        var dbgD = document.createElement("div");
-        dbgD.id = "dbgDuplicateBootstrap_" + (Math.random()+"").slice(2, 8);
-        dbgD.style.cssText = "position:fixed;left:0;right:0;top:88px;background:#f59e0b;color:#fff;padding:6px 10px;font-size:12px;font-weight:800;z-index:2147483644;text-align:center;letter-spacing:0.3px;box-shadow:0 4px 14px rgba(0,0,0,0.18);border-bottom:2px solid #fde68a;";
-        dbgD.textContent = "KYC DEBUG: DUPLICATE bootstrapCustomerPage — _vtBootstrapRan already true. Gates SKIPPED.";
-        document.body.appendChild(dbgD);
-      } catch (_) {}
       return new Promise(function(resolve){ resolve({ me: null, language: "en", kycCompleted: true, profilePicPrompted: false, duplicateBootstrapPrevented: true }); });
     }
     _vtBootstrapRan = true;
-    try {
-      if (typeof document !== "undefined" && document && document.body) {
-        var dbg0 = document.createElement("div");
-        dbg0.id = "dbgBootstrapEnter_" + (Math.random()+"").slice(2, 8);
-        dbg0.style.cssText = "position:fixed;left:0;right:0;top:88px;background:#6d28d9;color:#fff;padding:6px 10px;font-size:12px;font-weight:800;z-index:2147483644;text-align:center;letter-spacing:0.3px;box-shadow:0 4px 14px rgba(0,0,0,0.18);border-bottom:2px solid #c4b5fd;";
-        dbg0.textContent = "KYC DEBUG (bootstrapCustomerPage): function entered — executing — me=null so far — awaiting api(/api/me)";
-        document.body.appendChild(dbg0);
-      }
-    } catch (_) {}
     let me = null;
     try {
       me = await api("/api/me");
@@ -4986,7 +4958,8 @@
 
     const hasProfilePic = !!(
       (me && me.profilePic) ||
-      (me && me.profile && (me.profile.profilePic || me.profile.photoURL || me.profile.photo || me.profile.avatar))
+      (me && me.profile && (me.profile.profilePic || me.profile.photoURL || me.profile.photo || me.profile.avatar)) ||
+      (me && me.security && (me.security.profilePic || me.security.photoURL || me.security.photo || me.security.avatar))
     );
 
     function maybeRunAfter(finalMe, finalLanguage, extras) {
@@ -5013,13 +4986,7 @@
       );
       const cachedPic = !!(cachedState && (cachedState.profilePic || cachedState.photoURL || cachedState.photo || cachedState.avatar));
       const hasAnyPic = picSet || cachedPic;
-      const picIsDevMode = !!(typeof window !== "undefined" && window.location && (
-        String(window.location.pathname || "").indexOf("/_dev/") !== -1 ||
-        String(window.location.search || "").indexOf("force_gate=1") !== -1 ||
-        String(window.location.search || "").indexOf("vt=reset") !== -1
-      ));
-      const skipPic = !picIsDevMode && options && options.skipProfilePic === true;
-      if (!picIsDevMode && (hasAnyPic || skipPic)) {
+      if (hasAnyPic || (options && options.skipProfilePic === true)) {
         maybeRunAfter(inputMe, language, { profilePicPrompted: false });
         resolve({ me: inputMe, language, kycCompleted: true, profilePicPrompted: false });
         return;
@@ -5049,31 +5016,14 @@
     }
 
     const cachedState = readVtKycCache() || null;
+    const serverSaysKycDone = !!(
+      (me && me.onboarding && me.onboarding.kycCompleted === true) ||
+      (me && me.security && (me.security.kycCompleted === true || me.security.kycDone === true || me.security.KYCDone === true)) ||
+      (me && me.profile && (me.profile.kycCompleted === true || me.profile.kycDone === true || me.profile.KYCDone === true))
+    );
+    const profileFieldsDone = !!((me && me.profile) && (me.profile.country) && (me.profile.preferredLanguage) && (me.profile.firstname || me.firstname));
     const cachedKycDone = !!(cachedState && cachedState.kycCompleted === true);
-    const isDevMode = !!(typeof window !== "undefined" && window.location && (
-      String(window.location.pathname || "").indexOf("/_dev/") !== -1 ||
-      String(window.location.search || "").indexOf("force_gate=1") !== -1 ||
-      String(window.location.search || "").indexOf("vt=reset") !== -1
-    ));
-    const serverSaysKycDone = !!(me && me.security && (me.security.kycCompleted === true || me.security.kycDone === true || me.security.KYCDone === true));
-    const profileFieldsDone = !!((me && me.profile) && (me.profile.country) && (me.profile.preferredLanguage));
-    const cacheLooksKycDone = cachedKycDone && !!(cachedState && cachedState.country) && !!(cachedState && cachedState.preferredLanguage);
-    const serverRequiresKyc = (me && me.security && me.security.kycCompleted === false) ? true : false;
-    const hasAnyServerSignal = !!(
-      (me && me.security && ("kycCompleted" in me.security || "kycDone" in me.security || "KYCDone" in me.security)) ||
-      (me && me.profile && ("country" in me.profile && "preferredLanguage" in me.profile))
-    );
-    const anyProfilePic = !!(
-      (me && me.profilePic) ||
-      (me && me.profile && (me.profile.profilePic || me.profile.photoURL || me.profile.photo || me.profile.avatar)) ||
-      (me && me.security && (me.security.profilePic || me.security.photoURL || me.security.photo || me.security.avatar))
-    );
-    const serverSignalLooksIncomplete = !hasAnyServerSignal && !anyProfilePic;
-    const kycDone = isDevMode
-      ? false
-      : (serverSignalLooksIncomplete
-          ? false
-          : ((serverSaysKycDone || profileFieldsDone) && !serverRequiresKyc ? true : cacheLooksKycDone));
+    const kycDone = serverSaysKycDone || profileFieldsDone || cachedKycDone;
     const kycNeeded = !kycDone;
 
     if (options && options.alwaysShowKyc !== true && !kycNeeded) {
@@ -5088,16 +5038,6 @@
       });
     }
     _vtKycGateOpened = true;
-
-    try {
-      if (typeof document !== "undefined" && document && document.body) {
-        var dbg2 = document.createElement("div");
-        dbg2.id = "dbgBootstrapOpen_" + (Math.random()+"").slice(2, 8);
-        dbg2.style.cssText = "position:fixed;left:0;right:0;top:44px;background:#0ea5e9;color:#fff;padding:7px 11px;font-size:13px;font-weight:800;z-index:2147483645;text-align:center;letter-spacing:0.3px;box-shadow:0 4px 14px rgba(0,0,0,0.18);border-bottom:2px solid #7dd3fc;";
-        dbg2.textContent = "KYC DEBUG (bootstrap): about to call buildKycGate() — dev mode=" + (String(window.location.pathname.indexOf("/_dev/") !== -1)) + " kycNeeded=true";
-        document.body.insertBefore(dbg2, document.body.firstChild);
-      }
-    } catch (_) {}
 
     return new Promise((resolve) => {
       buildKycGate({
@@ -5467,7 +5407,9 @@
     if (typeof window.VT.UI.bootstrapCustomerPage !== "function") {
       window.VT.UI.bootstrapCustomerPage = bootstrapCustomerPage;
     }
-    window.__vtBootstrapCustomerPage = bootstrapCustomerPage;
+    if (typeof window.__vtBootstrapCustomerPage !== "function") {
+      window.__vtBootstrapCustomerPage = bootstrapCustomerPage;
+    }
     window.__vtBuildKycGate = buildKycGate;
     window.__vtBuildPicGate = buildPicGate;
     window.VT.Upload = exports.Upload;

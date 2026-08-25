@@ -911,6 +911,46 @@
                 </div>
 
                 <div class="vt-kv">
+                  <div class="ico"><i class="fas fa-birthday-cake"></i></div>
+                  <div class="txt">
+                    <div class="k">Date of Birth</div>
+                    <div class="v" id="dateOfBirth">--</div>
+                  </div>
+                </div>
+
+                <div class="vt-kv">
+                  <div class="ico"><i class="fas fa-globe"></i></div>
+                  <div class="txt">
+                    <div class="k">Country</div>
+                    <div class="v" id="country">--</div>
+                  </div>
+                </div>
+
+                <div class="vt-kv">
+                  <div class="ico"><i class="fas fa-passport"></i></div>
+                  <div class="txt">
+                    <div class="k">Nationality</div>
+                    <div class="v" id="nationality">--</div>
+                  </div>
+                </div>
+
+                <div class="vt-kv">
+                  <div class="ico"><i class="fas fa-briefcase"></i></div>
+                  <div class="txt">
+                    <div class="k">Occupation</div>
+                    <div class="v" id="occupation">--</div>
+                  </div>
+                </div>
+
+                <div class="vt-kv">
+                  <div class="ico"><i class="fas fa-map-marker-alt"></i></div>
+                  <div class="txt">
+                    <div class="k">Address</div>
+                    <div class="v" id="residentialAddress">--</div>
+                  </div>
+                </div>
+
+                <div class="vt-kv">
                   <div class="ico"><i class="fas fa-hashtag"></i></div>
                   <div class="txt">
                     <div class="k">Account Number</div>
@@ -1101,7 +1141,7 @@
         function populateProfileFields(me) {
           const el = (id, text) => {
             const n = document.getElementById(id);
-            if (n) n.textContent = text == null ? "--" : String(text);
+            if (n) n.textContent = text == null || text === "" ? "--" : String(text);
           };
           el("accountHolder", getFullName(me));
           el("emailAddress", getUserEmail(me));
@@ -1120,7 +1160,18 @@
           el("branchCode", String(p.branchCode || "RBBS0001").trim() || "RBBS0001");
           el("lastLogin", formatDate(me.lastLogin || p.lastLogin || ""));
           el("gender", genderVal);
-          el("accountNumber", String(p.accountNumber || me.accountNumber || "").trim() || "--");
+          el("dateOfBirth", String(p.dateOfBirth || p.dob || "").trim() || "--");
+          el("country", String(p.country || me.country || "").trim() || "--");
+          el("nationality", String(p.nationality || "").trim() || "--");
+          el("occupation", String(p.occupation || "").trim() || "--");
+          const addressParts = [
+            String(p.address || "").trim(),
+            String(p.city || "").trim(),
+            String(p.state || "").trim(),
+            String(p.zipCode || p.zip || "").trim()
+          ].filter(Boolean);
+          el("residentialAddress", addressParts.length ? addressParts.join(", ") : "--");
+          el("accountNumber", String(p.accountNumber || (me.account && me.account.accountNumber) || me.accountNumber || "").trim() || "--");
         }
 
         let latestMe = null;

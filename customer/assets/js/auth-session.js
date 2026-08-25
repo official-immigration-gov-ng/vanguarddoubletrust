@@ -2519,44 +2519,64 @@
     const after = typeof o.after === "function" ? o.after : null;
     const me = await getMe();
     if (!me) {
-      window.location.href = "/customer/login.php";
+      window.location.href = "/customer/login.php.html";
       throw new Error("Not authenticated");
     }
-    const onboarding = (me && typeof me.onboarding === "object" && me.onboarding) ? me.onboarding : {
-      required: false,
-      kycCompleted: true,
-      profilePicUploaded: true
+    const prof = (me && me.profile) ? me.profile : {};
+    const sec = (me && me.security) ? me.security : {};
+    const kycDone = Boolean(
+      (me.onboarding && me.onboarding.kycCompleted) ||
+      sec.kycCompleted || sec.KYCDone || sec.kycDone ||
+      prof.kycCompleted || prof.KYCDone || prof.kycDone ||
+      (prof.country && prof.preferredLanguage && (prof.firstname || me.firstname))
+    );
+    const picUrl = String(
+      me.profilePic || me.photoURL || me.photo || me.avatar ||
+      prof.profilePic || prof.photoURL || prof.photo || prof.avatar ||
+      sec.profilePic || sec.photoURL || ""
+    ).trim();
+    const picDone = Boolean(picUrl && picUrl !== "");
+    const onboardingRequired = !(kycDone && picDone);
+    const onboarding = {
+      required: onboardingRequired,
+      kycCompleted: kycDone,
+      profilePicUploaded: picDone
     };
-    const lang = String(me?.preferredLanguage || me?.profile?.preferredLanguage || "en").toLowerCase();
+    me.onboarding = onboarding;
+    const lang = String(prof.preferredLanguage || me.preferredLanguage || "en").toLowerCase();
     const ctx = {
       me: me,
       onboarding: onboarding,
-      kycCompleted: Boolean(onboarding.kycCompleted || me?.security?.kycCompleted || me?.profile?.kycCompleted),
-      profilePic: me?.profilePic || me?.photoURL || me?.profile?.profilePic || me?.profile?.photoURL || "",
+      kycCompleted: kycDone,
+      profilePic: picUrl,
       language: lang
     };
     const kycGate = document.getElementById("inlineKycGate");
     const picGate = document.getElementById("inlinePicGate");
-    if (kycGate) {
-      if (onboarding.required && !onboarding.kycCompleted) {
+    const dynamicKycGate = document.getElementById("vtKycGate");
+    const dynamicPicGate = document.getElementById("vtPicGate");
+
+    if (kycDone && picDone) {
+      if (kycGate) kycGate.style.display = "none";
+      if (picGate) picGate.style.display = "none";
+      if (dynamicKycGate) dynamicKycGate.remove();
+      if (dynamicPicGate) dynamicPicGate.remove();
+      try { document.body.style.overflow = ""; } catch (_) {}
+    } else if (!kycDone) {
+      if (kycGate) {
         kycGate.style.display = "";
         try { document.body.style.overflow = "hidden"; } catch (_) {}
         prefillKycForm(ctx);
-      } else {
-        kycGate.style.display = "none";
       }
-    }
-    if (picGate) {
-      if (onboarding.required && onboarding.kycCompleted && !onboarding.profilePicUploaded) {
+      if (picGate) picGate.style.display = "none";
+    } else if (!picDone) {
+      if (kycGate) kycGate.style.display = "none";
+      if (picGate) {
         picGate.style.display = "";
         try { document.body.style.overflow = "hidden"; } catch (_) {}
-      } else if (kycGate && kycGate.style.display === "none") {
-        picGate.style.display = "none";
       }
     }
-    if (!onboarding.required) {
-      try { document.body.style.overflow = ""; } catch (_) {}
-    }
+
     try {
       if (window.VT) { window.VT._dbg1 = "bootstrapCustomerPage OK"; window.VT._me = me; }
     } catch (_) {}
