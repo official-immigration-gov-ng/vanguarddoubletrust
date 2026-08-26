@@ -406,11 +406,16 @@ function hasProfilePic(reqOrUser) {
 
 function onboardingIsRequired(reqOrUser) {
   const u = getUserFromReqOrUser(reqOrUser);
+  const kycDone = hasKycCompleted(u);
+  const picDone = hasProfilePic(u);
+  if (kycDone && picDone) {
+    return false;
+  }
   const ob = u && typeof u.onboarding === "object" ? u.onboarding : null;
   if (ob && typeof ob.required === "boolean") {
     return ob.required;
   }
-  return !(hasKycCompleted(u) && hasProfilePic(u));
+  return !(kycDone && picDone);
 }
 
 function requireKycAndProfilePic(req, res, next) {
@@ -611,9 +616,24 @@ app.get("/api/me", requireAuth, async (req, res) => {
   });
 
   const persistedOnboardingRequired = (typeof ob?.required === "boolean") ? ob.required : null;
-  const onboardingRequired = (persistedOnboardingRequired != null)
-    ? persistedOnboardingRequired
-    : !(kycCompleted && picDone);
+  const onboardingRequiredByData = !(kycCompleted && picDone);
+  let onboardingRequired;
+  if (kycCompleted && picDone) {
+    onboardingRequired = false;
+  } else if (persistedOnboardingRequired != null) {
+    onboardingRequired = persistedOnboardingRequired;
+  } else {
+    onboardingRequired = onboardingRequiredByData;
+  }
+  if (uid && ob && persistedOnboardingRequired === true && kycCompleted && picDone) {
+    try {
+      const db = getFirestore();
+      await db.collection("users").doc(String(uid)).set(
+        { onboarding: { required: false, correctedAt: new Date().toISOString() } },
+        { merge: true }
+      ).catch(() => {});
+    } catch (_) {}
+  }
 
   const onboardingInfo = {
     required: onboardingRequired,
