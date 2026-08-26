@@ -422,6 +422,12 @@ function requireKycAndProfilePic(req, res, next) {
     next();
     return;
   }
+  const reqPath = String(req.path || "").toLowerCase();
+  const isDashboardRoute = reqPath === "/customer/dashboard.php" || reqPath === "/customer/dashboard";
+  if (isDashboardRoute) {
+    next();
+    return;
+  }
   if (String(req.path || "").startsWith("/api/")) {
     res.status(403).json({
       error: "Onboarding incomplete.",
