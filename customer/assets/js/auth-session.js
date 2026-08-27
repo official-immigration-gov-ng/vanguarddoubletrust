@@ -2527,8 +2527,7 @@
     const kycDone = Boolean(
       (me.onboarding && me.onboarding.kycCompleted) ||
       sec.kycCompleted || sec.KYCDone || sec.kycDone ||
-      prof.kycCompleted || prof.KYCDone || prof.kycDone ||
-      (prof.country && prof.preferredLanguage && (prof.firstname || me.firstname))
+      prof.kycCompleted || prof.KYCDone || prof.kycDone
     );
     const picUrl = String(
       me.profilePic || me.photoURL || me.photo || me.avatar ||

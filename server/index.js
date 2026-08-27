@@ -98,6 +98,106 @@ app.use(cookieParser());
 
 const siteRoot = path.resolve(__dirname, "..");
 
+const localAdminDataDir = path.join(__dirname, "data");
+const localAdminUsersFile = path.join(localAdminDataDir, "admin_users.json");
+const localAdminTransactionsFile = path.join(localAdminDataDir, "admin_transactions.json");
+
+(function ensureLocalDataDir() {
+  try {
+    if (!fs.existsSync(localAdminDataDir)) fs.mkdirSync(localAdminDataDir, { recursive: true });
+    if (!fs.existsSync(localAdminUsersFile)) fs.writeFileSync(localAdminUsersFile, JSON.stringify({}, null, 2), "utf8");
+    if (!fs.existsSync(localAdminTransactionsFile)) fs.writeFileSync(localAdminTransactionsFile, JSON.stringify({}, null, 2), "utf8");
+  } catch (e) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[VT] Local admin data init skipped:", e && e.message ? String(e.message) : e);
+    }
+  }
+})();
+
+function readLocalUsers() {
+  try {
+    if (!fs.existsSync(localAdminUsersFile)) return {};
+    const raw = fs.readFileSync(localAdminUsersFile, "utf8");
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function writeLocalUsers(users) {
+  try {
+    if (!fs.existsSync(localAdminDataDir)) fs.mkdirSync(localAdminDataDir, { recursive: true });
+    fs.writeFileSync(localAdminUsersFile, JSON.stringify(users || {}, null, 2), "utf8");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function readLocalTransactions() {
+  try {
+    if (!fs.existsSync(localAdminTransactionsFile)) return {};
+    const raw = fs.readFileSync(localAdminTransactionsFile, "utf8");
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function writeLocalTransactions(txs) {
+  try {
+    if (!fs.existsSync(localAdminDataDir)) fs.mkdirSync(localAdminDataDir, { recursive: true });
+    fs.writeFileSync(localAdminTransactionsFile, JSON.stringify(txs || {}, null, 2), "utf8");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function localUsersToList() {
+  const map = readLocalUsers();
+  const now = new Date().toISOString();
+  return Object.keys(map).map((uid) => {
+    const data = map[uid] || {};
+    const profile = data.profile || {};
+    const account = data.account || {};
+    return {
+      uid: uid,
+      email: data.email || null,
+      firstname: profile.firstname || "",
+      lastname: profile.lastname || "",
+      phone: profile.phone || "",
+      accountNumber: account.accountNumber || "",
+      balance: Number(account.balance || 0),
+      status: account.status || "ACTIVE",
+      currency: account.currency || "USD",
+      updatedAt: data.updatedAt || data.createdAt || now,
+      createdAt: data.createdAt || now
+    };
+  }).sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+}
+
+function mergeFirestoreUsersWithLocal(firestoreUsers) {
+  const fsList = Array.isArray(firestoreUsers) ? firestoreUsers : [];
+  const localList = localUsersToList();
+  const seen = new Set();
+  const merged = [];
+  fsList.forEach((u) => {
+    if (u && u.uid) {
+      seen.add(u.uid);
+      merged.push(u);
+    }
+  });
+  localList.forEach((u) => {
+    if (u && u.uid && !seen.has(u.uid)) {
+      merged.push(u);
+    }
+  });
+  return merged.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+}
+
 app.use((req, res, next) => {
   const blocked =
     req.path === "/package.json" ||
@@ -384,12 +484,7 @@ function hasKycCompleted(reqOrUser) {
     p?.kycCompleted === true || p?.KYCDone === true || p?.kycDone === true ||
     u?.kycCompleted === true || u?.KYCDone === true || u?.kycDone === true
   );
-  const first = String(p?.firstname || u?.firstname || "").trim();
-  const last = String(p?.lastname || u?.lastname || "").trim();
-  const country = String(p?.country || u?.country || "").trim();
-  const lang = String(p?.preferredLanguage || u?.preferredLanguage || "").trim();
-  const heuristic = Boolean(first && last && country && lang);
-  return Boolean(directFlag || heuristic);
+  return Boolean(directFlag);
 }
 
 function hasProfilePic(reqOrUser) {
@@ -444,7 +539,7 @@ function requireKycAndProfilePic(req, res, next) {
     });
     return;
   }
-  res.redirect("/customer/dashboard.php#onboarding");
+  res.redirect("/customer/dashboard.php");
 }
 
 function adminCredentials() {
@@ -722,9 +817,16 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
   const heuristicObRequired = !(kycDoneForCheck && picDoneForCheck);
   const existingOb = (existingSnap && typeof existingSnap.onboarding === "object" && existingSnap.onboarding) ? existingSnap.onboarding : {};
   const existingObRequired = typeof existingOb.required === "boolean" ? existingOb.required : null;
-  const onboardingRequiredForSave = (existingObRequired === false)
-    ? false
-    : (existingObRequired != null ? existingObRequired : heuristicObRequired);
+  let onboardingRequiredForSave;
+  if (!heuristicObRequired) {
+    onboardingRequiredForSave = false;
+  } else if (existingObRequired === false) {
+    onboardingRequiredForSave = false;
+  } else if (existingObRequired != null) {
+    onboardingRequiredForSave = existingObRequired;
+  } else {
+    onboardingRequiredForSave = heuristicObRequired;
+  }
 
   const updates = {
     updatedAt: nowIso,
@@ -766,9 +868,17 @@ app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
     const persistedObReq = (dbData?.onboarding && typeof dbData.onboarding.required === "boolean")
       ? dbData.onboarding.required
       : null;
-    const finalOnboardingRequired = (persistedObReq === false)
-      ? false
-      : (persistedObReq != null ? persistedObReq : !(kycDone && picDone));
+    const heuristicObFinal = !(kycDone && picDone);
+    let finalOnboardingRequired;
+    if (!heuristicObFinal) {
+      finalOnboardingRequired = false;
+    } else if (persistedObReq === false) {
+      finalOnboardingRequired = false;
+    } else if (persistedObReq != null) {
+      finalOnboardingRequired = persistedObReq;
+    } else {
+      finalOnboardingRequired = heuristicObFinal;
+    }
 
     res.status(200).json({
       ok: true,
@@ -919,9 +1029,16 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
 
   const existingOnboarding = (existingSnapshot && typeof existingSnapshot.onboarding === "object" && existingSnapshot.onboarding) ? existingSnapshot.onboarding : {};
   const existingObRequired = typeof existingOnboarding.required === "boolean" ? existingOnboarding.required : null;
-  const finalOnboardingRequiredForSave = (existingObRequired === false)
-    ? false
-    : (existingObRequired != null ? existingObRequired : onboardingRequired);
+  let finalOnboardingRequiredForSave;
+  if (!onboardingRequired) {
+    finalOnboardingRequiredForSave = false;
+  } else if (existingObRequired === false) {
+    finalOnboardingRequiredForSave = false;
+  } else if (existingObRequired != null) {
+    finalOnboardingRequiredForSave = existingObRequired;
+  } else {
+    finalOnboardingRequiredForSave = onboardingRequired;
+  }
 
   const updates = {
     updatedAt: nowIso,
@@ -961,9 +1078,17 @@ app.post("/api/customer/kyc", requireAuth, async (req, res) => {
   const persistedObFinal = (dbSnapshot?.onboarding && typeof dbSnapshot.onboarding.required === "boolean")
     ? dbSnapshot.onboarding.required
     : null;
-  const finalOnboardingRequired = (persistedObFinal === false)
-    ? false
-    : (persistedObFinal != null ? persistedObFinal : !(kycDoneFinal && picDoneFinal));
+  const heuristicObFinalKyc = !(kycDoneFinal && picDoneFinal);
+  let finalOnboardingRequired;
+  if (!heuristicObFinalKyc) {
+    finalOnboardingRequired = false;
+  } else if (persistedObFinal === false) {
+    finalOnboardingRequired = false;
+  } else if (persistedObFinal != null) {
+    finalOnboardingRequired = persistedObFinal;
+  } else {
+    finalOnboardingRequired = heuristicObFinalKyc;
+  }
 
   res.status(200).json({
     ok: true,
@@ -1185,9 +1310,16 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   const heuristicOb = !(kycForOnboarding && picForOnboarding);
   const existingObForSave = (existingSnapshot && typeof existingSnapshot.onboarding === "object" && existingSnapshot.onboarding) ? existingSnapshot.onboarding : {};
   const existingObReq = typeof existingObForSave.required === "boolean" ? existingObForSave.required : null;
-  const obRequiredForSave = (existingObReq === false)
-    ? false
-    : (existingObReq != null ? existingObReq : heuristicOb);
+  let obRequiredForSave;
+  if (!heuristicOb) {
+    obRequiredForSave = false;
+  } else if (existingObReq === false) {
+    obRequiredForSave = false;
+  } else if (existingObReq != null) {
+    obRequiredForSave = existingObReq;
+  } else {
+    obRequiredForSave = heuristicOb;
+  }
 
   const updates = {
     updatedAt: nowIso,
@@ -1225,9 +1357,17 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   const kycCompleted = hasKycCompleted(fullRefUser);
   const picCompleted = hasProfilePic(fullRefUser);
   const persistedOb = typeof fsOb.required === "boolean" ? fsOb.required : null;
-  const obRequiredFinal = (persistedOb === false)
-    ? false
-    : ((persistedOb != null) ? persistedOb : !(kycCompleted && picCompleted));
+  const heuristicObFinalProfile = !(kycCompleted && picCompleted);
+  let obRequiredFinal;
+  if (!heuristicObFinalProfile) {
+    obRequiredFinal = false;
+  } else if (persistedOb === false) {
+    obRequiredFinal = false;
+  } else if (persistedOb != null) {
+    obRequiredFinal = persistedOb;
+  } else {
+    obRequiredFinal = heuristicObFinalProfile;
+  }
 
   res.json({
     ok: true,
@@ -1522,10 +1662,12 @@ app.get("/api/admin/session", requireAdminAuth, (req, res) => {
 });
 
 app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
+  let firestoreUsers = [];
+  let firestoreFailed = false;
   try {
     const db = getFirestore();
     const snap = await db.collection("users").get();
-    const users = snap.docs
+    firestoreUsers = snap.docs
       .map((doc) => {
         const data = doc.data() || {};
         const profile = data.profile || {};
@@ -1543,21 +1685,26 @@ app.get("/api/admin/users", requireAdminAuth, async (req, res) => {
           updatedAt: data.updatedAt || null,
           createdAt: data.createdAt || null
         };
-      })
-      .sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
-
-    res.json({
-      ok: true,
-      users,
-      summary: {
-        totalUsers: users.length,
-        totalBalance: users.reduce((sum, user) => sum + Number(user.balance || 0), 0)
-      }
-    });
-  } catch (e) {
-    const normalized = normalizeFirebaseAdminError(e, "Unable to load users.");
-    res.status(normalized.status).json({ error: normalized.error });
+      });
+  } catch (fsErr) {
+    firestoreFailed = true;
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[VT] Admin users: Firestore unavailable, using local fallback.", fsErr && fsErr.message ? String(fsErr.message) : fsErr);
+    }
   }
+
+  const users = mergeFirestoreUsersWithLocal(firestoreUsers);
+  const sortedUsers = users.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+
+  res.json({
+    ok: true,
+    users: sortedUsers,
+    firestoreFallback: firestoreFailed,
+    summary: {
+      totalUsers: sortedUsers.length,
+      totalBalance: sortedUsers.reduce((sum, user) => sum + Number(user.balance || 0), 0)
+    }
+  });
 });
 
 app.get("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
@@ -2041,17 +2188,28 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
      * Make sure another customer does not already have
      * this account number.
      */
-    const db = getFirestore();
+    let duplicate = false;
+    try {
+      const db = getFirestore();
+      const duplicateSnap = await db
+        .collection("users")
+        .where("account.accountNumber", "==", newAccountNumber)
+        .limit(2)
+        .get();
+      duplicate = !!duplicateSnap.docs.find((doc) => doc.id !== uid);
+    } catch (_) {
+      // Firestore unavailable, fall back to local check below
+    }
 
-    const duplicateSnap = await db
-      .collection("users")
-      .where("account.accountNumber", "==", newAccountNumber)
-      .limit(2)
-      .get();
-
-    const duplicate = duplicateSnap.docs.find(
-      (doc) => doc.id !== uid
-    );
+    if (!duplicate) {
+      // Also check local store for duplicates
+      const localUsers = readLocalUsers();
+      const localDup = Object.keys(localUsers).find((k) => {
+        if (k === uid) return false;
+        return (localUsers[k]?.account?.accountNumber || "") === newAccountNumber;
+      });
+      if (localDup) duplicate = true;
+    }
 
     if (duplicate) {
       res.status(409).json({
@@ -2068,22 +2226,41 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
     const userRef = db.collection("users").doc(uid);
 
     const existingSnap = await userRef.get();
+    let existingData = null;
+    let currentBalance = 0;
+    let currency = "USD";
 
-    if (!existingSnap.exists) {
+    if (existingSnap && existingSnap.exists) {
+      existingData = existingSnap.data() || {};
+      currentBalance = Number(existingData?.account?.balance || 0);
+      currency = String(existingData?.account?.currency || "USD");
+    } else {
+      // User not in Firestore - check if they exist only in local store
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        // Apply update locally only
+        const cur = localUsers[uid] || {};
+        const curProfile = cur.profile || {};
+        const curAccount = cur.account || {};
+        const prevLocalBal = Number(curAccount.balance || 0);
+        if (typeof updates["profile.firstname"] !== "undefined") curProfile.firstname = updates["profile.firstname"];
+        if (typeof updates["profile.lastname"] !== "undefined") curProfile.lastname = updates["profile.lastname"];
+        if (typeof updates["account.balance"] !== "undefined") curAccount.balance = updates["account.balance"];
+        if (typeof updates["account.status"] !== "undefined") curAccount.status = updates["account.status"];
+        if (typeof updates["account.accountNumber"] !== "undefined") curAccount.accountNumber = updates["account.accountNumber"];
+        cur.updatedAt = new Date().toISOString();
+        cur.profile = curProfile;
+        cur.account = curAccount;
+        localUsers[uid] = cur;
+        writeLocalUsers(localUsers);
+        res.json({ ok: true, message: "Customer account updated (local-only record)." });
+        return;
+      }
       res.status(404).json({
         error: "Customer account not found."
       });
       return;
     }
-
-    const existingData = existingSnap.data() || {};
-    const currentBalance = Number(
-      existingData?.account?.balance || 0
-    );
-
-    const currency = String(
-      existingData?.account?.currency || "USD"
-    );
 
     if (deltaInfo) {
       deltaInfo.prevBalance = Number.isFinite(currentBalance)
@@ -2130,8 +2307,52 @@ app.patch("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
       message: "Customer account repaired successfully."
     });
 
+    // Also sync to local storage as backup
+    try {
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        const cur = localUsers[uid] || {};
+        const curProfile = cur.profile || {};
+        const curAccount = cur.account || {};
+        if (typeof updates["profile.firstname"] !== "undefined") curProfile.firstname = updates["profile.firstname"];
+        if (typeof updates["profile.lastname"] !== "undefined") curProfile.lastname = updates["profile.lastname"];
+        if (typeof updates["account.balance"] !== "undefined") curAccount.balance = updates["account.balance"];
+        if (typeof updates["account.status"] !== "undefined") curAccount.status = updates["account.status"];
+        if (typeof updates["account.accountNumber"] !== "undefined") curAccount.accountNumber = updates["account.accountNumber"];
+        cur.updatedAt = updates.updatedAt;
+        cur.profile = curProfile;
+        cur.account = curAccount;
+        localUsers[uid] = cur;
+        writeLocalUsers(localUsers);
+      }
+    } catch (_) {}
+
   } catch (e) {
-    console.error("[ADMIN] User update failed:", e);
+    console.error("[ADMIN] User update failed (Firestore):", e);
+
+    // Try local storage fallback
+    try {
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        const cur = localUsers[uid] || {};
+        const curProfile = cur.profile || {};
+        const curAccount = cur.account || {};
+        if (typeof updates["profile.firstname"] !== "undefined") curProfile.firstname = updates["profile.firstname"];
+        if (typeof updates["profile.lastname"] !== "undefined") curProfile.lastname = updates["profile.lastname"];
+        if (typeof updates["account.balance"] !== "undefined") curAccount.balance = updates["account.balance"];
+        if (typeof updates["account.status"] !== "undefined") curAccount.status = updates["account.status"];
+        if (typeof updates["account.accountNumber"] !== "undefined") curAccount.accountNumber = updates["account.accountNumber"];
+        cur.updatedAt = new Date().toISOString();
+        cur.profile = curProfile;
+        cur.account = curAccount;
+        localUsers[uid] = cur;
+        writeLocalUsers(localUsers);
+        res.json({ ok: true, message: "Customer account updated locally (Firestore unavailable)." });
+        return;
+      }
+    } catch (localErr) {
+        console.error("[ADMIN] Local fallback update also failed:", localErr);
+    }
 
     res.status(500).json({
       error: "Unable to update customer account."
@@ -2157,6 +2378,23 @@ app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
     const userSnap = await userRef.get();
 
     if (!userSnap.exists) {
+      // Check if user exists only in local store
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        delete localUsers[uid];
+        writeLocalUsers(localUsers);
+        // Also clear local transactions
+        const localTxs = readLocalTransactions();
+        if (localTxs[uid]) {
+          delete localTxs[uid];
+          writeLocalTransactions(localTxs);
+        }
+        res.json({
+          ok: true,
+          message: "Customer account deleted (local-only record)."
+        });
+        return;
+      }
       res.status(404).json({
         error: "Customer account not found."
       });
@@ -2256,6 +2494,20 @@ app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
       `[ADMIN] Permanently deleted customer ${uid} by ${req.admin?.email || "admin"}`
     );
 
+    // Also remove from local storage as sync
+    try {
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        delete localUsers[uid];
+        writeLocalUsers(localUsers);
+      }
+      const localTxs = readLocalTransactions();
+      if (localTxs[uid]) {
+        delete localTxs[uid];
+        writeLocalTransactions(localTxs);
+      }
+    } catch (_) {}
+
     res.json({
       ok: true,
       message: "Customer account permanently deleted."
@@ -2263,9 +2515,30 @@ app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
 
   } catch (error) {
     console.error(
-      "[ADMIN] Permanent user deletion failed:",
+      "[ADMIN] Permanent user deletion failed (Firestore):",
       error
     );
+
+    // Try local fallback
+    try {
+      const localUsers = readLocalUsers();
+      if (localUsers[uid]) {
+        delete localUsers[uid];
+        writeLocalUsers(localUsers);
+        const localTxs = readLocalTransactions();
+        if (localTxs[uid]) {
+          delete localTxs[uid];
+          writeLocalTransactions(localTxs);
+        }
+        res.json({
+          ok: true,
+          message: "Customer account deleted locally (Firestore unavailable)."
+        });
+        return;
+      }
+    } catch (localErr) {
+      console.error("[ADMIN] Local fallback delete also failed:", localErr);
+    }
 
     res.status(500).json({
       error: "Unable to permanently delete customer account."
@@ -2274,12 +2547,14 @@ app.delete("/api/admin/users/:uid", requireAdminAuth, async (req, res) => {
 });
 
 app.post("/api/admin/clear-users", requireAdminAuth, async (req, res) => {
+  let deletedCount = 0;
+  let firestoreFailed = false;
+
   try {
     const db = getFirestore();
     const auth = getAuth();
 
     const usersSnap = await db.collection("users").get();
-    let deletedCount = 0;
 
     for (const userDoc of usersSnap.docs) {
       const uid = userDoc.id;
@@ -2322,13 +2597,26 @@ app.post("/api/admin/clear-users", requireAdminAuth, async (req, res) => {
       await userDoc.ref.delete().catch(() => {});
       deletedCount++;
     }
-
-    console.log(`[ADMIN] Bulk cleared ${deletedCount} user accounts by ${req.admin?.email || "admin"}`);
-    res.json({ ok: true, message: `Successfully cleared ${deletedCount} old customer account(s).`, deletedCount });
-  } catch (e) {
-    const normalized = normalizeFirebaseAdminError(e, "Unable to clear customer accounts.");
-    res.status(normalized.status).json({ error: normalized.error });
+  } catch (fsErr) {
+    firestoreFailed = true;
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[VT] Clear users: Firestore unavailable, using local fallback.", fsErr && fsErr.message ? String(fsErr.message) : fsErr);
+    }
   }
+
+  // Also clear local storage (always - sync with Firestore or use local-only)
+  try {
+    const localUsers = readLocalUsers();
+    const localCount = Object.keys(localUsers).length;
+    if (localCount > 0) {
+      writeLocalUsers({});
+      deletedCount += localCount;
+    }
+    writeLocalTransactions({});
+  } catch (_) {}
+
+  console.log(`[ADMIN] Bulk cleared ${deletedCount} user accounts by ${req.admin?.email || "admin"}${firestoreFailed ? " (local only)" : ""}`);
+  res.json({ ok: true, message: `Successfully cleared ${deletedCount} old customer account(s).`, deletedCount, firestoreFallback: firestoreFailed });
 });
 
 function sendHtmlFile(res, absPath) {
@@ -2418,7 +2706,7 @@ app.get("/customer/dashboard", requireAuth, (req, res) => {
     return;
   }
   if (onboardingIsRequired(req)) {
-    res.redirect("/customer/dashboard.php#onboarding");
+    res.redirect("/customer/dashboard.php");
     return;
   }
   res.redirect("/customer/dashboard.php");
@@ -2501,7 +2789,7 @@ app.get(/^\/customer\/([A-Za-z0-9_-]+\.php)$/, requireAuth, (req, res, next) => 
     return;
   }
   if (onboardingIsRequired(req)) {
-    res.redirect("/customer/dashboard.php#onboarding");
+    res.redirect("/customer/dashboard.php");
     return;
   }
   sendPage(res, "customer/" + rel);

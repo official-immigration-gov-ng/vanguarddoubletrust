@@ -1277,38 +1277,49 @@
       <div style="max-width:920px;margin:0 auto;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;">
           <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" style="height:36px;max-width:220px;" onerror="this.style.display='none'"/>
-          <div style="color:#94a3b8;font-size:12px;">KYC / Profile Setup</div>
+          <div style="color:#94a3b8;font-size:12px;">Step 1 of 2 · KYC Information</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+          <div style="flex:1;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#b7922a);color:#0b0f14;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 6px 18px -6px rgba(212,175,55,0.5);">1</div>
+            <div style="font-size:14px;font-weight:800;color:#f8fafc;">KYC Information</div>
+          </div>
+          <div style="width:60px;height:3px;background:rgba(148,163,184,0.25);border-radius:3px;"></div>
+          <div style="flex:1;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(148,163,184,0.12);border:2px dashed rgba(148,163,184,0.35);color:#64748b;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;">2</div>
+            <div style="font-size:14px;font-weight:700;color:#64748b;">Profile Picture</div>
+          </div>
         </div>
         <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:26px 26px 22px;margin-bottom:18px;">
-          <h1 style="margin:0 0 8px 0;font-size:26px;color:#f8fafc;letter-spacing:-0.3px;">Complete Your Profile / KYC</h1>
-          <p style="margin:0 0 0 0;color:#cbd5e1;font-size:14px;line-height:1.6;">Please fill in your details and choose a language to unlock your dashboard.</p>
+          <h1 style="margin:0 0 8px 0;font-size:26px;color:#f8fafc;letter-spacing:-0.3px;">Step 1: Complete Your KYC Information</h1>
+          <p style="margin:0 0 0 0;color:#cbd5e1;font-size:14px;line-height:1.6;">Please fill in your personal details below. This information is required to verify your identity.</p>
         </div>
         <div style="background:linear-gradient(180deg,#7f1d1d,#991b1b);border:1px solid #b91c1c;color:#fecaca;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;font-weight:700;letter-spacing:0.2px;">
-          ⚠️ All required fields must be completed before you can use your account. This step is required.
+          ⚠️ Step 1 is required. You must complete KYC before uploading a profile picture.
         </div>
         <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px;">
           <form id="inlineKycForm" autocomplete="on" novalidate>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;">
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">First Name <span style="color:#f87171;">*</span></label>
-                <input id="ikFirstname" name="firstname" type="text" value="Frank" autocomplete="given-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikFirstname" name="firstname" type="text" value="" autocomplete="given-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
                 <div id="ikErrFirstname" style="color:#f87171;font-size:12px;margin-top:4px;min-height:16px;"></div>
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Last Name <span style="color:#f87171;">*</span></label>
-                <input id="ikLastname" name="lastname" type="text" value="James" autocomplete="family-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikLastname" name="lastname" type="text" value="" autocomplete="family-name" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
                 <div id="ikErrLastname" style="color:#f87171;font-size:12px;margin-top:4px;min-height:16px;"></div>
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Phone Number</label>
-                <input id="ikPhone" name="phone" type="tel" value="+4478789166724" autocomplete="tel" inputmode="tel" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikPhone" name="phone" type="tel" value="" autocomplete="tel" inputmode="tel" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
                 <div style="min-height:16px;"></div>
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Country <span style="color:#f87171;">*</span></label>
                 <select id="ikCountry" name="country" required style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;">
-                  <option value="">-- Country --</option>
-                  <option value="US" selected>United States</option>
+                  <option value="" selected>-- Country --</option>
+                  <option value="US">United States</option>
                   <option value="GB">United Kingdom</option>
                   <option value="CA">Canada</option>
                   <option value="AU">Australia</option>
@@ -1340,8 +1351,8 @@
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Gender</label>
                 <select id="ikGender" name="gender" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;">
-                  <option value="">-- Gender --</option>
-                  <option value="male" selected>Male</option>
+                  <option value="" selected>-- Gender --</option>
+                  <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="other">Other</option>
                   <option value="prefer_not_say">Prefer not to say</option>
@@ -1349,36 +1360,36 @@
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Date of Birth</label>
-                <input id="ikDob" name="dateOfBirth" type="date" value="1990-05-12" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikDob" name="dateOfBirth" type="date" value="" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Nationality</label>
-                <input id="ikNationality" name="nationality" type="text" value="American" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikNationality" name="nationality" type="text" value="" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Occupation</label>
-                <input id="ikOccupation" name="occupation" type="text" value="Software Engineer" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikOccupation" name="occupation" type="text" value="" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div style="grid-column:1 / -1;">
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">Street Address</label>
-                <input id="ikAddress" name="address" type="text" value="123 Main Street, Apt 4B" autocomplete="street-address" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikAddress" name="address" type="text" value="" autocomplete="street-address" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">City</label>
-                <input id="ikCity" name="city" type="text" value="New York" autocomplete="address-level2" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikCity" name="city" type="text" value="" autocomplete="address-level2" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div>
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">State / Province</label>
-                <input id="ikState" name="state" type="text" value="NY" autocomplete="address-level1" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikState" name="state" type="text" value="" autocomplete="address-level1" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
               <div style="grid-column:1 / -1;">
                 <label style="display:block;color:#e2e8f0;font-size:13px;font-weight:700;margin-bottom:6px;">ZIP / Postal Code</label>
-                <input id="ikZip" name="zipCode" type="text" value="10001" autocomplete="postal-code" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
+                <input id="ikZip" name="zipCode" type="text" value="" autocomplete="postal-code" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.65);color:#f8fafc;font-size:14px;outline:none;" />
               </div>
             </div>
             <div style="margin-top:20px;display:flex;justify-content:flex-end;">
               <button type="submit" id="ikSubmit" style="background:linear-gradient(135deg,#d4af37,#b7922a);color:#0b0f14;font-weight:800;font-size:15px;padding:14px 28px;border:none;border-radius:14px;cursor:pointer;box-shadow:0 10px 30px -10px rgba(212,175,55,0.45);letter-spacing:0.3px;">
-                Complete Setup
+                Continue to Step 2 →
               </button>
             </div>
           </form>
@@ -1392,15 +1403,28 @@
       <div style="max-width:560px;margin:0 auto;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap;">
           <img src="/assets/images/brand/logo_VanguardDoubleTrust_white.svg" alt="VanguardDoubleTrust" style="height:34px;max-width:220px;" onerror="this.style.display='none'"/>
-          <div style="color:#94a3b8;font-size:12px;">Profile Picture</div>
+          <div style="color:#94a3b8;font-size:12px;">Step 2 of 2 · Profile Picture</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+          <div style="flex:1;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(16,185,129,0.15);border:2px solid #10b981;color:#10b981;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;">
+              <i class="fas fa-check" style="font-size:16px;"></i>
+            </div>
+            <div style="font-size:14px;font-weight:800;color:#6ee7b7;">KYC Information</div>
+          </div>
+          <div style="width:60px;height:3px;background:#10b981;border-radius:3px;"></div>
+          <div style="flex:1;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#ffffff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 6px 18px -6px rgba(59,130,246,0.5);">2</div>
+            <div style="font-size:14px;font-weight:800;color:#f8fafc;">Profile Picture</div>
+          </div>
         </div>
         <div style="background:linear-gradient(180deg,#1e3a8a,#1e40af);border:1px solid #3b82f6;color:#dbeafe;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;font-weight:700;letter-spacing:0.2px;">
-          ⚠️ This step is required. Please upload a clear profile picture before accessing your account.
+          ⚠️ Final step required. Upload a clear profile picture to complete onboarding and access your account.
         </div>
         <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px;">
-          <h2 style="margin:0 0 6px 0;color:#f8fafc;font-size:22px;">Add Your Profile Picture</h2>
+          <h2 style="margin:0 0 6px 0;color:#f8fafc;font-size:22px;">Step 2: Add Your Profile Picture</h2>
           <p style="margin:0 0 18px 0;color:#cbd5e1;font-size:14px;line-height:1.6;">Upload a clear photo so we can recognize your account.</p>
-          <div style="width:140px;height:140px;border-radius:50%;background:rgba(30,41,59,0.9);border:2px dashed #64748b;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-weight:800;font-size:36px;letter-spacing:1px;" id="inlinePicPreview">FJ</div>
+          <div style="width:140px;height:140px;border-radius:50%;background:rgba(30,41,59,0.9);border:2px dashed #64748b;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-weight:800;font-size:36px;letter-spacing:1px;" id="inlinePicPreview">VT</div>
           <input id="inlinePicFile" type="file" accept="image/jpeg,image/png,image/webp" style="display:none;"/>
           <label for="inlinePicFile" style="display:block;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:800;font-size:14px;padding:12px 20px;border:none;border-radius:12px;cursor:pointer;text-align:center;margin-bottom:12px;box-shadow:0 8px 20px -8px rgba(59,130,246,0.45);">
             Choose a Photo (JPG, PNG, WebP · Max 8MB)
@@ -3122,99 +3146,104 @@
 
   if (!kycGate) return;
 
-  var completed = !!(
-    ctx &&
-    (
-      ctx.kycCompleted === true ||
-      ctx.kycCompleted === 1 ||
-      ctx.kycCompleted === "1" ||
-      ctx.kycCompleted === "true"
-    )
-  );
-
-  if (!completed && ctx && ctx.me && ctx.me.onboarding) {
-    var ob = ctx.me.onboarding;
-    if (ob.kycCompleted === true || ob.kycCompleted === 1 || ob.kycCompleted === "1" || ob.kycCompleted === "true") {
-      completed = true;
-    }
-  }
-  if (!completed && ctx && ctx.me && ctx.me.security) {
-    var sec = ctx.me.security;
-    if (sec.kycCompleted === true || sec.kycDone === true || sec.KYCDone === true) {
-      completed = true;
-    }
-  }
-  if (!completed && ctx && ctx.me && ctx.me.profile) {
-    var prof = ctx.me.profile;
-    if (prof.kycCompleted === true || prof.kycDone === true || prof.KYCDone === true) {
-      completed = true;
-    }
+  var onboardingRequired = false;
+  if (ctx && ctx.me && ctx.me.onboarding && typeof ctx.me.onboarding.required !== "undefined") {
+    onboardingRequired = ctx.me.onboarding.required === true || ctx.me.onboarding.required === 1 || ctx.me.onboarding.required === "1" || ctx.me.onboarding.required === "true";
   }
 
-  if (completed) {
-    kycGate.style.display = "none";
+  var kycCompleted = false;
+  if (ctx) {
+    if (ctx.kycCompleted === true || ctx.kycCompleted === 1 || ctx.kycCompleted === "1" || ctx.kycCompleted === "true") {
+      kycCompleted = true;
+    }
+    if (!kycCompleted && ctx.me && ctx.me.onboarding) {
+      var ob = ctx.me.onboarding;
+      if (ob.kycCompleted === true || ob.kycCompleted === 1 || ob.kycCompleted === "1" || ob.kycCompleted === "true") {
+        kycCompleted = true;
+      }
+    }
+    if (!kycCompleted && ctx.me && ctx.me.security) {
+      var sec = ctx.me.security;
+      if (sec.kycCompleted === true || sec.kycDone === true || sec.KYCDone === true) {
+        kycCompleted = true;
+      }
+    }
+    if (!kycCompleted && ctx.me && ctx.me.profile) {
+      var prof = ctx.me.profile;
+      if (prof.kycCompleted === true || prof.kycDone === true || prof.KYCDone === true) {
+        kycCompleted = true;
+      }
+    }
+  }
 
-    var picUploaded = false;
-    if (ctx) {
-      if (ctx.picUploaded === true || ctx.picUploaded === 1 || ctx.picUploaded === "1" || ctx.picUploaded === "true") {
+  var picUploaded = false;
+  if (ctx) {
+    if (ctx.picUploaded === true || ctx.picUploaded === 1 || ctx.picUploaded === "1" || ctx.picUploaded === "true") {
+      picUploaded = true;
+    }
+    if (!picUploaded && (ctx.profilePicUploaded === true || ctx.profilePicUploaded === 1 || ctx.profilePicUploaded === "1" || ctx.profilePicUploaded === "true")) {
+      picUploaded = true;
+    }
+    if (!picUploaded && ctx.me && ctx.me.onboarding) {
+      var ob2 = ctx.me.onboarding;
+      if (ob2.profilePicUploaded === true || ob2.profilePicUploaded === 1 || ob2.profilePicUploaded === "1" || ob2.profilePicUploaded === "true") {
         picUploaded = true;
       }
-      if (!picUploaded && (ctx.profilePicUploaded === true || ctx.profilePicUploaded === 1 || ctx.profilePicUploaded === "1" || ctx.profilePicUploaded === "true")) {
+    }
+    if (!picUploaded) {
+      var meObj = ctx.me || {};
+      var meProf = meObj.profile || {};
+      var meSec = meObj.security || {};
+      var pUrl = String(
+        ctx.profilePic || ctx.photoURL || ctx.photo || ctx.avatar ||
+        meObj.profilePic || meObj.photoURL || meObj.photo || meObj.avatar ||
+        meProf.profilePic || meProf.photoURL || meProf.photo || meProf.avatar ||
+        meSec.profilePic || meSec.photoURL || meSec.photo || meSec.avatar || ""
+      ).trim();
+      if (pUrl && pUrl !== "") {
         picUploaded = true;
-      }
-      if (!picUploaded && ctx.me && ctx.me.onboarding) {
-        var ob2 = ctx.me.onboarding;
-        if (ob2.profilePicUploaded === true || ob2.profilePicUploaded === 1 || ob2.profilePicUploaded === "1" || ob2.profilePicUploaded === "true") {
-          picUploaded = true;
-        }
-      }
-      if (!picUploaded) {
-        var meObj = ctx.me || {};
-        var meProf = meObj.profile || {};
-        var meSec = meObj.security || {};
-        var pUrl = String(
-          ctx.profilePic || ctx.photoURL || ctx.photo || ctx.avatar ||
-          meObj.profilePic || meObj.photoURL || meObj.photo || meObj.avatar ||
-          meProf.profilePic || meProf.photoURL || meProf.photo || meProf.avatar ||
-          meSec.profilePic || meSec.photoURL || meSec.photo || meSec.avatar || ""
-        ).trim();
-        if (pUrl && pUrl !== "") {
-          picUploaded = true;
-        } else {
+      } else {
+        try {
+          var cached = null;
+          try { cached = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { cached = {}; }
+          if (!cached || typeof cached !== "object") cached = {};
           try {
-            var cached = null;
-            try { cached = JSON.parse(localStorage.getItem("vt_kyc_state_v1") || "{}"); } catch (_) { cached = {}; }
-            if (!cached || typeof cached !== "object") cached = {};
-            try {
-              var perm = JSON.parse(localStorage.getItem("vt_kyc_perm_v1") || "{}");
-              if (perm && typeof perm === "object") cached = Object.assign({}, perm, cached);
-            } catch (_) {}
-            var cachedUrl = String(
-              cached.profilePic || cached.photoURL || cached.photo || cached.avatar || ""
-            ).trim();
-            if (cachedUrl && cachedUrl !== "") {
-              picUploaded = true;
-            }
+            var perm = JSON.parse(localStorage.getItem("vt_kyc_perm_v1") || "{}");
+            if (perm && typeof perm === "object") cached = Object.assign({}, perm, cached);
           } catch (_) {}
-        }
+          var cachedUrl = String(
+            cached.profilePic || cached.photoURL || cached.photo || cached.avatar || ""
+          ).trim();
+          if (cachedUrl && cachedUrl !== "") {
+            picUploaded = true;
+          }
+        } catch (_) {}
       }
     }
+  }
 
+  if (!onboardingRequired) {
+    kycGate.style.display = "none";
     if (picGate) {
-      picGate.style.display = picUploaded ? "none" : "";
+      picGate.style.display = "none";
     }
-
-    document.body.style.overflow = picUploaded ? "" : "hidden";
-
+    document.body.style.overflow = "";
     return;
   }
 
-  kycGate.style.display = "";
-  
-  if (picGate) {
-    picGate.style.display = "none";
+  if (!kycCompleted) {
+    kycGate.style.display = "";
+    if (picGate) {
+      picGate.style.display = "none";
+    }
+    document.body.style.overflow = "hidden";
+    return;
   }
 
+  kycGate.style.display = "none";
+  if (picGate) {
+    picGate.style.display = "";
+  }
   document.body.style.overflow = "hidden";
 }
     </script>
