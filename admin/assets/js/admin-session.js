@@ -498,7 +498,19 @@
         password: String(document.getElementById("createPassword")?.value || ""),
         accountPin: String(document.getElementById("createAccountPin")?.value || "").trim(),
         transferCode: String(document.getElementById("createTransferCode")?.value || "").trim(),
-        startingBalance: String(document.getElementById("createStartingBalance")?.value || "").trim()
+        startingBalance: String(document.getElementById("createStartingBalance")?.value || "").trim(),
+        phone: String(document.getElementById("createPhone")?.value || "").trim(),
+        country: String(document.getElementById("createCountry")?.value || "").trim(),
+        preferredLanguage: String(document.getElementById("createPreferredLanguage")?.value || "en").trim(),
+        gender: String(document.getElementById("createGender")?.value || "").trim(),
+        dateOfBirth: String(document.getElementById("createDateOfBirth")?.value || "").trim(),
+        nationality: String(document.getElementById("createNationality")?.value || "").trim(),
+        occupation: String(document.getElementById("createOccupation")?.value || "").trim(),
+        address: String(document.getElementById("createAddress")?.value || "").trim(),
+        city: String(document.getElementById("createCity")?.value || "").trim(),
+        state: String(document.getElementById("createState")?.value || "").trim(),
+        zipCode: String(document.getElementById("createZipCode")?.value || "").trim(),
+        profilePic: String(document.getElementById("createProfilePic")?.value || "").trim()
       };
     }
 
@@ -510,6 +522,18 @@
       if (next.accountPin != null) document.getElementById("createAccountPin").value = next.accountPin;
       if (next.transferCode != null) document.getElementById("createTransferCode").value = next.transferCode;
       if (next.startingBalance != null) document.getElementById("createStartingBalance").value = next.startingBalance;
+      if (next.phone != null) document.getElementById("createPhone").value = next.phone;
+      if (next.country != null) document.getElementById("createCountry").value = next.country;
+      if (next.preferredLanguage != null) document.getElementById("createPreferredLanguage").value = next.preferredLanguage;
+      if (next.gender != null) document.getElementById("createGender").value = next.gender;
+      if (next.dateOfBirth != null) document.getElementById("createDateOfBirth").value = next.dateOfBirth;
+      if (next.nationality != null) document.getElementById("createNationality").value = next.nationality;
+      if (next.occupation != null) document.getElementById("createOccupation").value = next.occupation;
+      if (next.address != null) document.getElementById("createAddress").value = next.address;
+      if (next.city != null) document.getElementById("createCity").value = next.city;
+      if (next.state != null) document.getElementById("createState").value = next.state;
+      if (next.zipCode != null) document.getElementById("createZipCode").value = next.zipCode;
+      if (next.profilePic != null) document.getElementById("createProfilePic").value = next.profilePic;
     }
 
     function renderCreatedInfo(data) {
@@ -537,7 +561,19 @@
         password: randomPassword(),
         accountPin: randomDigits(6),
         transferCode: randomDigits(6),
-        startingBalance: "0"
+        startingBalance: "0",
+        phone: "",
+        country: "",
+        preferredLanguage: "en",
+        gender: "",
+        dateOfBirth: "",
+        nationality: "",
+        occupation: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        profilePic: ""
       });
       setModalOpen(true);
     });

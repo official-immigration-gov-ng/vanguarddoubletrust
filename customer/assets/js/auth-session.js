@@ -310,62 +310,7 @@
   }
 
   function applyVtKycCacheToMeAuth(me) {
-    if (!me || typeof me !== "object") return me;
-    var cached = readVtKycCacheAuth();
-    if (!cached) return me;
-    var merged = Object.assign({}, me);
-    if (cached.kycCompleted) {
-      merged.security = Object.assign({}, merged.security || {});
-      merged.security.kycCompleted = true;
-      merged.security.KYCDone = true;
-      merged.security.kycDone = true;
-      if (!merged.security.kycCompletedAt) merged.security.kycCompletedAt = cached.kycCompletedAt || (new Date()).toISOString();
-      if (!merged.security.KYCDoneAt) merged.security.KYCDoneAt = cached.KYCDoneAt || merged.security.kycCompletedAt || (new Date()).toISOString();
-      if (!merged.security.kycDoneAt) merged.security.kycDoneAt = cached.kycDoneAt || merged.security.kycCompletedAt || (new Date()).toISOString();
-      merged.profile = Object.assign({}, merged.profile || {});
-      merged.profile.kycCompleted = true;
-      merged.profile.KYCDone = true;
-      merged.profile.kycDone = true;
-      if (!merged.profile.kycCompletedAt) merged.profile.kycCompletedAt = cached.kycCompletedAt || merged.security.kycCompletedAt || (new Date()).toISOString();
-      if (!merged.profile.KYCDoneAt) merged.profile.KYCDoneAt = cached.KYCDoneAt || merged.profile.kycCompletedAt || (new Date()).toISOString();
-      if (!merged.profile.kycDoneAt) merged.profile.kycDoneAt = cached.kycDoneAt || merged.profile.kycCompletedAt || (new Date()).toISOString();
-      if (cached.country) merged.profile.country = cached.country;
-      if (cached.preferredLanguage) {
-        merged.profile.preferredLanguage = cached.preferredLanguage;
-        if (!merged.preferredLanguage) merged.preferredLanguage = cached.preferredLanguage;
-      }
-    }
-    var cachedPic = String(cached.profilePic || cached.photoURL || cached.photo || cached.avatar || "");
-    var cachedPicPublic = String(cached.profilePicPublicId || cached.photoURLPublicId || cached.photoPublicId || cached.avatarPublicId || "");
-    if (cachedPic) {
-      merged.profilePic = merged.profilePic || cachedPic;
-      merged.photoURL = merged.photoURL || merged.profilePic || cachedPic;
-      merged.photo = merged.photo || merged.photoURL || merged.profilePic || cachedPic;
-      merged.avatar = merged.avatar || merged.photo || merged.photoURL || merged.profilePic || cachedPic;
-      merged.profile = Object.assign({}, merged.profile || {});
-      merged.profile.profilePic = merged.profile.profilePic || cachedPic;
-      merged.profile.photoURL = merged.profile.photoURL || merged.profile.profilePic || cachedPic;
-      merged.profile.photo = merged.profile.photo || merged.profile.photoURL || merged.profile.profilePic || cachedPic;
-      merged.profile.avatar = merged.profile.avatar || merged.profile.photo || merged.profile.photoURL || merged.profile.profilePic || cachedPic;
-      if (cachedPicPublic) {
-        merged.profile.profilePicPublicId = merged.profile.profilePicPublicId || cachedPicPublic;
-        merged.profile.photoURLPublicId = merged.profile.photoURLPublicId || cachedPicPublic;
-        merged.profile.photoPublicId = merged.profile.photoPublicId || cachedPicPublic;
-        merged.profile.avatarPublicId = merged.profile.avatarPublicId || cachedPicPublic;
-      }
-      merged.security = Object.assign({}, merged.security || {});
-      merged.security.profilePic = merged.security.profilePic || cachedPic;
-      merged.security.photoURL = merged.security.photoURL || merged.security.profilePic || cachedPic;
-      merged.security.photo = merged.security.photo || merged.security.photoURL || merged.security.profilePic || cachedPic;
-      merged.security.avatar = merged.security.avatar || merged.security.photo || merged.security.photoURL || merged.security.profilePic || cachedPic;
-      if (cachedPicPublic) {
-        merged.security.profilePicPublicId = merged.security.profilePicPublicId || cachedPicPublic;
-        merged.security.photoURLPublicId = merged.security.photoURLPublicId || cachedPicPublic;
-        merged.security.photoPublicId = merged.security.photoPublicId || cachedPicPublic;
-        merged.security.avatarPublicId = merged.security.avatarPublicId || cachedPicPublic;
-      }
-    }
-    return merged;
+    return me;
   }
 
   async function getMe() {
@@ -775,12 +720,10 @@
 
       setText("accountHolder", name);
       setText("emailAddress", me?.email || "--");
-      setText("phoneNumber", me?.profile?.phone || "--");
 
       const opening = me?.account?.openingDate || me?.createdAt || me?.profile?.createdAt || me?.profile?.created_at || me?.profile?.created || null;
       setText("accountOpening", formatDate(opening) || formatDate(new Date()));
       setText("lastLogin", formatDateTime(me?.account?.lastLogin || new Date()));
-      setText("gender", me?.profile?.gender || "--");
 
       const acct = accountNumberFromMe(me);
       setText("accountNumber", acct || "--");
@@ -2536,12 +2479,12 @@
     ).trim();
     const picDone = Boolean(picUrl && picUrl !== "");
 
-    let onboardingRequired;
+    let onboardingRequired = false;
     const persistedOb = me?.onboarding;
     if (persistedOb && typeof persistedOb.required === "boolean") {
-      onboardingRequired = persistedOb.required;
+      onboardingRequired = false;
     } else {
-      onboardingRequired = !(kycDone && picDone);
+      onboardingRequired = false;
     }
     const onboarding = {
       required: onboardingRequired,
@@ -2565,26 +2508,11 @@
     const dynamicKycGate = document.getElementById("vtKycGate");
     const dynamicPicGate = document.getElementById("vtPicGate");
 
-    if (kycDone && picDone) {
-      if (kycGate) kycGate.style.display = "none";
-      if (picGate) picGate.style.display = "none";
-      if (dynamicKycGate) dynamicKycGate.remove();
-      if (dynamicPicGate) dynamicPicGate.remove();
-      try { document.body.style.overflow = ""; } catch (_) {}
-    } else if (!kycDone) {
-      if (kycGate) {
-        kycGate.style.display = "";
-        try { document.body.style.overflow = "hidden"; } catch (_) {}
-        prefillKycForm(ctx);
-      }
-      if (picGate) picGate.style.display = "none";
-    } else if (!picDone) {
-      if (kycGate) kycGate.style.display = "none";
-      if (picGate) {
-        picGate.style.display = "";
-        try { document.body.style.overflow = "hidden"; } catch (_) {}
-      }
-    }
+    if (kycGate) kycGate.remove();
+    if (picGate) picGate.remove();
+    if (dynamicKycGate) dynamicKycGate.remove();
+    if (dynamicPicGate) dynamicPicGate.remove();
+    try { document.body.style.overflow = ""; } catch (_) {}
 
     try {
       if (window.VT) { window.VT._dbg1 = "bootstrapCustomerPage OK"; window.VT._me = me; }

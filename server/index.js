@@ -500,46 +500,11 @@ function hasProfilePic(reqOrUser) {
 }
 
 function onboardingIsRequired(reqOrUser) {
-  const u = getUserFromReqOrUser(reqOrUser);
-  const kycDone = hasKycCompleted(u);
-  const picDone = hasProfilePic(u);
-  if (kycDone && picDone) {
-    return false;
-  }
-  const ob = u && typeof u.onboarding === "object" ? u.onboarding : null;
-  if (ob && typeof ob.required === "boolean") {
-    return ob.required;
-  }
-  return !(kycDone && picDone);
+  return false;
 }
 
 function requireKycAndProfilePic(req, res, next) {
-  if (!req.user) {
-    next();
-    return;
-  }
-  if (!onboardingIsRequired(req)) {
-    next();
-    return;
-  }
-  const reqPath = String(req.path || "").toLowerCase();
-  const isDashboardRoute = reqPath === "/customer/dashboard.php" || reqPath === "/customer/dashboard";
-  if (isDashboardRoute) {
-    next();
-    return;
-  }
-  if (String(req.path || "").startsWith("/api/")) {
-    res.status(403).json({
-      error: "Onboarding incomplete.",
-      onboarding: {
-        required: true,
-        kycCompleted: hasKycCompleted(req),
-        profilePicUploaded: hasProfilePic(req)
-      }
-    });
-    return;
-  }
-  res.redirect("/customer/dashboard.php");
+  next();
 }
 
 function adminCredentials() {
@@ -611,7 +576,7 @@ async function ensureUserDoc(uid, email) {
         currency: "USD",
         balance: 4365423
       },
-      onboarding: { required: true }
+      onboarding: { required: false }
     },
     { merge: true }
   );
@@ -710,30 +675,10 @@ app.get("/api/me", requireAuth, async (req, res) => {
     accountPinHashSet: Boolean(sec?.accountPinHash)
   });
 
-  const persistedOnboardingRequired = (typeof ob?.required === "boolean") ? ob.required : null;
-  const onboardingRequiredByData = !(kycCompleted && picDone);
-  let onboardingRequired;
-  if (kycCompleted && picDone) {
-    onboardingRequired = false;
-  } else if (persistedOnboardingRequired != null) {
-    onboardingRequired = persistedOnboardingRequired;
-  } else {
-    onboardingRequired = onboardingRequiredByData;
-  }
-  if (uid && ob && persistedOnboardingRequired === true && kycCompleted && picDone) {
-    try {
-      const db = getFirestore();
-      await db.collection("users").doc(String(uid)).set(
-        { onboarding: { required: false, correctedAt: new Date().toISOString() } },
-        { merge: true }
-      ).catch(() => {});
-    } catch (_) {}
-  }
-
   const onboardingInfo = {
-    required: onboardingRequired,
-    kycCompleted: kycCompleted,
-    profilePicUploaded: picDone
+    required: false,
+    kycCompleted: true,
+    profilePicUploaded: true
   };
 
   res.json({
@@ -785,145 +730,8 @@ function isSafeCloudinaryUrl(secureUrl) {
 }
 
 app.post("/api/customer/profile-pic", requireAuth, async (req, res) => {
-  const b = req.body || {};
-  const secureUrl = typeof b?.secure_url === "string" ? String(b.secure_url).trim() : "";
-  const publicId = cleanString(b?.public_id || b?.publicId, 260);
-  const width = Number.isFinite(Number(b?.width)) ? Math.max(0, Math.min(20000, Number(b.width))) : 0;
-  const height = Number.isFinite(Number(b?.height)) ? Math.max(0, Math.min(20000, Number(b.height))) : 0;
-  const format = cleanString(b?.format, 16);
-  const bytes = Number.isFinite(Number(b?.bytes)) ? Math.max(0, Math.min(128 * 1024 * 1024, Number(b.bytes))) : 0;
-
-  if (!secureUrl || !isSafeCloudinaryUrl(secureUrl)) {
-    res.status(400).json({ error: "Invalid profile picture URL." });
-    return;
-  }
-
-  const uid = req.user.uid;
-  await ensureUserDoc(uid, req.user.email);
-  const nowIso = new Date().toISOString();
-
-  const existingSnap = await (async () => {
-    try {
-      const db = getFirestore();
-      const s = await db.collection("users").doc(String(uid)).get().catch(() => null);
-      if (s && s.exists) return s.data() || {};
-    } catch (_) {}
-    return {};
-  })();
-  const existingProfForCheck = existingSnap.profile || req.user?.profile || {};
-  const existingSecForCheck = existingSnap.security || req.user?.security || {};
-  const picDoneForCheck = Boolean(secureUrl) || hasProfilePic({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
-  const kycDoneForCheck = hasKycCompleted({ profile: existingProfForCheck, security: existingSecForCheck, ...existingSnap });
-  const heuristicObRequired = !(kycDoneForCheck && picDoneForCheck);
-  const existingOb = (existingSnap && typeof existingSnap.onboarding === "object" && existingSnap.onboarding) ? existingSnap.onboarding : {};
-  const existingObRequired = typeof existingOb.required === "boolean" ? existingOb.required : null;
-  let onboardingRequiredForSave;
-  if (!heuristicObRequired) {
-    onboardingRequiredForSave = false;
-  } else if (existingObRequired === false) {
-    onboardingRequiredForSave = false;
-  } else if (existingObRequired != null) {
-    onboardingRequiredForSave = existingObRequired;
-  } else {
-    onboardingRequiredForSave = heuristicObRequired;
-  }
-
-  const updates = {
-    updatedAt: nowIso,
-    profile: {
-      profilePic: secureUrl,
-      photoURL: secureUrl,
-      photo: secureUrl,
-      avatar: secureUrl,
-      ...(publicId ? { profilePicPublicId: publicId, photoURLPublicId: publicId, photoPublicId: publicId, avatarPublicId: publicId } : {}),
-      ...(width ? { profilePicWidth: width } : {}),
-      ...(height ? { profilePicHeight: height } : {}),
-      ...(format ? { profilePicFormat: format } : {}),
-      ...(bytes ? { profilePicBytes: bytes } : {})
-    },
-    security: {
-      profilePic: secureUrl,
-      photoURL: secureUrl,
-      photo: secureUrl,
-      avatar: secureUrl,
-      ...(publicId ? { profilePicPublicId: publicId } : {})
-    },
-    profilePic: secureUrl,
-    photoURL: secureUrl,
-    photo: secureUrl,
-    avatar: secureUrl,
-    onboarding: { required: onboardingRequiredForSave }
-  };
-
-  try {
-    const db = getFirestore();
-    await db.collection("users").doc(String(uid)).set(updates, { merge: true });
-    const refreshedSnap = await db.collection("users").doc(String(uid)).get().catch(() => null);
-    const dbData = refreshedSnap && refreshedSnap.exists ? (refreshedSnap.data() || {}) : null;
-    const dbProf = (dbData && dbData.profile) || (req.user?.profile) || {};
-    const dbSec = (dbData && dbData.security) || (req.user?.security) || {};
-    const fullUser = { uid, profile: dbProf, security: dbSec, ...dbData };
-    const kycDone = hasKycCompleted(fullUser);
-    const picDone = hasProfilePic(fullUser);
-    const persistedObReq = (dbData?.onboarding && typeof dbData.onboarding.required === "boolean")
-      ? dbData.onboarding.required
-      : null;
-    const heuristicObFinal = !(kycDone && picDone);
-    let finalOnboardingRequired;
-    if (!heuristicObFinal) {
-      finalOnboardingRequired = false;
-    } else if (persistedObReq === false) {
-      finalOnboardingRequired = false;
-    } else if (persistedObReq != null) {
-      finalOnboardingRequired = persistedObReq;
-    } else {
-      finalOnboardingRequired = heuristicObFinal;
-    }
-
-    res.status(200).json({
-      ok: true,
-      profilePic: secureUrl,
-      photoURL: secureUrl,
-      photo: secureUrl,
-      avatar: secureUrl,
-      profilePicPublicId: publicId || null,
-      photoURLPublicId: publicId || null,
-      photoPublicId: publicId || null,
-      avatarPublicId: publicId || null,
-      kycCompleted: kycDone,
-      kycDone: kycDone,
-      KYCDone: kycDone,
-      onboarding: {
-        required: finalOnboardingRequired,
-        kycCompleted: kycDone,
-        profilePicUploaded: picDone
-      },
-      profile: Object.assign({}, dbProf || {}, {
-        profilePic: secureUrl,
-        photoURL: secureUrl,
-        photo: secureUrl,
-        avatar: secureUrl,
-        profilePicPublicId: publicId || dbProf.profilePicPublicId || null,
-        kycCompleted: kycDone,
-        kycDone: kycDone,
-        KYCDone: kycDone
-      }),
-      security: Object.assign({}, dbSec || {}, {
-        profilePic: secureUrl,
-        photoURL: secureUrl,
-        photo: secureUrl,
-        avatar: secureUrl,
-        profilePicPublicId: publicId || dbSec.profilePicPublicId || null,
-        kycCompleted: kycDone,
-        kycDone: kycDone,
-        KYCDone: kycDone
-      })
-    });
-  } catch (e) {
-    const normalized = normalizeFirebaseAdminError(e, "Unable to save profile picture.");
-    res.status(normalized.status).json({ error: normalized.error });
-    return;
-  }
+  res.status(410).json({ error: "User-facing profile picture updates are disabled. Please contact an administrator for profile picture changes." });
+  return;
 });
 
 function cleanString(v, maxLen) {
@@ -942,6 +750,9 @@ function buildAllowedLanguageSet() {
 }
 
 app.post("/api/customer/kyc", requireAuth, async (req, res) => {
+  res.status(410).json({ error: "User-facing KYC submission is disabled. Please contact an administrator for KYC updates." });
+  return;
+
   const b = req.body || {};
   const phone = cleanString(b.phone, 40);
   const country = cleanString(b.country, 80);
@@ -1169,29 +980,9 @@ app.put("/api/profile", requireAuth, async (req, res) => {
   const {
     firstname,
     lastname,
-    phone,
-    country,
-    state,
-    city,
-    dob,
-    dateOfBirth,
-    gender,
-    acctype,
-    brname,
     accountPin,
     transferPin,
-    preferredLanguage,
-    address,
-    zipCode,
-    zip,
-    postal,
-    nationality,
-    occupation,
-    profilePic,
-    profile_pic,
-    photoUrl,
-    photoURL,
-    avatar
+    preferredLanguage
   } = req.body || {};
 
   const uid = req.user.uid;
@@ -1522,18 +1313,6 @@ app.post("/api/customer/transfer", requireAuth, requireKycAndProfilePic, async (
   const senderStatus = String(senderAccount?.status || "").toUpperCase();
   if (senderStatus && senderStatus !== "ACTIVE") {
     res.status(400).json({ error: `Your account status is ${senderStatus}. Transfers are not available.` });
-    return;
-  }
-  const senderKycDone = !!(senderDoc?.security?.kycCompleted === true);
-  const senderHasPic = !!(
-    senderDoc?.profile?.profilePic ||
-    senderDoc?.profile?.photoURL ||
-    senderDoc?.profile?.photo ||
-    senderDoc?.profile?.avatar ||
-    senderDoc?.security?.profilePic
-  );
-  if (!senderKycDone || !senderHasPic) {
-    res.status(403).json({ error: "KYC and profile picture must be completed before performing transfers. Please complete your profile first." });
     return;
   }
   const currentBalance = Number(senderAccount?.balance || 0);
@@ -1969,6 +1748,19 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
     const startingBalance =
       startingBalanceRaw == null || startingBalanceRaw === "" ? 0 : Number(startingBalanceRaw);
 
+    const phone = String(req.body?.phone || "").trim();
+    const country = String(req.body?.country || "").trim();
+    const preferredLanguage = String(req.body?.preferredLanguage || "en").trim();
+    const dateOfBirth = String(req.body?.dateOfBirth || req.body?.dob || "").trim();
+    const gender = String(req.body?.gender || "").trim();
+    const nationality = String(req.body?.nationality || "").trim();
+    const occupation = String(req.body?.occupation || "").trim();
+    const address = String(req.body?.address || "").trim();
+    const city = String(req.body?.city || "").trim();
+    const state = String(req.body?.state || "").trim();
+    const zipCode = String(req.body?.zipCode || req.body?.zip || req.body?.postal || "").trim();
+    const profilePic = String(req.body?.profilePic || "").trim();
+
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       res.status(400).json({ error: "Login email is required and must be valid." });
       return;
@@ -2005,38 +1797,88 @@ app.post("/api/admin/users", requireAdminAuth, async (req, res) => {
     const nowIso = new Date().toISOString();
     const accountNumber = generateAccountNumber();
 
+    const hasKycData = Boolean(country || phone || dateOfBirth || gender || nationality || occupation || address || city || state || zipCode);
+    const hasProfilePic = Boolean(profilePic);
+    const kycCompleted = hasKycData;
+
+    const userDoc = {
+      email,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      profile: {
+        firstname,
+        lastname
+      },
+      security: {
+        accountPinHash: sha256Hex(accountPin),
+        transferPinHash: sha256Hex(transferCode),
+        twoFactorEnabled: true
+      },
+      account: {
+        accountNumber,
+        status: "ACTIVE",
+        branchCode: "RBSUS001",
+        openingDate: nowIso,
+        lastLogin: nowIso,
+        currency: "USD",
+        balance: startingBalance
+      },
+      onboarding: { required: false }
+    };
+
+    if (phone) userDoc.profile.phone = phone;
+    if (country) userDoc.profile.country = country;
+    if (preferredLanguage) userDoc.profile.preferredLanguage = preferredLanguage;
+    if (dateOfBirth) userDoc.profile.dateOfBirth = dateOfBirth;
+    if (gender) userDoc.profile.gender = gender;
+    if (nationality) userDoc.profile.nationality = nationality;
+    if (occupation) userDoc.profile.occupation = occupation;
+    if (address) userDoc.profile.address = address;
+    if (city) userDoc.profile.city = city;
+    if (state) userDoc.profile.state = state;
+    if (zipCode) userDoc.profile.zipCode = zipCode;
+
+    if (kycCompleted) {
+      userDoc.profile.kycCompleted = true;
+      userDoc.profile.kycDone = true;
+      userDoc.profile.KYCDone = true;
+      userDoc.profile.kycCompletedAt = nowIso;
+      userDoc.profile.kycDoneAt = nowIso;
+      userDoc.profile.KYCDoneAt = nowIso;
+      userDoc.security.kycCompleted = true;
+      userDoc.security.kycDone = true;
+      userDoc.security.KYCDone = true;
+      userDoc.security.kycCompletedAt = nowIso;
+      userDoc.security.kycDoneAt = nowIso;
+      userDoc.security.KYCDoneAt = nowIso;
+      userDoc.kycCompleted = true;
+      if (country) userDoc.country = country;
+      if (preferredLanguage) userDoc.preferredLanguage = preferredLanguage;
+      if (firstname) userDoc.firstname = firstname;
+      if (lastname) userDoc.lastname = lastname;
+    }
+
+    if (hasProfilePic) {
+      userDoc.profile.profilePic = profilePic;
+      userDoc.profile.photoURL = profilePic;
+      userDoc.profile.photo = profilePic;
+      userDoc.profile.avatar = profilePic;
+      userDoc.security.profilePic = profilePic;
+      userDoc.security.photoURL = profilePic;
+      userDoc.security.photo = profilePic;
+      userDoc.security.avatar = profilePic;
+      userDoc.profilePic = profilePic;
+      userDoc.photoURL = profilePic;
+      userDoc.photo = profilePic;
+      userDoc.avatar = profilePic;
+    }
+
     try {
       const db = getFirestore();
       await db
         .collection("users")
         .doc(uid)
-        .set(
-          {
-            email,
-            createdAt: nowIso,
-            updatedAt: nowIso,
-            profile: {
-              firstname,
-              lastname
-            },
-            security: {
-              accountPinHash: sha256Hex(accountPin),
-              transferPinHash: sha256Hex(transferCode),
-              twoFactorEnabled: true
-            },
-            account: {
-              accountNumber,
-              status: "ACTIVE",
-              branchCode: "RBSUS001",
-              openingDate: nowIso,
-              lastLogin: nowIso,
-              currency: "USD",
-              balance: startingBalance
-            },
-            onboarding: { required: true }
-          },
-          { merge: true }
-        );
+        .set(userDoc, { merge: true });
 
       if (startingBalance > 0) {
         await writeTransaction({

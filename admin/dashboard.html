@@ -626,44 +626,131 @@
         </div>
       </div>
 
-      <div id="adminCreateModal" style="display:none; position:fixed; inset:0; background:rgba(30, 58, 138, 0.72); padding:18px; z-index:50">
-        <div class="card" style="max-width:760px; margin:0 auto; padding:22px">
+      <div id="adminCreateModal" style="display:none; position:fixed; inset:0; background:rgba(30, 58, 138, 0.72); padding:18px; z-index:50; overflow-y:auto;">
+        <div class="card" style="max-width:860px; margin:0 auto; padding:22px">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px">
             <div>
               <h3 style="margin:0 0 6px">Create Customer Account</h3>
-              <div class="muted">Generate login + account details and register the customer.</div>
+              <div class="muted">Generate login + account details, KYC, and profile picture.</div>
             </div>
             <button class="btn-secondary" id="adminCreateCloseBtn" type="button">Close</button>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; margin-bottom:14px">
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer First Name</label>
-              <input id="createFirstname" type="text" placeholder="Frank" />
+          <div style="margin-bottom:14px">
+            <div style="color:#93c5fd; font-weight:800; font-size:13px; margin-bottom:8px">Account Credentials</div>
+            <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px;">
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer First Name</label>
+                <input id="createFirstname" type="text" placeholder="Frank" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer Last Name</label>
+                <input id="createLastname" type="text" placeholder="James" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Email</label>
+                <input id="createEmail" type="email" placeholder="customer@email.com" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Password</label>
+                <input id="createPassword" type="text" placeholder="Generated password" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Account PIN (6 digits)</label>
+                <input id="createAccountPin" type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Transfer Code</label>
+                <input id="createTransferCode" type="text" placeholder="6 digits or strong code" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Starting Balance</label>
+                <input id="createStartingBalance" type="number" min="0" step="0.01" placeholder="0.00" />
+              </div>
             </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Customer Last Name</label>
-              <input id="createLastname" type="text" placeholder="James" />
-            </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Email</label>
-              <input id="createEmail" type="email" placeholder="customer@email.com" />
-            </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Login Password</label>
-              <input id="createPassword" type="text" placeholder="Generated password" />
-            </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Account PIN (6 digits)</label>
-              <input id="createAccountPin" type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
-            </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Transfer Code</label>
-              <input id="createTransferCode" type="text" placeholder="6 digits or strong code" />
-            </div>
-            <div>
-              <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Starting Balance</label>
-              <input id="createStartingBalance" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+
+          <div style="border-top:1px solid rgba(147,197,253,0.15); padding-top:14px; margin-bottom:14px">
+            <div style="color:#93c5fd; font-weight:800; font-size:13px; margin-bottom:8px">KYC Information</div>
+            <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px;">
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Phone Number</label>
+                <input id="createPhone" type="tel" placeholder="+1 555 000 0000" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Country</label>
+                <select id="createCountry" style="width:100%">
+                  <option value="">-- Select --</option>
+                  <option value="US">United States</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="CA">Canada</option>
+                  <option value="AU">Australia</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="NG">Nigeria</option>
+                  <option value="KE">Kenya</option>
+                  <option value="ZA">South Africa</option>
+                  <option value="IN">India</option>
+                  <option value="BR">Brazil</option>
+                  <option value="MX">Mexico</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Preferred Language</label>
+                <select id="createPreferredLanguage" style="width:100%">
+                  <option value="en" selected>English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                  <option value="de">Deutsch</option>
+                  <option value="pt">Português</option>
+                  <option value="ru">Русский</option>
+                  <option value="zh">中文</option>
+                  <option value="ar">العربية</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Gender</label>
+                <select id="createGender" style="width:100%">
+                  <option value="">-- Select --</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="prefer_not_say">Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Date of Birth</label>
+                <input id="createDateOfBirth" type="date" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Nationality</label>
+                <input id="createNationality" type="text" placeholder="American" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Occupation</label>
+                <input id="createOccupation" type="text" placeholder="Software Engineer" />
+              </div>
+              <div style="grid-column:1 / -1;">
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Street Address</label>
+                <input id="createAddress" type="text" placeholder="123 Main St" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">City</label>
+                <input id="createCity" type="text" placeholder="New York" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">State / Province</label>
+                <input id="createState" type="text" placeholder="NY" />
+              </div>
+              <div>
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">ZIP / Postal Code</label>
+                <input id="createZipCode" type="text" placeholder="10001" />
+              </div>
+              <div style="grid-column:1 / -1;">
+                <label style="display:block; margin:0 0 6px; font-size:12px; color:#93c5fd; font-weight:800">Profile Picture URL (optional)</label>
+                <input id="createProfilePic" type="text" placeholder="https://example.com/photo.jpg or Cloudinary URL" />
+                <div class="muted" style="font-size:11px; margin-top:4px">Paste a direct image URL. This will be saved as the customer's profile picture.</div>
+              </div>
             </div>
           </div>
 

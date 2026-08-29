@@ -6,3 +6,6 @@ npm-debug.log
 yarn-error.log
 .vercel/
 server_stderr.log
+server_stdout.log
+*.log
+scratch/
